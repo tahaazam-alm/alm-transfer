@@ -1,0 +1,2164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440, initial-scale=1" />
+<title>Almosafer Rides — Desktop wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesk:opsz,wght@12..96,500;12..96,700&family=Caveat:wght@500;600;700&family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --alm-teal:    #0BA0B7;
+    --alm-butter:  #FE9C09;
+    --alm-success: #319E37;
+    --alm-coral:   #EF4550;
+    --alm-navy:    #003143;
+    --metal:    #1C1C1C;
+    --chateau:  #66797F;
+    --montreal: #A1AAAD;
+    --gainsboro:#D8DCDE;
+    --alice:    #EDF1F3;
+    --ghost:    #F7F9FA;
+    --paper:    #FBFAF6;
+    --ink:      #1C1C1C;
+    --sketch:   #2A2A2A;
+    --hand:     "Caveat", "Segoe Script", cursive;
+    --display:  "Bricolage Grotesk", "Geist", sans-serif;
+    --body:     "Geist", "Inter", system-ui, sans-serif;
+    --mono:     "Geist Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--body);
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 1px 1px, rgba(0,0,0,.06) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+    line-height: 1.5;
+    padding: 56px 32px 160px;
+  }
+
+  /* ---------- Doc header ---------- */
+  .doc-header {
+    max-width: 1320px;
+    margin: 0 auto 28px;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 18px;
+  }
+  .doc-header h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 38px;
+    margin: 0 0 4px;
+    letter-spacing: -.01em;
+  }
+  .doc-header .meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--chateau);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .doc-header .right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .doc-header .sub {
+    font-family: var(--hand);
+    font-size: 22px;
+    color: var(--alm-navy);
+    transform: rotate(-1.2deg);
+    transform-origin: right;
+  }
+  .toggle {
+    appearance: none;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 100px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    box-shadow: 2px 2px 0 var(--ink);
+    transition: transform .08s ease;
+  }
+  .toggle:hover { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+  .toggle .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--alm-success); margin-right: 6px; vertical-align: middle; }
+  body.annot-off .toggle .dot { background: var(--montreal); }
+  body.annot-off .annot, body.annot-off .callout, body.annot-off .arrow-svg { display: none !important; }
+
+  /* ---------- Legend ---------- */
+  .legend {
+    max-width: 1320px;
+    margin: 0 auto 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .legend .card {
+    border: 1.5px dashed var(--ink);
+    background: rgba(255,255,255,.6);
+    padding: 14px 16px;
+    border-radius: 12px;
+  }
+  .legend h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: 0 0 8px;
+    color: var(--chateau);
+  }
+  .legend p, .legend li {
+    font-size: 13px;
+    margin: 0;
+    color: var(--ink);
+  }
+  .legend ul { margin: 0; padding: 0 0 0 16px; }
+  .case-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  .case {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    border: 1.2px solid var(--ink);
+    background: var(--paper);
+  }
+  .case.an { background: rgba(11,160,183,.12); border-color: var(--alm-teal); color: var(--alm-navy); }
+  .case.na { background: rgba(254,156,9,.16); border-color: var(--alm-butter); color: #6e4400; }
+  .case.nn { background: var(--alice); }
+
+  /* ---------- Exploration section ---------- */
+  .exp {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 56px 0 24px;
+  }
+  .exp + .exp { border-top: 2px dashed var(--montreal); }
+  .exp-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 28px;
+    align-items: end;
+    margin-bottom: 12px;
+  }
+  .exp-tag {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 84px;
+    line-height: .9;
+    color: var(--alm-navy);
+    letter-spacing: -.04em;
+  }
+  .exp-tag .slash { color: var(--alm-teal); }
+  .exp-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 6px;
+    letter-spacing: -.01em;
+  }
+  .exp-sub {
+    font-size: 14px;
+    color: var(--chateau);
+    max-width: 700px;
+    margin: 0;
+  }
+  .exp-stamp {
+    font-family: var(--hand);
+    font-size: 26px;
+    color: var(--alm-coral);
+    transform: rotate(-3deg);
+    border: 2px solid var(--alm-coral);
+    padding: 6px 12px;
+    border-radius: 8px;
+    align-self: center;
+  }
+  .exp-stamp.ok { color: var(--alm-success); border-color: var(--alm-success); }
+  .exp-stamp.wip { color: var(--alm-butter); border-color: var(--alm-butter); }
+
+  .exp-rationale {
+    margin: 18px 0 36px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,.7);
+    border-left: 4px solid var(--alm-teal);
+    border-radius: 4px 12px 12px 4px;
+    font-size: 14px;
+    max-width: 1100px;
+  }
+  .exp-rationale b { color: var(--alm-navy); }
+  .exp-rationale .law {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--alm-teal);
+    background: rgba(11,160,183,.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  /* ---------- Screen frame ---------- */
+  .screen {
+    margin: 32px 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 32px;
+    align-items: start;
+  }
+  .screen.full { grid-template-columns: 1fr; }
+  .screen-head {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .screen-step {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+  }
+  .urlchip {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 5px 10px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .urlchip::before {
+    content: "";
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--alm-success);
+  }
+  .screen-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .screen-tag.skip { background: rgba(239,69,80,.1); border-color: var(--alm-coral); color: #8a1f24; }
+  .screen-tag.state { background: rgba(254,156,9,.15); border-color: var(--alm-butter); color: #6e4400; }
+
+  .browser {
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 6px 6px 0 rgba(0,0,0,.08);
+  }
+  .browser .chrome {
+    background: var(--ghost);
+    border-bottom: 1px solid var(--gainsboro);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .browser .lights { display: flex; gap: 6px; }
+  .browser .lights span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gainsboro);
+    border: 1px solid var(--montreal);
+  }
+  .browser .urlbar {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--gainsboro);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--chateau);
+  }
+  .browser .urlbar b { color: var(--ink); font-weight: 500; }
+  .browser .tab-strip {
+    display: flex;
+    gap: 4px;
+    padding: 0 12px;
+    background: var(--ghost);
+    border-bottom: 1px solid var(--gainsboro);
+  }
+  .browser .tab-strip span {
+    padding: 6px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--chateau);
+    border-bottom: 2px solid transparent;
+  }
+  .browser .tab-strip span.active { color: var(--ink); border-bottom-color: var(--alm-teal); }
+
+  /* App header inside browser */
+  .app-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px dashed var(--gainsboro);
+  }
+  .app-logo {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--alm-navy);
+    letter-spacing: -.02em;
+  }
+  .app-nav { display: flex; gap: 18px; font-size: 12px; color: var(--chateau); font-family: var(--mono); }
+  .app-nav .active { color: var(--alm-teal); font-weight: 500; }
+  .app-actions { display: flex; gap: 10px; font-size: 12px; font-family: var(--mono); color: var(--chateau); }
+
+  /* ---------- Sketchy primitives ---------- */
+  .box { border: 1.5px solid var(--ink); border-radius: 8px; background: #fff; }
+  .box.dashed { border-style: dashed; }
+  .box.muted { background: var(--alice); border-color: var(--montreal); }
+  .box.input {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--chateau);
+  }
+  .box.input.filled { color: var(--ink); background: #fff; }
+  .box.input .ico {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--chateau); border-radius: 4px; flex: 0 0 18px;
+  }
+  .box.input .ico.pin { border-radius: 50% 50% 50% 0; transform: rotate(-45deg); }
+  .box.input .ico.plane { border-radius: 50%; background: rgba(254,156,9,.2); border-color: var(--alm-butter); }
+  .box.input .ico.cal { border-radius: 3px; background: repeating-linear-gradient(to bottom, var(--alice) 0 3px, transparent 3px 5px); }
+  .box.input .ico.clock { border-radius: 50%; }
+  .box.input .label { font-family: var(--body); font-size: 11px; color: var(--montreal); text-transform: uppercase; letter-spacing: .08em; display: block; }
+  .box.input .val { display: block; font-family: var(--mono); font-size: 14px; color: var(--ink); }
+  .box.input .stack { flex: 1; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    border: 1.5px solid var(--ink);
+    cursor: default;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .btn.primary { background: var(--alm-teal); color: #fff; border-color: var(--alm-teal); }
+  .btn.ghost   { background: transparent; }
+  .btn.warn    { background: var(--alm-butter); color: var(--ink); border-color: var(--alm-butter); }
+  .btn.link    { background: transparent; border: none; color: var(--alm-teal); text-decoration: underline; padding: 0; box-shadow: none; }
+  .btn.sm      { padding: 6px 12px; font-size: 11px; }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1.5px solid var(--ink);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-family: var(--mono);
+    font-size: 11px;
+    background: #fff;
+  }
+  .chip.edit::after {
+    content: "✎"; font-family: var(--body); font-size: 12px; color: var(--alm-teal);
+  }
+  .chip.teal { background: var(--alm-teal); color: #fff; border-color: var(--alm-teal); }
+  .chip.butter { background: rgba(254,156,9,.18); border-color: var(--alm-butter); color: #6e4400; }
+  .chip.success { background: rgba(49,158,55,.14); border-color: var(--alm-success); color: #135b18; }
+  .chip.coral { background: rgba(239,69,80,.12); border-color: var(--alm-coral); color: #8a1f24; }
+
+  /* placeholder lines */
+  .ph { background: var(--alice); border-radius: 4px; height: 10px; }
+  .ph.short { width: 40%; }
+  .ph.mid { width: 65%; }
+  .ph.long { width: 88%; }
+  .ph.title { height: 14px; background: var(--gainsboro); }
+
+  /* Section title inside frames */
+  .panel-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 10px;
+    color: var(--alm-navy);
+  }
+  .micro {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--chateau);
+  }
+
+  /* Annotation column on right of screen */
+  .annot {
+    font-family: var(--hand);
+    font-size: 18px;
+    color: var(--alm-navy);
+    line-height: 1.25;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 60px;
+  }
+  .annot .note {
+    position: relative;
+    padding-left: 18px;
+  }
+  .annot .note::before {
+    content: "";
+    position: absolute; left: 0; top: 8px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--alm-butter);
+    border: 1.5px solid var(--ink);
+  }
+  .annot .note.teal::before { background: var(--alm-teal); }
+  .annot .note.coral::before { background: var(--alm-coral); }
+  .annot .note.success::before { background: var(--alm-success); }
+  .annot .law-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: var(--ink);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transform: translateY(-2px);
+    margin-right: 4px;
+  }
+
+  /* Callout overlay */
+  .callout-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: -16px;
+  }
+  .callout {
+    font-family: var(--hand);
+    font-size: 17px;
+    color: var(--alm-navy);
+    background: rgba(255,251,235,.85);
+    border: 1.5px dashed var(--alm-butter);
+    border-radius: 12px;
+    padding: 10px 14px;
+    line-height: 1.25;
+  }
+  .callout b { color: var(--alm-coral); font-weight: 700; }
+
+  /* ---------- Diff strip (for N→A and N→N) ---------- */
+  .diffs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 56px 0 16px;
+  }
+  .diff {
+    border: 1.5px solid var(--ink);
+    border-radius: 16px;
+    background: #fff;
+    padding: 22px 24px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,.06);
+  }
+  .diff h4 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 0 4px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .diff .sub { font-size: 12px; color: var(--chateau); margin: 0 0 14px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+  .diff ul { padding: 0 0 0 0; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .diff li { font-size: 13.5px; line-height: 1.5; padding-left: 22px; position: relative; }
+  .diff li::before {
+    content: "↳";
+    position: absolute; left: 0; top: 0;
+    color: var(--alm-teal); font-weight: 700;
+  }
+  .diff li.warn::before { content: "⚠"; color: var(--alm-coral); }
+  .diff li.note::before { content: "✱"; color: var(--alm-butter); }
+  .diff .mini {
+    margin-top: 16px;
+    background: var(--ghost);
+    border: 1px dashed var(--montreal);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .diff .mini b { color: var(--alm-teal); }
+
+  /* ---------- Trip timeline ---------- */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px 0;
+  }
+  .timeline .row {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 12px;
+    align-items: start;
+    padding: 8px 0;
+    position: relative;
+  }
+  .timeline .row .node {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 13px;
+    z-index: 1;
+  }
+  .timeline .row.flight .node { background: rgba(254,156,9,.2); border-color: var(--alm-butter); }
+  .timeline .row.driver .node { background: rgba(11,160,183,.15); border-color: var(--alm-teal); }
+  .timeline .row.dest   .node { background: rgba(49,158,55,.15); border-color: var(--alm-success); }
+  .timeline .row.wait   .node { background: var(--alice); border-style: dashed; }
+  .timeline .row::after {
+    content: "";
+    position: absolute;
+    left: 19px; top: 36px; bottom: -8px;
+    width: 1.5px;
+    background: var(--ink);
+    z-index: 0;
+  }
+  .timeline .row:last-child::after { display: none; }
+  .timeline .row.wait::after { background: repeating-linear-gradient(to bottom, var(--ink) 0 3px, transparent 3px 6px); }
+  .timeline .row .label { font-size: 13px; font-weight: 500; }
+  .timeline .row .desc  { font-size: 12px; color: var(--chateau); font-family: var(--mono); }
+  .timeline .row .time {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    align-self: center;
+  }
+  .timeline .row.dim { opacity: .35; }
+
+  /* ---------- Cards (selection, flight, car, etc) ---------- */
+  .stack { display: flex; flex-direction: column; gap: 10px; }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .grow { flex: 1; }
+
+  .flight-card {
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 36px 1fr auto auto;
+    gap: 14px;
+    align-items: center;
+    cursor: default;
+  }
+  .flight-card.selected { border-color: var(--alm-teal); background: rgba(11,160,183,.06); box-shadow: 0 0 0 2px rgba(11,160,183,.25); }
+  .flight-card .airline-mark {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--alice); border: 1px solid var(--gainsboro);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+  }
+  .flight-card .route {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .flight-card .route b { font-weight: 600; }
+  .flight-card .meta { font-size: 11px; color: var(--chateau); font-family: var(--mono); }
+  .flight-card .time { text-align: right; font-family: var(--mono); font-size: 13px; }
+
+  .car-card {
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 14px;
+    align-items: center;
+  }
+  .car-card .ph-img {
+    height: 60px;
+    background: var(--alice);
+    border-radius: 8px;
+    border: 1px dashed var(--montreal);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 9px; color: var(--montreal);
+    text-transform: uppercase; letter-spacing: .1em;
+  }
+  .car-card .price { text-align: right; font-family: var(--mono); font-size: 16px; font-weight: 600; }
+  .car-card .price .lbl { display: block; font-size: 10px; color: var(--chateau); font-weight: 400; text-transform: uppercase; letter-spacing: .08em; }
+  .car-card .name { font-family: var(--display); font-weight: 700; font-size: 15px; }
+  .car-card .feats { font-size: 11px; color: var(--chateau); font-family: var(--mono); margin-top: 4px; }
+  .car-card.recommended { border-color: var(--alm-teal); background: rgba(11,160,183,.04); }
+  .car-card .badge {
+    font-family: var(--mono); font-size: 9px;
+    background: var(--alm-teal); color: #fff;
+    padding: 2px 6px; border-radius: 100px;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 4px; display: inline-block;
+  }
+
+  /* Banner */
+  .banner {
+    display: flex; align-items: center; gap: 12px;
+    border: 1.5px solid var(--alm-butter);
+    background: rgba(254,156,9,.12);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  .banner.delay { border-color: var(--alm-coral); background: rgba(239,69,80,.08); }
+  .banner.success { border-color: var(--alm-success); background: rgba(49,158,55,.1); }
+  .banner b { color: var(--alm-navy); }
+  .banner .ico {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid var(--alm-butter);
+    background: rgba(254,156,9,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 11px;
+    flex: 0 0 22px;
+  }
+  .banner.delay .ico { border-color: var(--alm-coral); background: rgba(239,69,80,.2); }
+  .banner.success .ico { border-color: var(--alm-success); background: rgba(49,158,55,.2); }
+
+  /* trips prefill cards */
+  .trip-card {
+    border: 1.5px dashed var(--ink);
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 38px 1fr auto;
+    gap: 14px;
+    align-items: center;
+  }
+  .trip-card .mark {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--alice); border: 1px solid var(--gainsboro);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+  }
+  .trip-card.flight .mark { background: rgba(254,156,9,.18); border-color: var(--alm-butter); }
+  .trip-card.hotel .mark  { background: rgba(11,160,183,.12); border-color: var(--alm-teal); }
+  .trip-card .ttl { font-weight: 600; font-size: 14px; }
+  .trip-card .sub { font-size: 11px; font-family: var(--mono); color: var(--chateau); margin-top: 2px; }
+  .trip-card .cta { font-family: var(--mono); font-size: 11px; color: var(--alm-teal); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* arrows between screens */
+  .step-arrow {
+    grid-column: 1 / -1;
+    margin: -8px 0 -8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--hand);
+    font-size: 22px;
+    color: var(--alm-teal);
+  }
+  .step-arrow::before {
+    content: "";
+    width: 60px; height: 2px;
+    background: var(--alm-teal);
+    border-radius: 2px;
+    transform: skewX(-12deg);
+  }
+  .step-arrow::after {
+    content: "→";
+    margin-left: 8px;
+    font-family: var(--body);
+    font-size: 24px;
+  }
+
+  /* Skeleton lines */
+  .skel { background: linear-gradient(90deg, var(--alice) 0, var(--ghost) 50%, var(--alice) 100%); border-radius: 4px; }
+
+  /* Hourly entry */
+  .hourly {
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    background: var(--alm-navy);
+    color: #fff;
+    padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px;
+  }
+  .hourly h4 { margin: 0; font-family: var(--display); font-size: 16px; font-weight: 700; }
+  .hourly p { margin: 2px 0 0; font-size: 12px; opacity: .75; font-family: var(--mono); }
+  .hourly .arrow { font-size: 20px; }
+
+  /* Summary bar above results */
+  .sumbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    background: #fff;
+    flex-wrap: wrap;
+  }
+  .sumbar .seg { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .sumbar .div { width: 1px; height: 20px; background: var(--gainsboro); }
+  .sumbar .seg .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--alm-teal); }
+  .sumbar .seg.flight .dot { background: var(--alm-butter); }
+  .sumbar .seg.dest .dot { background: var(--alm-success); }
+
+  /* Side filters mock */
+  .filters {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .filters .f {
+    font-family: var(--mono); font-size: 11px;
+    padding: 4px 10px;
+    border: 1.5px solid var(--ink);
+    border-radius: 100px;
+    background: #fff;
+  }
+  .filters .f.on { background: var(--ink); color: #fff; }
+
+  /* ---------- Specific frame layouts ---------- */
+  .a-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: 600px;
+  }
+  .a-grid .left { padding: 24px; border-right: 1px solid var(--gainsboro); background: var(--ghost); }
+  .a-grid .right { padding: 24px; }
+
+  .b-grid {
+    padding: 24px;
+  }
+
+  .widget {
+    border: 1.5px solid var(--ink);
+    border-radius: 16px;
+    background: #fff;
+    padding: 8px;
+    box-shadow: 0 4px 0 rgba(0,0,0,.05);
+  }
+  .widget .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .widget .row.expanded {
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  }
+  .widget .field {
+    background: var(--ghost);
+    border-radius: 10px;
+    padding: 10px 14px;
+    border: 1.5px dashed transparent;
+  }
+  .widget .field .label {
+    font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--chateau);
+  }
+  .widget .field .val {
+    font-family: var(--mono); font-size: 14px;
+    color: var(--ink);
+    margin-top: 2px;
+    display: block;
+    min-height: 18px;
+  }
+  .widget .field .val.placeholder { color: var(--montreal); }
+  .widget .field.new {
+    border-color: var(--alm-butter);
+    background: rgba(254,156,9,.08);
+    animation: none;
+  }
+  .widget .field.airport {
+    background: rgba(254,156,9,.08);
+  }
+  .widget .go {
+    padding: 0 22px;
+    background: var(--alm-teal);
+    color: #fff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px;
+    text-transform: uppercase; letter-spacing: .08em;
+    border: 1.5px solid var(--alm-teal);
+  }
+  .widget .flight-row {
+    margin-top: 8px;
+    padding: 12px 14px;
+    background: rgba(11,160,183,.06);
+    border: 1.5px solid var(--alm-teal);
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 36px 1fr auto auto;
+    gap: 14px;
+    align-items: center;
+  }
+  .widget .flight-row .ck {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--alm-teal); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 14px;
+  }
+
+  /* C adaptive markings */
+  .morph-arrow {
+    text-align: center;
+    font-family: var(--hand);
+    font-size: 24px;
+    color: var(--alm-teal);
+    margin: 12px 0;
+  }
+
+  /* footer */
+  .doc-footer {
+    max-width: 1320px;
+    margin: 80px auto 0;
+    border-top: 1.5px dashed var(--montreal);
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+    font-size: 13px;
+    color: var(--chateau);
+  }
+  .doc-footer h4 { font-family: var(--display); font-size: 16px; margin: 0 0 8px; color: var(--ink); }
+  .doc-footer ul { padding-left: 18px; margin: 0; }
+
+  /* small responsive guard */
+  @media (max-width: 1200px) {
+    .screen { grid-template-columns: 1fr; }
+    .annot { padding-top: 0; }
+    .diffs { grid-template-columns: 1fr; }
+    .legend { grid-template-columns: repeat(2, 1fr); }
+  }
+
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <div>
+    <div class="meta">Almosafer Rides · Desktop web · Wireframes v1</div>
+    <h1>Airport transfer — search experience</h1>
+  </div>
+  <div class="right">
+    <div class="sub">three takes, one product model</div>
+    <button class="toggle" id="annot-toggle" aria-pressed="true">
+      <span class="dot"></span> Annotations on
+    </button>
+  </div>
+</header>
+
+<!-- ============ LEGEND / KEY ============ -->
+<section class="legend">
+  <div class="card">
+    <h3>Three in-scope cases</h3>
+    <div class="case-badges" style="margin-bottom:8px">
+      <span class="case an">A → N · pickup</span>
+      <span class="case na">N → A · drop-off</span>
+      <span class="case nn">N → N · normal</span>
+    </div>
+    <p>Type is <b>inferred</b> from the fields — never a toggle.</p>
+  </div>
+  <div class="card">
+    <h3>URL / history rules</h3>
+    <ul>
+      <li><span class="urlchip" style="font-size:10px">/rides</span> landing</li>
+      <li><span class="urlchip" style="font-size:10px">/rides/flight</span> flight step (airport cases only)</li>
+      <li><span class="urlchip" style="font-size:10px">/rides/cars</span> results</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Edits</h3>
+    <p><span class="chip" style="font-size:10px">pax</span> inline · always · everywhere</p>
+    <p style="margin-top:6px"><span class="chip butter" style="font-size:10px">airport</span> routes back to flight step</p>
+    <p style="margin-top:6px"><span class="chip" style="font-size:10px">date/time</span> inline at the step that owns it</p>
+  </div>
+  <div class="card">
+    <h3>Reading the doc</h3>
+    <p style="font-family:var(--hand);font-size:18px;color:var(--alm-navy);line-height:1.2">handwritten = rationale &amp; UX-law callouts</p>
+    <p style="margin-top:6px"><span class="micro">mono caps</span> = system / URL / state labels</p>
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- =========== EXPLORATION A — SIDE PANEL =============== -->
+<!-- ====================================================== -->
+<section class="exp" id="exp-a">
+  <div class="exp-header">
+    <div class="exp-tag">A<span class="slash">/</span></div>
+    <div>
+      <h2 class="exp-title">Search on the side · live trip timeline</h2>
+      <p class="exp-sub">A persistent <b>left input column</b> collects route → flight → pax progressively. The <b>right canvas</b> is the trip story — empty at first, then a growing timeline once an airport is detected. Timing is the anxiety in an airport transfer, not route geometry.</p>
+    </div>
+    <div class="exp-stamp ok">recommend</div>
+  </div>
+
+  <div class="exp-rationale">
+    <span class="law">Visibility of system status</span>
+    <span class="law">Progressive disclosure</span>
+    <span class="law">Recognition over recall</span>
+    The left panel never disappears, so a user can always see where they are in the input set. The right side does the heavy lifting of explaining <b>what we'll do for them</b> — when the driver arrives, how long we wait, when they reach the gate. URLs change on real step changes (landing → flight → cars); flight selection is in-page state inside <code class="micro" style="background:var(--alice);padding:1px 5px;border-radius:3px">/rides/flight</code>.
+  </div>
+
+  <!-- ============ A · SCREEN 1 — Landing ============ -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">1 · Landing</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides</span>
+      <span class="screen-tag">all cases start here</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides</b></div></div>
+      <div class="app-head">
+        <div class="app-logo">almosafer · <span style="color:var(--alm-teal)">rides</span></div>
+        <div class="app-nav"><span>Flights</span><span>Hotels</span><span class="active">Rides</span><span>Activities</span></div>
+        <div class="app-actions"><span>SAR</span><span>EN</span><span>Account</span></div>
+      </div>
+      <div class="a-grid">
+        <div class="left">
+          <p class="micro" style="margin:0 0 6px">Where to?</p>
+          <h4 class="panel-title" style="font-size:22px;margin-bottom:18px">Plan your ride</h4>
+          <div class="stack" style="gap:8px">
+            <div class="box input"><span class="ico pin"></span><div class="stack" style="gap:0"><span class="label">Pickup</span><span style="color:var(--montreal);font-family:var(--mono);font-size:13px">Address, hotel, or airport</span></div></div>
+            <div class="box input"><span class="ico pin"></span><div class="stack" style="gap:0"><span class="label">Drop-off</span><span style="color:var(--montreal);font-family:var(--mono);font-size:13px">Address, hotel, or airport</span></div></div>
+            <button class="btn primary" style="margin-top:8px;width:100%">Find a ride</button>
+          </div>
+          <p class="micro" style="margin:22px 0 8px">Need it by the hour?</p>
+          <div class="hourly">
+            <div><h4>Hourly rides</h4><p>2h min · same driver waits</p></div>
+            <div class="arrow">→</div>
+          </div>
+        </div>
+        <div class="right">
+          <p class="micro" style="margin:0 0 12px">From your trips</p>
+          <div class="stack" style="gap:10px">
+            <div class="trip-card flight">
+              <div class="mark" style="color:var(--alm-butter)">✈</div>
+              <div><div class="ttl">Flynas XY 304 · CAI → RUH</div><div class="sub">Sat 14 Jun · arrives 22:10 · Terminal 5</div></div>
+              <div class="cta">Use →</div>
+            </div>
+            <div class="trip-card hotel">
+              <div class="mark" style="color:var(--alm-teal)">⌂</div>
+              <div><div class="ttl">Marriott Riyadh Diplomatic Quarter</div><div class="sub">Check-in Sat 14 Jun · 1 night</div></div>
+              <div class="cta">Ride to/from →</div>
+            </div>
+            <div class="trip-card">
+              <div class="mark">+</div>
+              <div><div class="ttl" style="color:var(--chateau)">No upcoming trip?</div><div class="sub">Start from scratch above ↖</div></div>
+              <div></div>
+            </div>
+          </div>
+
+          <p class="micro" style="margin:28px 0 10px">Why book ahead with Almosafer</p>
+          <div class="row" style="gap:14px">
+            <div class="box dashed" style="flex:1;padding:14px;text-align:center">
+              <div style="font-family:var(--display);font-weight:700;font-size:22px;color:var(--alm-teal)">15m</div>
+              <div class="micro">free wait on arrivals</div>
+            </div>
+            <div class="box dashed" style="flex:1;padding:14px;text-align:center">
+              <div style="font-family:var(--display);font-weight:700;font-size:22px;color:var(--alm-butter)">live</div>
+              <div class="micro">flight-delay tracking</div>
+            </div>
+            <div class="box dashed" style="flex:1;padding:14px;text-align:center">
+              <div style="font-family:var(--display);font-weight:700;font-size:22px;color:var(--alm-success)">SAR</div>
+              <div class="micro">fare locked at booking</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal"><span class="law-tag">Hick</span>Only TWO fields. No "airport / city" toggle to short-circuit thinking.</div>
+      <div class="note">Flight card on the right is the <b>fastest path</b> for the airport case — one click prefills everything.</div>
+      <div class="note coral">Hourly is its <b>own card below</b>, not a tab. Never sells a normal ride against a "type" decision.</div>
+      <div class="note success"><span class="law-tag">Jakob</span>Header keeps Flights/Hotels/Rides so this looks like the rest of Almosafer.</div>
+    </aside>
+
+    <div class="callout-row">
+      <div class="callout"><b>N → N path:</b> two non-airports → "Find a ride" goes straight to <code class="micro">/rides/cars</code>. Skips flight step entirely.</div>
+      <div class="callout"><b>Hotel card path:</b> only fills one field (still N→N) — but if user later types an airport, we'll capture flight details.</div>
+      <div class="callout"><b>Empty state ≠ blank.</b> Right canvas always has trips OR value-prompt cards, never void.</div>
+    </div>
+  </div>
+
+  <!-- ============ A · SCREEN 2 — Flight step, multi-match ============ -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">2 · Flight step — date first, then airline/number</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight</span>
+      <span class="screen-tag state">A → N · multiple matches</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight</b></div></div>
+      <div class="a-grid">
+        <div class="left">
+          <p class="micro" style="margin:0 0 6px">Step 2 of 3 · airport detected</p>
+          <h4 class="panel-title" style="font-size:20px">Your arriving flight</h4>
+          <div class="stack" style="gap:8px;margin-bottom:18px">
+            <div class="box input filled" style="background:rgba(254,156,9,.08);border-color:var(--alm-butter)"><span class="ico plane"></span><div class="stack" style="gap:0"><span class="label">Pickup · airport</span><span class="val">RUH · King Khalid Intl</span></div><span class="chip edit sm">edit</span></div>
+            <div class="box input filled"><span class="ico pin"></span><div class="stack" style="gap:0"><span class="label">Drop-off</span><span class="val">Marriott Diplomatic Quarter</span></div><span class="chip edit sm">edit</span></div>
+          </div>
+
+          <p class="micro" style="margin:0 0 6px;color:var(--alm-coral)">Required · used to find your flight</p>
+          <div class="box input filled" style="margin-bottom:8px"><span class="ico cal"></span><div class="stack" style="gap:0"><span class="label">Arrival date</span><span class="val">Sat 14 Jun 2026</span></div><span class="chip edit sm">edit</span></div>
+
+          <p class="micro" style="margin:14px 0 6px">Airline or flight number</p>
+          <div class="box input filled" style="border-color:var(--alm-teal);box-shadow:0 0 0 2px rgba(11,160,183,.15)"><span class="ico plane"></span><div class="stack grow" style="gap:0"><span class="label">Search</span><span class="val">XY 30…</span></div></div>
+          <p style="font-size:11px;color:var(--chateau);margin:6px 0 0;font-family:var(--mono)">Accepts "Flynas", "XY30", partials</p>
+
+          <div style="margin-top:24px;border-top:1px dashed var(--gainsboro);padding-top:14px">
+            <button class="btn link" style="font-size:12px">I don't have my flight details →</button>
+          </div>
+        </div>
+        <div class="right">
+          <p class="micro" style="margin:0 0 12px">3 flights match "XY 30" on Sat 14 Jun</p>
+          <div class="stack">
+            <div class="flight-card">
+              <div class="airline-mark" style="color:#0d6">XY</div>
+              <div>
+                <div class="route"><b>Flynas XY 304</b> · CAI → RUH</div>
+                <div class="meta">Cairo Intl 19:25 → King Khalid 22:10</div>
+              </div>
+              <div class="time"><b>22:10</b><div class="meta">Terminal 5</div></div>
+              <button class="btn sm primary">Select</button>
+            </div>
+            <div class="flight-card">
+              <div class="airline-mark" style="color:#0d6">XY</div>
+              <div>
+                <div class="route"><b>Flynas XY 306</b> · DXB → RUH</div>
+                <div class="meta">Dubai Intl 21:00 → King Khalid 23:55</div>
+              </div>
+              <div class="time"><b>23:55</b><div class="meta">Terminal 5</div></div>
+              <button class="btn sm primary">Select</button>
+            </div>
+            <div class="flight-card">
+              <div class="airline-mark" style="color:#0d6">XY</div>
+              <div>
+                <div class="route"><b>Flynas XY 308</b> · JED → RUH</div>
+                <div class="meta">Jeddah 23:10 → King Khalid 00:40 (+1)</div>
+              </div>
+              <div class="time"><b>00:40</b><div class="meta">Terminal 5</div></div>
+              <button class="btn sm primary">Select</button>
+            </div>
+          </div>
+
+          <p class="micro" style="margin:24px 0 10px">Trip preview · once you pick a flight</p>
+          <div class="timeline" style="opacity:.55">
+            <div class="row flight"><div class="node">✈</div><div><div class="label">Flight lands</div><div class="desc">pick a flight to see</div></div><div class="time">—:—</div></div>
+            <div class="row wait"><div class="node">·</div><div><div class="label">Free wait window</div><div class="desc">15 min after landing</div></div><div class="time">+15</div></div>
+            <div class="row driver"><div class="node">▣</div><div><div class="label">Driver meets you</div><div class="desc">arrivals · terminal TBD</div></div><div class="time">—:—</div></div>
+            <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott Diplomatic Q.</div><div class="desc">~32 min drive</div></div><div class="time">—:—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note coral"><span class="law-tag">Errors</span>Date is asked FIRST and is required. Without it, flight number is ambiguous (daily flights repeat).</div>
+      <div class="note teal"><span class="law-tag">Postel</span>Search accepts "Flynas", "XY", "30", "304" — partials all welcome.</div>
+      <div class="note">Multiple matches → don't auto-pick. Show all three with arrival times and terminals so the choice is scannable.</div>
+      <div class="note success">Skip path is never hidden. Quiet link at the bottom of the panel — see screen 3.</div>
+    </aside>
+
+    <div class="callout-row">
+      <div class="callout"><b>Doherty:</b> sub-400ms feedback. Timeline on the right starts rendering skeleton rows the instant the date is filled.</div>
+      <div class="callout"><b>Single match</b> auto-confirms (skip the list, go straight to screen 4 state) — saves a click.</div>
+      <div class="callout"><b>No match</b> → graceful → skip path. Never a dead end.</div>
+    </div>
+  </div>
+
+  <!-- ============ A · SCREEN 3 — No match / Skip ============ -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">3 · No match → manual skip path</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight</span>
+      <span class="screen-tag skip">A → N · skip / no flight yet</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight?manual=1</b></div></div>
+      <div class="a-grid">
+        <div class="left">
+          <p class="micro" style="margin:0 0 6px">Step 2 of 3 · manual entry</p>
+          <h4 class="panel-title" style="font-size:20px">Tell us when to be there</h4>
+          <div class="box input filled" style="margin-bottom:8px;background:rgba(254,156,9,.08);border-color:var(--alm-butter)"><span class="ico plane"></span><div class="stack" style="gap:0"><span class="label">Pickup · airport</span><span class="val">RUH · King Khalid Intl</span></div></div>
+          <div class="box input filled" style="margin-bottom:8px"><span class="ico pin"></span><div class="stack" style="gap:0"><span class="label">Drop-off</span><span class="val">Marriott Diplomatic Quarter</span></div></div>
+          <div class="box input filled" style="margin-bottom:8px"><span class="ico cal"></span><div class="stack" style="gap:0"><span class="label">Date</span><span class="val">Sat 14 Jun 2026</span></div></div>
+          <div class="box input filled" style="margin-bottom:8px"><span class="ico clock"></span><div class="stack" style="gap:0"><span class="label">Pickup time</span><span class="val">22:30</span></div></div>
+
+          <p class="micro" style="margin:14px 0 8px">Terminal</p>
+          <div class="row" style="gap:6px;flex-wrap:wrap">
+            <span class="chip">T1</span><span class="chip">T2</span><span class="chip">T3</span><span class="chip">T4</span><span class="chip teal">T5</span>
+          </div>
+
+          <div style="margin-top:24px;border-top:1px dashed var(--gainsboro);padding-top:14px">
+            <button class="btn link" style="font-size:12px">← back to flight search</button>
+          </div>
+
+          <button class="btn primary" style="width:100%;margin-top:16px">See cars</button>
+        </div>
+        <div class="right">
+          <div class="banner" style="margin-bottom:16px">
+            <div class="ico">!</div>
+            <div>We couldn't find <b>"XY 9999"</b> on Sat 14 Jun. <b>No worries</b> — set a terminal and pickup time yourself.</div>
+          </div>
+
+          <p class="micro" style="margin:0 0 8px">Trip preview · manual timing</p>
+          <div class="timeline">
+            <div class="row driver"><div class="node">▣</div><div><div class="label">Driver meets you</div><div class="desc">Terminal 5 · arrivals curb</div></div><div class="time">22:30</div></div>
+            <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott Diplomatic Q.</div><div class="desc">~32 min drive</div></div><div class="time">23:02</div></div>
+          </div>
+
+          <div class="banner success" style="margin-top:18px">
+            <div class="ico">i</div>
+            <div><b>You can add the flight later.</b> Open this booking after you have your boarding pass and we'll switch on delay tracking automatically.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note">No match ≠ failure. The fallback is a <b>real path forward</b>, not an error screen.</div>
+      <div class="note teal"><span class="law-tag">Control</span>The "back to flight search" link is always there; the user is never stuck in manual mode.</div>
+      <div class="note success">Promise of <b>future delay tracking</b> after the user has the flight # keeps the door open.</div>
+      <div class="note coral">Banner sits in the right canvas, not the left input column, so the inputs stay quiet and the user's focus stays on the change.</div>
+    </aside>
+  </div>
+
+  <!-- ============ A · SCREEN 4 — Flight selected, auto-fill ============ -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">4 · Flight selected → trip timeline live</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight</span>
+      <span class="screen-tag state">In-page state · same URL · no history entry</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight</b></div></div>
+      <div class="a-grid">
+        <div class="left">
+          <p class="micro" style="margin:0 0 6px">Step 2 of 3 · ✓ flight confirmed</p>
+          <h4 class="panel-title" style="font-size:20px">Looks good — last details</h4>
+
+          <div class="flight-card selected" style="margin-bottom:14px">
+            <div class="airline-mark">XY</div>
+            <div>
+              <div class="route"><b>Flynas XY 304</b> · CAI → RUH</div>
+              <div class="meta">Sat 14 Jun · lands 22:10 · T5</div>
+            </div>
+            <div></div>
+            <span class="chip edit sm">change</span>
+          </div>
+
+          <p class="micro" style="margin:0 0 6px">Passengers</p>
+          <div class="row" style="margin-bottom:8px">
+            <div class="box input filled" style="flex:1"><div class="stack" style="gap:0"><span class="label">Adults</span><span class="val">2</span></div></div>
+            <div class="box input filled" style="flex:1"><div class="stack" style="gap:0"><span class="label">Children</span><span class="val">0</span></div></div>
+            <div class="box input filled" style="flex:1"><div class="stack" style="gap:0"><span class="label">Bags</span><span class="val">3</span></div></div>
+          </div>
+
+          <p class="micro" style="margin:14px 0 6px">Optional</p>
+          <div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:14px">
+            <span class="chip">Child seat</span>
+            <span class="chip">Meet &amp; greet</span>
+            <span class="chip">English-speaking driver</span>
+          </div>
+
+          <button class="btn primary" style="width:100%">See cars</button>
+        </div>
+        <div class="right">
+          <div class="banner success" style="margin-bottom:18px">
+            <div class="ico">✓</div>
+            <div>Pickup auto-set to <b>22:25</b> (15 min after landing). We'll track <b>XY 304</b> and shift this if it's delayed.</div>
+          </div>
+
+          <p class="micro" style="margin:0 0 8px">Your trip</p>
+          <div class="timeline">
+            <div class="row flight"><div class="node">✈</div><div><div class="label">XY 304 lands at RUH T5</div><div class="desc">on time · arriving from CAI</div></div><div class="time">22:10</div></div>
+            <div class="row wait"><div class="node">·</div><div><div class="label">Free wait window</div><div class="desc">immigration · bags · grace</div></div><div class="time">+15</div></div>
+            <div class="row driver"><div class="node">▣</div><div><div class="label">Driver meets you</div><div class="desc">T5 arrivals · with name board</div></div><div class="time">22:25</div></div>
+            <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott Diplomatic Q.</div><div class="desc">~32 min drive · light traffic</div></div><div class="time">22:57</div></div>
+          </div>
+
+          <p class="micro" style="margin:24px 0 8px">If your flight is delayed</p>
+          <div class="banner delay">
+            <div class="ico">↻</div>
+            <div>Pickup time auto-shifts to <b>land + 15 min</b>. The free-wait window covers up to <b>1 hour</b> beyond scheduled.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note success"><span class="law-tag">Status</span>"22:10 → 22:25" is shown EXPLICITLY. Computed timing must be visible, not just trusted.</div>
+      <div class="note teal">URL doesn't change. Single browser-back from <code class="micro">/cars</code> still lands here, with the flight selection intact.</div>
+      <div class="note">Optional add-ons live AFTER the flight is confirmed — never block the airport detection path.</div>
+      <div class="note coral">Delay-handling rules are shown <b>before</b> the user pays for a car. Sets expectations early.</div>
+    </aside>
+  </div>
+
+  <!-- ============ A · SCREEN 5 — Car results ============ -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">5 · Car results — editable summary above the list</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/cars</span>
+      <span class="screen-tag">A → N · with delay banner state</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/cars</b></div></div>
+      <div class="a-grid">
+        <div class="left">
+          <p class="micro" style="margin:0 0 8px">Your trip</p>
+          <div class="timeline">
+            <div class="row flight"><div class="node">✈</div><div><div class="label">XY 304 · CAI → RUH T5</div><div class="desc"><b style="color:var(--alm-coral)">delayed 25 min</b> · now 22:35</div></div><div class="time">22:35</div></div>
+            <div class="row wait"><div class="node">·</div><div><div class="label">Free wait</div><div class="desc">15 min grace</div></div><div class="time">+15</div></div>
+            <div class="row driver"><div class="node">▣</div><div><div class="label">Driver meets you</div><div class="desc">T5 arrivals</div></div><div class="time">22:50</div></div>
+            <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott Diplomatic Q.</div><div class="desc">~32 min · light traffic</div></div><div class="time">23:22</div></div>
+          </div>
+
+          <p class="micro" style="margin:24px 0 8px">Filters</p>
+          <div class="filters">
+            <span class="f on">All</span><span class="f">Sedan</span><span class="f">SUV</span><span class="f">Van</span><span class="f">Luxury</span>
+          </div>
+          <p class="micro" style="margin:18px 0 8px">Sort</p>
+          <div class="filters">
+            <span class="f on">Recommended</span><span class="f">Price ↑</span><span class="f">Rating</span>
+          </div>
+        </div>
+        <div class="right">
+          <div class="sumbar" style="margin-bottom:14px">
+            <div class="seg flight"><span class="dot"></span><span><b style="font-weight:600">XY 304</b> · lands 22:35</span><span class="chip edit sm" style="border:none;padding:0;color:var(--alm-teal)">change</span></div>
+            <div class="div"></div>
+            <div class="seg"><span class="dot"></span><span>RUH T5 → Marriott DQ</span></div>
+            <div class="div"></div>
+            <div class="seg"><span>2 adults · 3 bags</span><span class="chip edit sm" style="border:none;padding:0;color:var(--alm-teal)">edit</span></div>
+          </div>
+
+          <div class="banner delay" style="margin-bottom:14px">
+            <div class="ico">!</div>
+            <div><b>XY 304 now lands 22:35</b> (delayed 25 min). Driver shifted to 22:50. Fare unchanged.</div>
+          </div>
+
+          <p class="micro" style="margin:0 0 10px">12 cars · sorted by recommended</p>
+          <div class="stack">
+            <div class="car-card recommended">
+              <div class="ph-img">car photo</div>
+              <div>
+                <span class="badge">Best match</span>
+                <div class="name">Comfort sedan · Hyundai Sonata</div>
+                <div class="feats">4 pax · 3 bags · free 15-min wait · name board</div>
+              </div>
+              <div class="price">SAR 142<span class="lbl">all in</span></div>
+            </div>
+            <div class="car-card">
+              <div class="ph-img">car photo</div>
+              <div>
+                <div class="name">SUV · Toyota Land Cruiser</div>
+                <div class="feats">6 pax · 5 bags · meet &amp; greet · child seat avail.</div>
+              </div>
+              <div class="price">SAR 218<span class="lbl">all in</span></div>
+            </div>
+            <div class="car-card">
+              <div class="ph-img">car photo</div>
+              <div>
+                <div class="name">Luxury · Mercedes E-Class</div>
+                <div class="feats">3 pax · 3 bags · english driver</div>
+              </div>
+              <div class="price">SAR 320<span class="lbl">all in</span></div>
+            </div>
+            <div class="car-card">
+              <div class="ph-img">car photo</div>
+              <div>
+                <div class="name">Van · Toyota Hiace</div>
+                <div class="feats">8 pax · 8 bags · meet &amp; greet</div>
+              </div>
+              <div class="price">SAR 265<span class="lbl">all in</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal"><span class="law-tag">Visibility</span>Delay banner is loud + the timeline updates so the new pickup time isn't a surprise.</div>
+      <div class="note">Summary bar uses the <b>edit rules</b>: pax = inline, route + flight = "change" routes back to flight step.</div>
+      <div class="note success">Timeline persists on the left even on cars — anxiety relief carries through to checkout.</div>
+      <div class="note coral">Browser <b>Back</b> from here = back to <code class="micro">/rides/flight</code> with the selected flight intact.</div>
+    </aside>
+  </div>
+
+  <!-- ============ A · DIFFS (N→A and N→N) ============ -->
+  <div class="diffs">
+    <div class="diff">
+      <h4>N → A drop-off · diff</h4>
+      <p class="sub">Same shell. Different copy. Backwards timing.</p>
+      <ul>
+        <li>Pickup field = home/hotel. Drop-off = airport (butter chip).</li>
+        <li>Step 2 asks for the <b>departure</b> flight, same date-first pattern.</li>
+        <li class="warn">Pickup time computed <b>backwards</b>: departure − (check-in + drive + safety buffer). <b>Always show the math.</b></li>
+        <li class="note">Timeline reverses: <span class="micro">home → driver → drive → curb-side T5 → check-in cutoff</span>.</li>
+        <li>Free-wait removed. Replaced with a "<b>recommend arriving 2h 20m before departure</b>" rationale row.</li>
+      </ul>
+      <div class="mini">
+        <b>Banner copy:</b> "Departure XY 213 leaves 14:30 — we'll pick you up at <b>10:55</b> so you reach T5 by <b>11:35</b> (2h 55m before)."
+      </div>
+    </div>
+    <div class="diff">
+      <h4>N → N normal ride · diff</h4>
+      <p class="sub">Skip the flight step entirely. Two URLs only.</p>
+      <ul>
+        <li><span class="urlchip" style="font-size:10px">/rides</span> → <span class="urlchip" style="font-size:10px">/rides/cars</span>. No <code class="micro">/flight</code>.</li>
+        <li>Step 1 left panel adds a "<b>Ride now</b> / <b>Schedule</b>" toggle below pickup/drop-off — only here.</li>
+        <li class="note">Right canvas shows trip preview as a 2-row timeline: driver meets you → destination. No flight rows.</li>
+        <li>Edit rules: both location fields editable inline, no airport routing.</li>
+        <li class="warn">Hotel-prefill path lives here too — until a user types an airport, in which case we jump back to <code class="micro">/rides/flight</code> and capture the flight details.</li>
+      </ul>
+      <div class="mini">
+        <b>Path summary:</b> trips-card flight → straight to <span class="urlchip" style="font-size:10px">/cars</span> · trips-card hotel → <span class="urlchip" style="font-size:10px">/rides</span> with one field filled · airport later → jump to <span class="urlchip" style="font-size:10px">/flight</span>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- =========== EXPLORATION B — EXPANDING WIDGET ========= -->
+<!-- ====================================================== -->
+<section class="exp" id="exp-b">
+  <div class="exp-header">
+    <div class="exp-tag">B<span class="slash">/</span></div>
+    <div>
+      <h2 class="exp-title">Expanding search widget</h2>
+      <p class="exp-sub">A compact top-of-page widget — same visual language as the Flights/Hotels search bar — that <b>grows as inputs are added</b>. Airport detected → date field injects → flight-search field injects → selected flight locks as a confirmed row inside the widget. Cars render below.</p>
+    </div>
+    <div class="exp-stamp wip">consider</div>
+  </div>
+
+  <div class="exp-rationale">
+    <span class="law">Jakob's Law</span>
+    <span class="law">Aesthetic-usability</span>
+    <span class="law">Progressive disclosure</span>
+    The strongest argument: it <b>looks and behaves like the rest of Almosafer</b>. Risk: airport-transfer timing is the user's actual anxiety, and a horizontal widget has limited room to tell that story above the fold — the timeline / system-status moments are pushed below the car cards or into a smaller side panel.
+  </div>
+
+  <!-- B Screen 1 — Landing -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">1 · Landing — compact widget</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides</span>
+      <span class="screen-tag">all cases start here</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides</b></div></div>
+      <div class="app-head">
+        <div class="app-logo">almosafer · <span style="color:var(--alm-teal)">rides</span></div>
+        <div class="app-nav"><span>Flights</span><span>Hotels</span><span class="active">Rides</span><span>Activities</span></div>
+        <div class="app-actions"><span>SAR</span><span>EN</span><span>Account</span></div>
+      </div>
+      <div class="b-grid">
+        <div style="text-align:center;padding:12px 0 28px">
+          <h2 style="font-family:var(--display);font-weight:700;font-size:38px;margin:0 0 6px;color:var(--alm-navy)">Book a ride. Anywhere.</h2>
+          <p style="margin:0;color:var(--chateau);font-family:var(--mono);font-size:13px">Airport, hotel or home — same two fields.</p>
+        </div>
+        <div class="widget">
+          <div class="row">
+            <div class="field"><div class="label">Pickup</div><div class="val placeholder">Where from?</div></div>
+            <div class="field"><div class="label">Drop-off</div><div class="val placeholder">Where to?</div></div>
+            <div class="go">Find ride →</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px">
+          <div>
+            <p class="micro" style="margin:0 0 10px">From your trips</p>
+            <div class="stack" style="gap:10px">
+              <div class="trip-card flight">
+                <div class="mark" style="color:var(--alm-butter)">✈</div>
+                <div><div class="ttl">Flynas XY 304 · CAI → RUH</div><div class="sub">Sat 14 Jun · arrives 22:10</div></div>
+                <div class="cta">Use →</div>
+              </div>
+              <div class="trip-card hotel">
+                <div class="mark" style="color:var(--alm-teal)">⌂</div>
+                <div><div class="ttl">Marriott Riyadh DQ</div><div class="sub">Check-in Sat 14 Jun</div></div>
+                <div class="cta">Ride →</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="micro" style="margin:0 0 10px">Need it by the hour?</p>
+            <div class="hourly" style="height:calc(100% - 22px)">
+              <div><h4>Hourly rides</h4><p>2h minimum · same driver waits</p></div><div class="arrow">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal"><span class="law-tag">Jakob</span>Looks like Flights/Hotels widget — zero learning cost.</div>
+      <div class="note">Widget is only <b>two fields</b> at rest. No type toggle, no clutter.</div>
+      <div class="note success">Trips and hourly sit below — discoverable, not dominant.</div>
+      <div class="note coral">Risk: when the widget grows, the page above the fold gets crowded — see screen 2.</div>
+    </aside>
+  </div>
+
+  <!-- B Screen 2 — Widget grew -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">2 · Airport detected → widget grows in place</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight</span>
+      <span class="screen-tag state">A → N · expanded · multi-match</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight</b></div></div>
+      <div class="b-grid" style="padding-top:14px">
+        <div class="widget" style="padding:10px">
+          <div class="row expanded" style="display:grid;grid-template-columns:1.2fr 1.2fr 0.9fr 1.4fr auto;gap:6px">
+            <div class="field airport"><div class="label">Pickup · airport ✈</div><div class="val">RUH T?</div></div>
+            <div class="field"><div class="label">Drop-off</div><div class="val">Marriott DQ</div></div>
+            <div class="field new"><div class="label">Arrival date · required</div><div class="val">Sat 14 Jun</div></div>
+            <div class="field new" style="background:#fff;border-color:var(--alm-teal)"><div class="label">Airline or flight #</div><div class="val">XY 30…</div></div>
+            <div class="go">Search</div>
+          </div>
+          <p style="margin:8px 4px 0;font-family:var(--mono);font-size:11px;color:var(--chateau)">Date and flight fields appeared because RUH is an airport. <span style="color:var(--alm-teal)">Date is required first.</span></p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px">
+          <div>
+            <p class="micro" style="margin:0 0 10px">3 flights match "XY 30" on Sat 14 Jun</p>
+            <div class="stack">
+              <div class="flight-card">
+                <div class="airline-mark">XY</div>
+                <div><div class="route"><b>Flynas XY 304</b> · CAI → RUH</div><div class="meta">19:25 → 22:10 · T5</div></div>
+                <div class="time"><b>22:10</b></div>
+                <button class="btn sm primary">Select</button>
+              </div>
+              <div class="flight-card">
+                <div class="airline-mark">XY</div>
+                <div><div class="route"><b>Flynas XY 306</b> · DXB → RUH</div><div class="meta">21:00 → 23:55 · T5</div></div>
+                <div class="time"><b>23:55</b></div>
+                <button class="btn sm primary">Select</button>
+              </div>
+              <div class="flight-card">
+                <div class="airline-mark">XY</div>
+                <div><div class="route"><b>Flynas XY 308</b> · JED → RUH</div><div class="meta">23:10 → 00:40 +1 · T5</div></div>
+                <div class="time"><b>00:40</b></div>
+                <button class="btn sm primary">Select</button>
+              </div>
+            </div>
+
+            <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+              <button class="btn link">I don't have my flight details →</button>
+              <span class="micro">single match would auto-confirm</span>
+            </div>
+          </div>
+          <div>
+            <p class="micro" style="margin:0 0 10px">Why we ask</p>
+            <div class="box dashed" style="padding:14px">
+              <p style="margin:0 0 8px;font-size:13px">We use your flight to:</p>
+              <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.5">
+                <li>track delays in real time</li>
+                <li>shift pickup if you land late</li>
+                <li>send the driver to the right terminal</li>
+              </ul>
+              <p class="micro" style="margin:10px 0 0">15 min free wait included</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal"><span class="law-tag">Progressive disclosure</span>Fields only inject when needed. The base widget stays small for N→N.</div>
+      <div class="note">Animated growth is a strong signal — the user sees WHY a new field appeared.</div>
+      <div class="note coral">Trade-off: less room for the trip-timeline story. We compensate with a small "why we ask" side card.</div>
+      <div class="note success"><span class="law-tag">URL</span>Widget growing IS the step transition. URL flips to /flight. Browser Back collapses the widget AND data is preserved.</div>
+    </aside>
+  </div>
+
+  <!-- B Screen 3 — No match, manual mode in widget -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">3 · No match → widget switches to manual fields</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight?manual=1</span>
+      <span class="screen-tag skip">A → N · skip / manual</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight?manual=1</b></div></div>
+      <div class="b-grid" style="padding-top:14px">
+        <div class="banner" style="margin-bottom:12px">
+          <div class="ico">!</div>
+          <div>No flight matches <b>"XY 9999"</b> on Sat 14 Jun. Switched to manual entry so you can keep going.</div>
+        </div>
+
+        <div class="widget" style="padding:10px">
+          <div class="row" style="display:grid;grid-template-columns:1.1fr 1.3fr 0.7fr 0.8fr 1.1fr auto;gap:6px">
+            <div class="field airport"><div class="label">Pickup · airport ✈</div><div class="val">RUH</div></div>
+            <div class="field"><div class="label">Drop-off</div><div class="val">Marriott DQ</div></div>
+            <div class="field"><div class="label">Terminal</div><div class="val">T5</div></div>
+            <div class="field"><div class="label">Date</div><div class="val">Sat 14 Jun</div></div>
+            <div class="field"><div class="label">Pickup time</div><div class="val">22:30</div></div>
+            <div class="go">See cars</div>
+          </div>
+          <p style="margin:8px 4px 0;font-family:var(--mono);font-size:11px;color:var(--chateau)">
+            <button class="btn link" style="font-size:11px">← back to flight search</button> · You can add the flight later from your booking
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal">Same widget — just morphs its fields. User isn't dumped onto a different layout.</div>
+      <div class="note">Banner sits ABOVE the widget so the cause/effect is obvious.</div>
+      <div class="note success">Reversible: "back to flight search" link is always one tap.</div>
+    </aside>
+  </div>
+
+  <!-- B Screen 4 — Flight locked into widget -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">4 · Flight locked as a confirmed row in the widget</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight</span>
+      <span class="screen-tag state">In-page state · still /flight</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight</b></div></div>
+      <div class="b-grid" style="padding-top:14px">
+        <div class="widget" style="padding:10px">
+          <div class="row" style="display:grid;grid-template-columns:1.1fr 1.3fr 0.9fr auto;gap:6px">
+            <div class="field airport"><div class="label">Pickup</div><div class="val">RUH · T5</div></div>
+            <div class="field"><div class="label">Drop-off</div><div class="val">Marriott DQ</div></div>
+            <div class="field"><div class="label">Sat 14 Jun</div><div class="val">2 adults · 3 bags</div></div>
+            <div class="go">See cars</div>
+          </div>
+          <div class="flight-row">
+            <div class="ck">✓</div>
+            <div>
+              <div style="font-family:var(--mono);font-size:13px"><b>Flynas XY 304</b> · CAI → RUH · lands <b>22:10</b> · pickup auto-set <b>22:25</b></div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--chateau);margin-top:2px">live delay tracking on · 15 min free wait</div>
+            </div>
+            <span class="chip edit sm">change</span>
+            <button class="btn link" style="font-size:11px">remove</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:18px">
+          <div>
+            <p class="micro" style="margin:0 0 8px">Pax · edits inline anywhere</p>
+            <div class="row" style="gap:8px">
+              <div class="box input filled" style="flex:1"><div class="stack" style="gap:0"><span class="label">Adults</span><span class="val">2</span></div></div>
+              <div class="box input filled" style="flex:1"><div class="stack" style="gap:0"><span class="label">Children</span><span class="val">0</span></div></div>
+              <div class="box input filled" style="flex:1"><div class="stack" style="gap:0"><span class="label">Bags</span><span class="val">3</span></div></div>
+            </div>
+            <p class="micro" style="margin:18px 0 8px">Optional</p>
+            <div class="filters">
+              <span class="f">Child seat</span><span class="f">Meet &amp; greet</span><span class="f">English driver</span>
+            </div>
+          </div>
+          <div>
+            <p class="micro" style="margin:0 0 8px">Quick trip story</p>
+            <div class="timeline" style="padding:0">
+              <div class="row flight"><div class="node">✈</div><div><div class="label">Lands</div><div class="desc">T5</div></div><div class="time">22:10</div></div>
+              <div class="row driver"><div class="node">▣</div><div><div class="label">Driver</div><div class="desc">arrivals</div></div><div class="time">22:25</div></div>
+              <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott DQ</div><div class="desc">~32m</div></div><div class="time">22:57</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note success">"Confirmed flight" row is visually distinct from inputs — it's a locked fact, not a field.</div>
+      <div class="note teal">Pickup auto-fill is announced inside the same row to keep cause/effect together.</div>
+      <div class="note">Compressed timeline lives on the right — smaller than in A, but present.</div>
+      <div class="note coral">"Change" routes back to flight search; "remove" demotes to manual mode.</div>
+    </aside>
+  </div>
+
+  <!-- B Screen 5 — Cars -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">5 · Car results — widget collapses to summary strip</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/cars</span>
+      <span class="screen-tag">A → N · with edit rules</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/cars</b></div></div>
+      <div class="b-grid" style="padding-top:14px">
+        <div class="sumbar" style="margin-bottom:14px">
+          <div class="seg flight"><span class="dot"></span><span><b>XY 304</b> lands 22:10 · T5</span><span class="chip edit sm" style="border:none;padding:0;color:var(--alm-teal)">change</span></div>
+          <div class="div"></div>
+          <div class="seg"><span class="dot"></span><span>RUH T5 → Marriott DQ</span><span class="chip edit sm" style="border:none;padding:0;color:var(--alm-teal)">edit</span></div>
+          <div class="div"></div>
+          <div class="seg"><span>Sat 14 Jun · pickup 22:25</span></div>
+          <div class="div"></div>
+          <div class="seg"><span>2 adults · 3 bags</span><span class="chip edit sm" style="border:none;padding:0;color:var(--alm-teal)">edit</span></div>
+          <div class="grow"></div>
+          <button class="btn ghost sm">Expand</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:18px">
+          <div>
+            <p class="micro" style="margin:0 0 8px">Filters</p>
+            <div class="filters" style="flex-direction:column;align-items:flex-start">
+              <span class="f on">All</span><span class="f">Sedan</span><span class="f">SUV</span><span class="f">Van</span><span class="f">Luxury</span>
+            </div>
+            <p class="micro" style="margin:18px 0 8px">Sort</p>
+            <div class="filters" style="flex-direction:column;align-items:flex-start">
+              <span class="f on">Recommended</span><span class="f">Price ↑</span><span class="f">Rating</span>
+            </div>
+          </div>
+          <div>
+            <p class="micro" style="margin:0 0 10px">12 cars</p>
+            <div class="stack">
+              <div class="car-card recommended">
+                <div class="ph-img">car photo</div>
+                <div>
+                  <span class="badge">Best match</span>
+                  <div class="name">Comfort sedan · Hyundai Sonata</div>
+                  <div class="feats">4 pax · 3 bags · free 15-min wait · name board</div>
+                </div>
+                <div class="price">SAR 142<span class="lbl">all in</span></div>
+              </div>
+              <div class="car-card">
+                <div class="ph-img">car photo</div>
+                <div>
+                  <div class="name">SUV · Toyota Land Cruiser</div>
+                  <div class="feats">6 pax · 5 bags · meet &amp; greet</div>
+                </div>
+                <div class="price">SAR 218<span class="lbl">all in</span></div>
+              </div>
+              <div class="car-card">
+                <div class="ph-img">car photo</div>
+                <div>
+                  <div class="name">Luxury · Mercedes E-Class</div>
+                  <div class="feats">3 pax · 3 bags · english driver</div>
+                </div>
+                <div class="price">SAR 320<span class="lbl">all in</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal">Widget compresses to a summary strip. Each segment carries its own edit affordance.</div>
+      <div class="note coral">"Change flight" goes back to /flight. "Edit pax" stays here, inline.</div>
+      <div class="note">Expand button opens the full widget if user wants to make several edits at once.</div>
+      <div class="note success">Browser Back from here → /flight (with selected flight). Browser Forward = car results again.</div>
+    </aside>
+  </div>
+
+  <!-- B Diffs -->
+  <div class="diffs">
+    <div class="diff">
+      <h4>N → A drop-off · diff</h4>
+      <p class="sub">Same widget. Departure flight. Pickup math runs backwards.</p>
+      <ul>
+        <li>Drop-off (airport) is the airport chip; date field still injects first.</li>
+        <li>Confirmed-flight row now reads: "<b>XY 213 departs 14:30</b> · pickup auto-set 10:55 (2h 55m before)."</li>
+        <li class="note">Trip story reverses: home → driver → drive → curb-side T5.</li>
+        <li class="warn">No delay tracking (departure ≠ your concern). Replace banner with "<b>traffic-aware pickup</b>" copy.</li>
+        <li>Skip path identical: terminal + date + pickup-time chips.</li>
+      </ul>
+      <div class="mini">
+        <b>Confirmed row copy:</b> "Departure XY 213 · RUH T5 · 14:30. We'll pick you up at <b>10:55</b> to arrive by <b>11:35</b>."
+      </div>
+    </div>
+    <div class="diff">
+      <h4>N → N normal ride · diff</h4>
+      <p class="sub">Widget never grows. Two fields and go.</p>
+      <ul>
+        <li>Widget shows ONLY pickup, drop-off, "Find ride". Plus a quiet "Ride now / Schedule" pill below pickup.</li>
+        <li>URL goes <span class="urlchip" style="font-size:10px">/rides</span> → <span class="urlchip" style="font-size:10px">/rides/cars</span> directly.</li>
+        <li class="note">Summary strip on /cars has fewer segments — no flight chip.</li>
+        <li class="warn">Hotel-prefill is a single-field case. If user later edits drop-off to an airport → widget grows AND URL jumps to <span class="urlchip" style="font-size:10px">/flight</span>.</li>
+        <li>Edit rules: pickup/drop-off editable inline since both are non-airport.</li>
+      </ul>
+      <div class="mini">
+        <b>Best fit when:</b> the user is comfortable in mobile-style horizontal widgets and most rides are non-airport.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- =========== EXPLORATION C — ADAPTIVE SHELL =========== -->
+<!-- ====================================================== -->
+<section class="exp" id="exp-c">
+  <div class="exp-header">
+    <div class="exp-tag">C<span class="slash">/</span></div>
+    <div>
+      <h2 class="exp-title">Adaptive shell · widget at rest, side panel at depth</h2>
+      <p class="exp-sub">Honest about the fact that an airport transfer is genuinely a different beast. Starts as B's <b>compact widget</b> (familiar, low-effort). The moment an airport is detected, the layout <b>morphs into A's side-panel + timeline</b> for the flight step — where complexity actually lives. On the cars page, returns to a summary strip. URLs follow the morph.</p>
+    </div>
+    <div class="exp-stamp ok">strong hybrid</div>
+  </div>
+
+  <div class="exp-rationale">
+    <span class="law">Aesthetic-usability</span>
+    <span class="law">Visibility of system status</span>
+    <span class="law">Match the mental model</span>
+    Familiar shell where the task is simple (N→N feels like Flights/Hotels). Specialist shell where the task is hard (A→N needs the timeline). One product, two postures. Risk to manage: <b>the morph itself must feel intentional</b> — not jarring — and the user must understand they're still on the same flow.
+  </div>
+
+  <!-- C Screen 1 — Landing (same as B) -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">1 · Landing — at rest, looks like B</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides</span>
+      <span class="screen-tag">all cases start here</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides</b></div></div>
+      <div class="b-grid">
+        <div style="text-align:center;padding:12px 0 24px">
+          <h2 style="font-family:var(--display);font-weight:700;font-size:36px;margin:0 0 6px;color:var(--alm-navy)">Where are you going?</h2>
+          <p style="margin:0;color:var(--chateau);font-family:var(--mono);font-size:13px">Two fields. We'll figure out the rest.</p>
+        </div>
+        <div class="widget">
+          <div class="row">
+            <div class="field"><div class="label">Pickup</div><div class="val placeholder">Where from?</div></div>
+            <div class="field"><div class="label">Drop-off</div><div class="val placeholder">Where to?</div></div>
+            <div class="go">Find ride →</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-top:24px">
+          <div>
+            <p class="micro" style="margin:0 0 8px">From your trips · one click prefills the lot</p>
+            <div class="stack" style="gap:10px">
+              <div class="trip-card flight">
+                <div class="mark" style="color:var(--alm-butter)">✈</div>
+                <div><div class="ttl">Flynas XY 304 · CAI → RUH</div><div class="sub">Sat 14 Jun · 22:10 · T5</div></div>
+                <div class="cta">Skip ahead →</div>
+              </div>
+              <div class="trip-card hotel">
+                <div class="mark" style="color:var(--alm-teal)">⌂</div>
+                <div><div class="ttl">Marriott Riyadh DQ</div><div class="sub">Sat 14 Jun check-in · 1 night</div></div>
+                <div class="cta">Ride to/from →</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="micro" style="margin:0 0 8px">Other entries</p>
+            <div class="hourly">
+              <div><h4>Hourly</h4><p>2h min · same driver</p></div><div class="arrow">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal">"Trips" cards get a tiny "<b>Skip ahead</b>" CTA — this exploration adds a deeper jump than just the flight step.</div>
+      <div class="note">From trip-card flight → straight to <span class="urlchip" style="font-size:10px">/cars</span> with timeline already drawn (see screen 4).</div>
+      <div class="note success">Same landing, no surprise. The morph happens only after the user reveals intent.</div>
+    </aside>
+  </div>
+
+  <!-- C Screen 2 — Morph into side panel -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">2 · Airport detected → shell morphs to side-panel</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight</span>
+      <span class="screen-tag state">A → N · multi-match · widget folds into left rail</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight</b></div></div>
+      <div class="a-grid">
+        <div class="left">
+          <p class="micro" style="margin:0 0 6px">Your trip so far</p>
+          <h4 class="panel-title" style="font-size:18px;margin-bottom:14px">Riyadh · Sat 14 Jun</h4>
+
+          <div class="stack" style="gap:8px;margin-bottom:14px">
+            <div class="box input filled" style="background:rgba(254,156,9,.08);border-color:var(--alm-butter)"><span class="ico plane"></span><div class="stack" style="gap:0"><span class="label">Pickup · airport</span><span class="val">RUH · King Khalid Intl</span></div><span class="chip edit sm">edit</span></div>
+            <div class="box input filled"><span class="ico pin"></span><div class="stack" style="gap:0"><span class="label">Drop-off</span><span class="val">Marriott DQ</span></div><span class="chip edit sm">edit</span></div>
+          </div>
+
+          <div class="box input filled" style="margin-bottom:8px"><span class="ico cal"></span><div class="stack" style="gap:0"><span class="label">Arrival date · required</span><span class="val">Sat 14 Jun 2026</span></div><span class="chip edit sm">edit</span></div>
+          <div class="box input filled" style="border-color:var(--alm-teal);box-shadow:0 0 0 2px rgba(11,160,183,.15)"><span class="ico plane"></span><div class="stack grow" style="gap:0"><span class="label">Airline / flight #</span><span class="val">XY 30…</span></div></div>
+
+          <div style="margin-top:18px;padding:12px;background:rgba(11,160,183,.05);border-radius:10px;border:1px dashed var(--alm-teal)">
+            <p class="micro" style="margin:0 0 4px;color:var(--alm-teal)">Why the layout changed</p>
+            <p style="margin:0;font-size:12px">RUH is an airport. Flight details help us track delays and time your pickup.</p>
+          </div>
+
+          <button class="btn link" style="margin-top:14px;font-size:12px">I don't have my flight →</button>
+        </div>
+        <div class="right">
+          <p class="micro" style="margin:0 0 10px">3 flights match · Sat 14 Jun</p>
+          <div class="stack" style="margin-bottom:18px">
+            <div class="flight-card">
+              <div class="airline-mark">XY</div>
+              <div><div class="route"><b>Flynas XY 304</b> · CAI → RUH</div><div class="meta">19:25 → 22:10 · T5</div></div>
+              <div class="time"><b>22:10</b><div class="meta">T5</div></div>
+              <button class="btn sm primary">Select</button>
+            </div>
+            <div class="flight-card">
+              <div class="airline-mark">XY</div>
+              <div><div class="route"><b>Flynas XY 306</b> · DXB → RUH</div><div class="meta">21:00 → 23:55 · T5</div></div>
+              <div class="time"><b>23:55</b><div class="meta">T5</div></div>
+              <button class="btn sm primary">Select</button>
+            </div>
+            <div class="flight-card">
+              <div class="airline-mark">XY</div>
+              <div><div class="route"><b>Flynas XY 308</b> · JED → RUH</div><div class="meta">23:10 → 00:40 +1 · T5</div></div>
+              <div class="time"><b>00:40</b><div class="meta">T5</div></div>
+              <button class="btn sm primary">Select</button>
+            </div>
+          </div>
+
+          <p class="micro" style="margin:0 0 8px">Trip preview · awaits flight selection</p>
+          <div class="timeline" style="opacity:.55">
+            <div class="row flight"><div class="node">✈</div><div><div class="label">Lands</div><div class="desc">pick a flight</div></div><div class="time">—:—</div></div>
+            <div class="row wait"><div class="node">·</div><div><div class="label">Free wait</div><div class="desc">15 min</div></div><div class="time">+15</div></div>
+            <div class="row driver"><div class="node">▣</div><div><div class="label">Driver</div><div class="desc">T5 arrivals</div></div><div class="time">—:—</div></div>
+            <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott DQ</div><div class="desc">~32m drive</div></div><div class="time">—:—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal"><span class="law-tag">Status</span>Tiny "why the layout changed" card explains the morph. Removes the magic-feeling.</div>
+      <div class="note coral">Animation matters: widget should visibly fold into the left rail, not just snap. ~300ms morph.</div>
+      <div class="note">Same flight-list and skip-path content as A — leverages all of A's work for the actual flight step.</div>
+      <div class="note success"><span class="law-tag">Jakob</span>The morph is bounded — it only kicks in for airport cases. N→N never sees it.</div>
+    </aside>
+
+    <div class="callout-row">
+      <div class="callout"><b>The morph in one line:</b> compact widget at <code class="micro">/rides</code> → side panel + timeline at <code class="micro">/rides/flight</code> → summary strip at <code class="micro">/rides/cars</code>.</div>
+      <div class="callout"><b>Reversibility:</b> browser Back from /flight collapses the side panel back into the widget. State preserved.</div>
+      <div class="callout"><b>Risk we accept:</b> two visual postures in one flow. We earn it by matching the complexity.</div>
+    </div>
+  </div>
+
+  <!-- C Screen 3 — No match / skip path -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">3 · No match → side panel keeps you moving</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/flight?manual=1</span>
+      <span class="screen-tag skip">A → N · skip / manual</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/flight?manual=1</b></div></div>
+      <div class="a-grid">
+        <div class="left">
+          <p class="micro" style="margin:0 0 6px">Manual entry · you can add the flight later</p>
+          <h4 class="panel-title" style="font-size:18px">Set terminal &amp; time</h4>
+
+          <div class="box input filled" style="margin:8px 0;background:rgba(254,156,9,.08);border-color:var(--alm-butter)"><span class="ico plane"></span><div class="stack" style="gap:0"><span class="label">Pickup · airport</span><span class="val">RUH</span></div></div>
+
+          <p class="micro" style="margin:14px 0 8px">Terminal</p>
+          <div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:10px">
+            <span class="chip">T1</span><span class="chip">T2</span><span class="chip">T3</span><span class="chip">T4</span><span class="chip teal">T5</span>
+          </div>
+
+          <div class="box input filled" style="margin-bottom:8px"><span class="ico cal"></span><div class="stack" style="gap:0"><span class="label">Date</span><span class="val">Sat 14 Jun</span></div></div>
+          <div class="box input filled"><span class="ico clock"></span><div class="stack" style="gap:0"><span class="label">Pickup time</span><span class="val">22:30</span></div></div>
+
+          <button class="btn primary" style="width:100%;margin-top:14px">See cars</button>
+          <button class="btn link" style="margin-top:10px;font-size:12px">← back to flight search</button>
+        </div>
+        <div class="right">
+          <div class="banner" style="margin-bottom:16px">
+            <div class="ico">!</div>
+            <div>We couldn't find <b>"XY 9999"</b> on Sat 14 Jun. Switched to manual so you can keep going.</div>
+          </div>
+
+          <p class="micro" style="margin:0 0 8px">Trip preview · without flight tracking</p>
+          <div class="timeline">
+            <div class="row driver"><div class="node">▣</div><div><div class="label">Driver meets you</div><div class="desc">T5 arrivals</div></div><div class="time">22:30</div></div>
+            <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott DQ</div><div class="desc">~32 min drive</div></div><div class="time">23:02</div></div>
+          </div>
+
+          <div class="banner success" style="margin-top:16px">
+            <div class="ico">i</div>
+            <div><b>Add your flight later</b> from "My bookings" to switch on delay tracking automatically.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note">Same skeleton as A's skip path — proven pattern, just reached via the morph.</div>
+      <div class="note teal">Two timeline rows here instead of four. Honest about what we don't know.</div>
+      <div class="note success">Future-tracking promise carried forward to set expectations.</div>
+    </aside>
+  </div>
+
+  <!-- C Screen 4 — Selected from trips, jump deep -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">4 · Picked from "My trips" → deep jump · cars page already drawn</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/cars?from=trip-XY304</span>
+      <span class="screen-tag state">A → N · trip-card prefilled · timeline locked</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/cars?from=trip-XY304</b></div></div>
+      <div class="a-grid">
+        <div class="left">
+          <div class="banner success" style="margin-bottom:14px">
+            <div class="ico">✓</div>
+            <div>Prefilled from your <b>Flynas XY 304</b> booking. Edit anything below.</div>
+          </div>
+
+          <p class="micro" style="margin:0 0 8px">Your trip</p>
+          <div class="timeline">
+            <div class="row flight"><div class="node">✈</div><div><div class="label">XY 304 · CAI → RUH</div><div class="desc">on time</div></div><div class="time">22:10</div></div>
+            <div class="row wait"><div class="node">·</div><div><div class="label">Free wait</div><div class="desc">15m grace</div></div><div class="time">+15</div></div>
+            <div class="row driver"><div class="node">▣</div><div><div class="label">Driver · T5</div><div class="desc">name board</div></div><div class="time">22:25</div></div>
+            <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott DQ</div><div class="desc">~32 min</div></div><div class="time">22:57</div></div>
+          </div>
+
+          <p class="micro" style="margin:22px 0 8px">Quick edits</p>
+          <div class="stack" style="gap:6px">
+            <span class="chip edit">Flight: XY 304</span>
+            <span class="chip edit">Drop-off: Marriott DQ</span>
+            <span class="chip edit">2 adults · 3 bags</span>
+          </div>
+        </div>
+        <div class="right">
+          <div class="sumbar" style="margin-bottom:14px">
+            <div class="seg flight"><span class="dot"></span><span>XY 304 · 22:10 · T5</span></div>
+            <div class="div"></div>
+            <div class="seg dest"><span class="dot"></span><span>Marriott DQ</span></div>
+            <div class="div"></div>
+            <div class="seg"><span>2 adults · 3 bags</span></div>
+          </div>
+          <p class="micro" style="margin:0 0 10px">12 cars · recommended for arrivals</p>
+          <div class="stack">
+            <div class="car-card recommended">
+              <div class="ph-img">car photo</div>
+              <div>
+                <span class="badge">Best match</span>
+                <div class="name">Comfort sedan · Hyundai Sonata</div>
+                <div class="feats">4 pax · 3 bags · free 15-min wait · name board</div>
+              </div>
+              <div class="price">SAR 142<span class="lbl">all in</span></div>
+            </div>
+            <div class="car-card">
+              <div class="ph-img">car photo</div>
+              <div>
+                <div class="name">SUV · Toyota Land Cruiser</div>
+                <div class="feats">6 pax · 5 bags · meet &amp; greet</div>
+              </div>
+              <div class="price">SAR 218<span class="lbl">all in</span></div>
+            </div>
+            <div class="car-card">
+              <div class="ph-img">car photo</div>
+              <div>
+                <div class="name">Luxury · Mercedes E-Class</div>
+                <div class="feats">3 pax · 3 bags · english driver</div>
+              </div>
+              <div class="price">SAR 320<span class="lbl">all in</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note success"><span class="law-tag">Recognition</span>Trip card carries enough info to skip /flight entirely. <b>Doherty</b> — fastest path to value.</div>
+      <div class="note teal">URL marks the source so analytics + back-stack are unambiguous.</div>
+      <div class="note">Browser Back from here → /rides (landing). NOT /flight, because we never visited it.</div>
+      <div class="note coral">If user "changes" the flight, we route them to /flight with the trip data populated.</div>
+    </aside>
+  </div>
+
+  <!-- C Screen 5 — Cars with widget summary strip -->
+  <div class="screen">
+    <div class="screen-head">
+      <h3 class="screen-step">5 · Cars after the full flow — summary strip · timeline rail</h3>
+      <span class="urlchip"><b>almosafer.com</b>/rides/cars</span>
+      <span class="screen-tag state">A → N · edit-flight after seeing prices</span>
+    </div>
+
+    <div class="browser">
+      <div class="chrome"><div class="lights"><span></span><span></span><span></span></div><div class="urlbar">almosafer.com<b>/rides/cars</b></div></div>
+      <div class="b-grid" style="padding-top:14px">
+        <div class="sumbar" style="margin-bottom:14px">
+          <div class="seg flight"><span class="dot"></span><span><b>XY 304</b> · 22:10 · T5</span><span class="chip edit sm" style="border:none;padding:0;color:var(--alm-teal)">change flight</span></div>
+          <div class="div"></div>
+          <div class="seg"><span class="dot"></span><span>RUH T5 → Marriott DQ</span></div>
+          <div class="div"></div>
+          <div class="seg"><span>Sat 14 Jun · pickup 22:25</span></div>
+          <div class="div"></div>
+          <div class="seg"><span>2 adults · 3 bags</span><span class="chip edit sm" style="border:none;padding:0;color:var(--alm-teal)">edit</span></div>
+          <div class="grow"></div>
+          <button class="btn ghost sm">Expand timeline ↓</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:260px 1fr;gap:18px">
+          <div>
+            <p class="micro" style="margin:0 0 8px">Your trip</p>
+            <div class="timeline" style="padding:0">
+              <div class="row flight"><div class="node">✈</div><div><div class="label">XY 304 lands</div><div class="desc">T5 · on time</div></div><div class="time">22:10</div></div>
+              <div class="row wait"><div class="node">·</div><div><div class="label">Free wait</div><div class="desc">15m</div></div><div class="time">+15</div></div>
+              <div class="row driver"><div class="node">▣</div><div><div class="label">Driver meets you</div><div class="desc">arrivals · name board</div></div><div class="time">22:25</div></div>
+              <div class="row dest"><div class="node">⌂</div><div><div class="label">Marriott DQ</div><div class="desc">~32m</div></div><div class="time">22:57</div></div>
+            </div>
+
+            <p class="micro" style="margin:18px 0 8px">Filters</p>
+            <div class="filters" style="flex-direction:column;align-items:flex-start">
+              <span class="f on">All</span><span class="f">Sedan</span><span class="f">SUV</span><span class="f">Luxury</span>
+            </div>
+          </div>
+          <div>
+            <p class="micro" style="margin:0 0 10px">12 cars</p>
+            <div class="stack">
+              <div class="car-card recommended">
+                <div class="ph-img">car photo</div>
+                <div>
+                  <span class="badge">Best match</span>
+                  <div class="name">Comfort sedan · Hyundai Sonata</div>
+                  <div class="feats">4 pax · 3 bags · free 15-min wait · name board</div>
+                </div>
+                <div class="price">SAR 142<span class="lbl">all in</span></div>
+              </div>
+              <div class="car-card">
+                <div class="ph-img">car photo</div>
+                <div>
+                  <div class="name">SUV · Toyota Land Cruiser</div>
+                  <div class="feats">6 pax · 5 bags · meet &amp; greet</div>
+                </div>
+                <div class="price">SAR 218<span class="lbl">all in</span></div>
+              </div>
+              <div class="car-card">
+                <div class="ph-img">car photo</div>
+                <div>
+                  <div class="name">Luxury · Mercedes E-Class</div>
+                  <div class="feats">3 pax · 3 bags · english driver</div>
+                </div>
+                <div class="price">SAR 320<span class="lbl">all in</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner" style="margin-top:18px;background:rgba(11,160,183,.06);border-color:var(--alm-teal)">
+          <div class="ico" style="border-color:var(--alm-teal);background:rgba(11,160,183,.18)">✎</div>
+          <div><b>Changed your mind about the flight?</b> Tap "change flight" above — we'll take you back to /flight, your route + pax preserved.</div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annot">
+      <div class="note teal">Hybrid finale: summary strip (B) + timeline rail (A). Best of both at the highest-anxiety step.</div>
+      <div class="note">"Change flight" gracefully routes back; "edit pax" stays inline. Exactly the editing rules in the brief.</div>
+      <div class="note success">Teal info banner illustrates the <b>"change my flight after seeing prices"</b> recovery path the brief asks for.</div>
+      <div class="note coral">Expand timeline ↓ reopens the side-panel layout from screen 2 if user wants a richer edit surface.</div>
+    </aside>
+  </div>
+
+  <!-- C Diffs -->
+  <div class="diffs">
+    <div class="diff">
+      <h4>N → A drop-off · diff</h4>
+      <p class="sub">Morph still triggers. Departure flight. Backwards math.</p>
+      <ul>
+        <li>Morph trigger: airport in <b>drop-off</b> field.</li>
+        <li>"Why the layout changed" card adapts: "we use your departure to time your pickup back from the airport."</li>
+        <li class="warn">Timeline reverses + last row reads "<b>at terminal by 11:35</b>" with safety buffer explained explicitly.</li>
+        <li class="note">No delay-tracking copy — replaced with "traffic-aware pickup time".</li>
+        <li>Skip path identical to A→N skip; "set terminal &amp; time" copy adjusts to "departure side".</li>
+      </ul>
+      <div class="mini">
+        <b>Banner on /cars:</b> "Departure 14:30 · we pick you up at <b>10:55</b> · at T5 by <b>11:35</b> (2h 55m before)."
+      </div>
+    </div>
+    <div class="diff">
+      <h4>N → N normal ride · diff</h4>
+      <p class="sub">Morph never triggers. Widget stays small.</p>
+      <ul>
+        <li>Two URLs: <span class="urlchip" style="font-size:10px">/rides</span> → <span class="urlchip" style="font-size:10px">/rides/cars</span>. /flight is never visited.</li>
+        <li>Widget gains only a quiet "Ride now / Schedule" toggle. No expansion.</li>
+        <li class="note">/cars summary strip omits the flight chip; timeline rail shortens to driver → destination.</li>
+        <li class="warn">Hotel-prefill: still N→N until an airport is typed. The moment it is, the morph kicks in and URL jumps to <span class="urlchip" style="font-size:10px">/flight</span>.</li>
+        <li>Edit rules: both fields editable inline (no airport routing needed).</li>
+      </ul>
+      <div class="mini">
+        <b>The promise of C:</b> never punish a simple ride with airport-flow weight, never strand an airport ride in a widget too small to tell the story.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- =========== FOOTER / DECISION HELP =================== -->
+<!-- ====================================================== -->
+<footer class="doc-footer">
+  <div>
+    <h4>How to choose between A, B, C</h4>
+    <ul>
+      <li><b>A · Side panel.</b> Pick if airport transfers are the majority of bookings or if reducing arrival anxiety is the #1 north-star. The timeline is its single biggest asset.</li>
+      <li><b>B · Expanding widget.</b> Pick if N→N rides outnumber A→N, and Almosafer's other widgets are well-loved. Lowest learning cost; pays a price on the flight step's clarity.</li>
+      <li><b>C · Adaptive shell.</b> Pick if the team has the engineering appetite for the morph transition. Probably the strongest end-to-end UX, but the most to build and animate well.</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Cross-cutting decisions still open</h4>
+    <ul>
+      <li>Default sort on /cars — recommended vs price?</li>
+      <li>How loudly do we surface delay-tracking promise on landing?</li>
+      <li>Should "Hourly" live as a tile here or as a sibling product page?</li>
+      <li>Tablet — does C's morph degrade gracefully or revert to B?</li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById('annot-toggle');
+    const body = document.body;
+    let on = true;
+    btn.addEventListener('click', () => {
+      on = !on;
+      body.classList.toggle('annot-off', !on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.innerHTML = '<span class="dot"></span> Annotations ' + (on ? 'on' : 'off');
+    });
+  })();
+</script>
+
+</body>
+</html>

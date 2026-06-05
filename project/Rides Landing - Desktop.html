@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440, initial-scale=1" />
+<title>Almosafer — Rides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --alm-teal:    #0BA0B7;
+    --alm-teal-12: rgba(11,160,183,.12);
+    --alm-teal-06: rgba(11,160,183,.06);
+    --alm-navy:    #003143;
+    --alm-butter:  #FE9C09;
+    --alm-butter-12: rgba(254,156,9,.12);
+    --alm-success: #319E37;
+
+    --ink:        #1C1C1C;
+    --text-2:     #66797F;
+    --text-3:     #A1AAAD;
+
+    --border:     #D8DCDE;
+    --border-soft:#EDF1F3;
+
+    --bg-page:    #F7F9FA;
+    --bg-card:    #FFFFFF;
+    --bg-subtle:  #F7F9FA;
+
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+
+    --shadow-card: 0 1px 2px rgba(16,24,40,.04), 0 1px 1px rgba(16,24,40,.03);
+    --shadow-pop:  0 8px 24px rgba(16,24,40,.06), 0 2px 4px rgba(16,24,40,.04);
+
+    --font: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    color: var(--ink);
+    background: var(--bg-page);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Frame ---------- */
+  .frame {
+    width: 1440px;
+    margin: 0 auto;
+    background: var(--bg-page);
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Top nav ---------- */
+  .topnav {
+    background: #fff;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .topnav .row1 {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .topnav .row2 {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  /* logo */
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--alm-navy);
+  }
+  .logo svg { display: block; height: 24px; width: auto; }
+
+  /* utility row right side */
+  .util {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .util a, .util button {
+    color: inherit;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+  }
+  .util a:hover { color: var(--alm-teal); }
+  .util .currency {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+  .util .currency svg { width: 14px; height: 14px; color: var(--text-2); }
+  .util .phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .util .phone .ic {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #25D366;
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .util .phone .ic svg { width: 14px; height: 14px; }
+  .util .signin {
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 100px;
+    border: 1px solid var(--alm-teal);
+    color: var(--alm-teal);
+    font-weight: 600;
+    font-size: 14px;
+    background: #fff;
+  }
+  .util .signin:hover { background: var(--alm-teal-06); }
+
+  /* product nav row */
+  .prodnav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .prodnav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 56px;
+    font-size: 15px;
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+  }
+  .prodnav a svg { width: 18px; height: 18px; color: var(--text-2); }
+  .prodnav a.active { color: var(--alm-navy); font-weight: 600; }
+  .prodnav a.active svg { color: var(--alm-teal); }
+  .prodnav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px;
+    background: var(--alm-teal);
+  }
+  .prodnav a:hover { color: var(--alm-navy); }
+  .prodnav a:hover svg { color: var(--alm-teal); }
+
+  /* ---------- Page header ---------- */
+  .page-head {
+    padding: 32px 0 24px;
+  }
+  .page-head .eyebrow {
+    font-size: 12px;
+    color: var(--text-2);
+    margin: 0 0 8px;
+  }
+  .page-head h1 {
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    margin: 0 0 8px;
+    color: var(--alm-navy);
+  }
+  .page-head .lede {
+    font-size: 15px;
+    color: var(--text-2);
+    margin: 0;
+    max-width: 640px;
+  }
+
+  /* ---------- Panel title (18 semibold) ---------- */
+  .panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--alm-navy);
+    margin: 0 0 16px;
+    letter-spacing: -.005em;
+  }
+
+  /* ---------- Hero card (right column — contains all right content) ---------- */
+  .hero-card {
+    padding: 32px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-lg);
+    background: linear-gradient(135deg, var(--alm-teal-06) 0%, #fff 60%);
+  }
+  .hero-card .hero-eyebrow {
+    font-size: 12px;
+    color: var(--alm-teal);
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .hero-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--alm-navy);
+    margin: 0 0 12px;
+    line-height: 1.15;
+  }
+  .hero-card .hero-lede {
+    font-size: 14px;
+    color: var(--text-2);
+    margin: 0 0 16px;
+    line-height: 1.55;
+    max-width: 480px;
+  }
+  .hero-card .ride-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .hero-card .ride-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 100px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .hero-card .ride-type .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--alm-teal);
+  }
+  .hero-card .ride-type.airport .dot { background: var(--alm-butter); }
+  .hero-card .ride-type.city    .dot { background: var(--alm-teal); }
+  .hero-card .ride-type.hourly  .dot { background: var(--alm-success); }
+  .hero-card .hero-image {
+    width: 345px;
+    max-width: 100%;
+    margin: 16px 0 0 auto;
+    display: block;
+  }
+  .hero-card .hero-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ---------- Value props row (3 across) ---------- */
+  .value-props {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .value-props .value-card {
+    padding: 20px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .value-props .value-card .iicon {
+    width: 36px; height: 36px;
+    border-radius: var(--r-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .value-props .value-card .iicon svg { width: 18px; height: 18px; }
+  .value-props .value-card .iicon.teal   { background: var(--alm-teal-12);   color: var(--alm-teal); }
+  .value-props .value-card .iicon.butter { background: var(--alm-butter-12); color: var(--alm-butter); }
+  .value-props .value-card .iicon.success{ background: rgba(49,158,55,.12);  color: var(--alm-success); }
+  .value-props .value-card .ititle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .value-props .value-card .idesc {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  /* ---------- Two column layout ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: 520px 1fr;
+    gap: 24px;
+    padding-bottom: 64px;
+    align-items: start;
+  }
+
+  /* ---------- Panel (card) ---------- */
+  .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    color: var(--text-2);
+    margin: 0 0 12px;
+    font-weight: 400;
+  }
+
+  /* ---------- Input fields ---------- */
+  .field {
+    height: 48px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    cursor: text;
+  }
+  .field:hover { border-color: #B7BFC3; }
+  .field:focus-within {
+    border-color: var(--alm-teal);
+    box-shadow: 0 0 0 3px var(--alm-teal-12);
+  }
+  .field .ico {
+    width: 18px; height: 18px;
+    flex: 0 0 18px;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .field .ico svg { width: 18px; height: 18px; display: block; }
+  .field .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  .field .label {
+    font-size: 11px;
+    color: var(--text-2);
+    line-height: 1.2;
+  }
+  .field input,
+  .field .value {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    width: 100%;
+    padding: 0;
+    line-height: 1.3;
+  }
+  .field input::placeholder { color: var(--text-3); }
+  .field .placeholder { font-size: 15px; color: var(--text-3); }
+  .field .swap {
+    width: 28px; height: 28px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-2);
+    cursor: pointer;
+    flex: 0 0 28px;
+  }
+  .field .swap:hover { color: var(--alm-teal); border-color: var(--alm-teal); }
+
+  .field-stack { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ---------- Combined pickup/drop-off field ---------- */
+  .combo-field {
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: #fff;
+    overflow: hidden;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .combo-field:hover { border-color: #B7BFC3; }
+  .combo-field:focus-within {
+    border-color: var(--alm-teal);
+    box-shadow: 0 0 0 3px var(--alm-teal-12);
+  }
+  .combo-row {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 16px;
+    cursor: text;
+  }
+  .combo-row .ico {
+    width: 20px; height: 20px;
+    flex: 0 0 20px;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .combo-row .ico svg { width: 20px; height: 20px; display: block; }
+  .combo-row input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    width: 100%;
+    padding: 0;
+    line-height: 1.3;
+  }
+  .combo-row input::placeholder { color: var(--text-2); }
+  .combo-divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin-left: 50px;
+  }
+  .combo-hint {
+    font-size: 13px;
+    color: var(--text-2);
+    margin: 8px 0 0;
+  }
+
+  /* ---------- Primary button ---------- */
+  .btn {
+    height: 48px;
+    padding: 0 20px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-primary {
+    background: var(--alm-teal);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #0A8FA4; }
+  .btn-block { width: 100%; }
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .btn-ghost:hover { border-color: #B7BFC3; }
+
+  /* ---------- In-panel divider ---------- */
+  .panel-divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 24px 0;
+    border: 0;
+  }
+  .or-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--text-3);
+    font-size: 12px;
+    letter-spacing: .02em;
+  }
+  .or-divider::before,
+  .or-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-soft);
+  }
+
+  /* ---------- Hourly card ---------- */
+  .hourly {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+  }
+  .hourly:hover {
+    border-color: var(--alm-teal);
+    background: var(--alm-teal-06);
+  }
+  .hourly .hicon {
+    width: 40px; height: 40px;
+    border-radius: var(--r-sm);
+    background: var(--alm-teal-12);
+    color: var(--alm-teal);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 40px;
+  }
+  .hourly .hicon svg { width: 20px; height: 20px; }
+  .hourly .htxt { flex: 1; min-width: 0; }
+  .hourly .htitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+  .hourly .hmeta {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .hourly .harrow { color: var(--text-3); }
+
+  /* ---------- Upcoming trips ---------- */
+  .trips { display: flex; flex-direction: column; gap: 12px; }
+  .trip {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    background: #fff;
+    transition: border-color .15s ease;
+  }
+  .trip:hover { border-color: var(--border); }
+  .trip .mark {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 48px;
+    background: var(--bg-subtle);
+    position: relative;
+  }
+  .trip.flight .mark {
+    background: var(--alm-teal);
+    color: #fff;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+    font-style: italic;
+    letter-spacing: -.02em;
+  }
+  .trip.hotel .mark {
+    background: linear-gradient(180deg, #FE9C09 0%, #C4651A 55%, #1F2A4A 100%);
+  }
+  .trip.hotel .mark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, transparent 55%, rgba(0,0,0,.3) 100%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><g fill='%231F2A4A' opacity='.85'><rect x='10' y='30' width='3' height='12'/><rect x='14' y='26' width='3' height='16'/><polygon points='20,18 23,12 25,12 25,42 20,42'/><rect x='28' y='22' width='4' height='20'/><rect x='34' y='28' width='3' height='14'/></g></svg>");
+    background-size: cover;
+    background-position: center;
+  }
+  .trip .body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .trip .title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.3;
+  }
+  .trip .title svg { width: 16px; height: 16px; color: var(--text-2); flex: 0 0 16px; }
+  .trip .meta {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.4;
+  }
+  .trip .book-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 100px;
+    border: 1px solid var(--alm-teal);
+    background: #fff;
+    color: var(--alm-teal);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .15s ease;
+  }
+  .trip .book-btn:hover { background: var(--alm-teal-06); }
+  .trip .book-btn svg { width: 14px; height: 14px; }
+
+  /* ---------- Why book ahead ---------- */
+  .why { }
+  .why .row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .why .item {
+    padding: 16px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    background: #fff;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .why .iicon {
+    width: 36px; height: 36px;
+    border-radius: var(--r-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .why .iicon.teal   { background: var(--alm-teal-12);   color: var(--alm-teal); }
+  .why .iicon.butter { background: var(--alm-butter-12); color: var(--alm-butter); }
+  .why .iicon.success{ background: rgba(49,158,55,.12);  color: var(--alm-success); }
+  .why .iicon svg { width: 18px; height: 18px; }
+  .why .itext { min-width: 0; }
+  .why .ititle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 4px;
+  }
+  .why .idesc {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.45;
+  }
+
+  /* ---------- Footer ---------- */
+  .foot {
+    border-top: 1px solid var(--border-soft);
+    background: #fff;
+  }
+  .foot .inner {
+    padding: 24px 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .foot a { color: var(--text-2); text-decoration: none; margin-left: 24px; }
+  .foot a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- Top nav -->
+  <header class="topnav">
+    <div class="container row1">
+      <a href="#" class="logo" aria-label="Almosafer">
+        <svg width="132" height="24" viewBox="0 0 132 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M64.2183 8.11154H51.0996L56.1199 11.6467H60.1564V14.2933C62.5967 12.897 64.4849 11.872 64.5198 11.8656V8.40983C64.5198 8.24482 64.3865 8.11154 64.2215 8.11154" fill="#EF4550"/>
+          <path d="M54.8442 6.85167H56.9069V7.67675H57.8431V5.93457H53.9081V7.67675H54.8442V6.85167Z" fill="#EF4550"/>
+          <path d="M50.639 18.6221V11.6471H56.1195L51.0992 8.11192H46.574C46.4089 8.11192 46.2757 8.2452 46.2757 8.41021V22.2715C46.2757 22.2715 49.1571 20.615 52.6192 18.6221H50.639Z" fill="#002D3F"/>
+          <path d="M64.5162 11.8756V11.866C64.4813 11.8724 62.5931 12.8974 60.1528 14.2937V18.6221H52.6129C49.1507 20.6119 46.2693 22.2715 46.2693 22.2715H64.2147C64.3829 22.2715 64.5162 22.1351 64.513 21.9701V11.8756H64.5162Z" fill="#1AA5B7"/>
+          <path d="M88.3323 16.2358V17.6289C88.3323 17.7463 88.272 17.8605 88.1768 17.9272C87.1487 18.657 86.1364 19.0283 85.1621 19.0283C84.1879 19.0283 83.7786 18.6507 83.7786 17.8383V17.3147C83.7786 16.5848 84.1213 16.2516 84.8861 16.2358H88.3323ZM87.2788 7.81364C85.0067 7.81364 82.6171 8.03577 80.1799 8.47687L79.98 8.51178L80.4179 11.6566L80.6147 11.6439C82.9249 11.4979 84.8448 11.4249 86.3173 11.4249C87.3232 11.4249 87.7516 11.5963 87.9325 11.7359C88.18 11.9327 88.3165 12.3484 88.3323 12.9704V13.3639H83.7087C82.3632 13.3639 81.2906 13.6844 80.5258 14.319C79.7452 14.9632 79.3485 15.8677 79.3485 17.0101V18.3841C79.3485 19.6725 79.7896 20.6912 80.6623 21.4179C81.5191 22.1351 82.6393 22.5 83.9848 22.5C85.8825 22.5 87.52 21.7765 88.8623 20.3516L89.1701 21.8875C89.2018 22.0526 89.3478 22.17 89.5128 22.17H92.4736C92.6672 22.17 92.8258 22.0113 92.8258 21.8177V12.9989C92.8258 11.1139 92.3657 9.75891 91.4613 8.97827C90.5664 8.20714 89.1606 7.81364 87.282 7.81364" fill="#002D3F"/>
+          <path d="M113.761 13.8684H110.137C110.203 12.8022 110.403 12.085 110.727 11.7391C111.07 11.3741 111.736 11.1869 112.717 11.1869C113.545 11.1869 114.113 11.298 114.402 11.5169C114.675 11.72 114.811 12.1135 114.811 12.6816C114.811 13.0909 114.738 13.4019 114.592 13.6019C114.459 13.7827 114.179 13.8716 113.757 13.8716M118.178 15.7344C118.867 15.0648 119.219 14.0556 119.219 12.7355C119.2 11.0822 118.654 9.82872 117.597 9.01316C116.556 8.2103 114.868 7.80093 112.577 7.80093C110.038 7.80093 108.198 8.35945 107.109 9.45743C106.018 10.5554 105.465 12.4817 105.465 15.1854C105.465 17.8891 106.033 19.6408 107.147 20.7768C108.264 21.9129 110.146 22.4905 112.739 22.4905C115.331 22.4905 117.305 22.1414 118.74 21.4528L118.879 21.3861L118.441 18.5047L118.241 18.5269C116.331 18.7268 114.636 18.8284 113.205 18.8284C112.174 18.8284 111.434 18.6729 111.009 18.3587C110.628 18.0858 110.371 17.5432 110.235 16.7498H114.884C116.382 16.7498 117.489 16.4103 118.178 15.7407" fill="#002D3F"/>
+          <path d="M101.023 5.71919C101.248 5.5034 101.673 5.39233 102.292 5.39233H105.031L105.469 2.31734L105.269 2.27926C104.25 2.0952 102.758 2 100.832 2C97.7382 2 96.1674 3.47879 96.1674 6.38877V8.09922L93.8032 8.41656V11.6439H96.1674V21.8621C96.1674 22.0557 96.3261 22.2144 96.5196 22.2144H100.334C100.528 22.2144 100.686 22.0557 100.686 21.8621V11.647H104.425V8.10239H100.686V6.94094C100.686 6.34435 100.801 5.93181 101.019 5.71919" fill="#002D3F"/>
+          <path d="M129.431 7.85803C127.666 7.85803 125.867 8.59108 124.077 10.0381L123.804 8.53078C123.773 8.36259 123.63 8.24201 123.458 8.24201H120.555C120.361 8.24201 120.203 8.40067 120.203 8.59425V21.8621C120.203 22.0557 120.361 22.2144 120.555 22.2144H124.344C124.537 22.2144 124.696 22.0557 124.696 21.8621V13.1766C124.696 13.0243 124.804 12.8846 124.95 12.837C126.59 12.3103 127.828 12.0437 128.634 12.0437H129.923L130.383 7.85485H129.431V7.85803Z" fill="#002D3F"/>
+          <path d="M11.8541 14.5951H8.54113C8.34438 14.5951 8.20475 14.4016 8.25235 14.2112C9.30908 10.1842 9.95328 7.64863 10.1818 6.60459C10.2389 6.90923 10.3341 7.32177 10.4674 7.8422C10.5943 8.34677 11.1528 10.4698 12.1429 14.2112C12.1937 14.4016 12.0509 14.5951 11.8541 14.5951ZM13.4059 3.59941C13.371 3.4693 13.2504 3.37727 13.1171 3.37727H7.20831C7.07186 3.37727 6.95444 3.46613 6.91953 3.59941L2.01033 21.8336C1.95955 22.024 2.10236 22.2112 2.2991 22.2112H6.11984C6.25313 22.2112 6.37371 22.1224 6.40862 21.9923L7.52565 17.9684C7.56055 17.8383 7.68114 17.7495 7.81442 17.7495H12.5332C12.6665 17.7495 12.7871 17.8383 12.822 17.9684L13.939 21.9923C13.9739 22.1224 14.0945 22.2112 14.2278 22.2112H18.0454C18.2421 22.2112 18.3849 22.024 18.3341 21.8336L13.4059 3.59941Z" fill="#002D3F"/>
+          <path d="M23.64 3.37727H19.6289C19.4639 3.37727 19.3274 3.51055 19.3274 3.67557V21.9383C19.3274 22.1033 19.4607 22.2398 19.6289 22.2398H23.64C23.805 22.2398 23.9383 22.1065 23.9383 21.9383V3.67874C23.9383 3.51373 23.805 3.38044 23.64 3.38044" fill="#002D3F"/>
+          <path d="M44.9904 8.11192H27.6384C26.1374 8.11192 24.9252 9.32732 24.9252 10.8251V21.9097C24.9252 22.0747 25.0585 22.208 25.2235 22.208H29.0696C29.2346 22.208 29.3679 22.0747 29.3679 21.9097V11.9612C29.3679 11.7962 29.5012 11.6629 29.6662 11.6629H32.5984C32.7634 11.6629 32.8999 11.7962 32.8999 11.9612V21.9097C32.8999 22.0747 33.0332 22.208 33.1982 22.208H37.3743C37.5394 22.208 37.6758 22.0747 37.6758 21.9097V11.9295C37.6758 11.7645 37.8091 11.628 37.9741 11.628H40.3097C40.4747 11.628 40.6112 11.7613 40.6112 11.9295V21.9097C40.6112 22.0747 40.7445 22.208 40.9095 22.208H44.9873C45.1523 22.208 45.2856 22.0747 45.2856 21.9097V8.41339C45.2856 8.24837 45.1523 8.11509 44.9873 8.11509" fill="#002D3F"/>
+          <path d="M74.4203 13.2908H70.7867C70.5424 13.2908 70.3361 13.2083 70.1743 13.0465C70.0124 12.8847 69.9299 12.6784 69.9299 12.434C69.9299 12.1897 70.0124 12.0596 70.1743 11.8946C70.3361 11.7327 70.5424 11.6502 70.7867 11.6502H76.7686C76.9304 11.6502 77.0637 11.5169 77.0637 11.3551V8.39433C77.0637 8.23249 76.9304 8.09921 76.7686 8.09921H69.2286C68.045 8.09921 67.0803 8.46098 66.3631 9.17816C65.6459 9.89217 65.2841 10.8569 65.2841 12.0437V12.9513C65.2841 14.1381 65.6459 15.0997 66.3631 15.8168C67.0771 16.534 68.0418 16.8958 69.2286 16.8958H73.7189V17.7526C73.7189 17.997 73.6364 18.2032 73.4746 18.3651C73.3096 18.5301 73.1097 18.6094 72.8621 18.6094H65.8395C65.6776 18.6094 65.5443 18.7427 65.5443 18.9045V21.9192C65.5443 22.0811 65.6776 22.2144 65.8395 22.2144H74.4171C75.6039 22.2144 76.5655 21.8526 77.2826 21.1354C77.9966 20.4182 78.3616 19.4567 78.3616 18.2699V17.2322C78.3616 16.0453 77.9998 15.0838 77.2826 14.3666C76.5655 13.6494 75.6007 13.2877 74.4171 13.2877" fill="#002D3F"/>
+        </svg>
+      </a>
+      <div class="util">
+        <span class="currency">SAR
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+        <a href="#" lang="ar">العربية</a>
+        <a href="#">Retrieve my booking</a>
+        <span class="phone">
+          <span class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A12 12 0 0 0 3.1 19.7L2 22l2.4-1.1A12 12 0 1 0 20.5 3.5zm-8.5 18a9.9 9.9 0 0 1-5-1.4l-.4-.2-2.3 1 1-2.2-.2-.4a10 10 0 1 1 6.9 3.2zm5.6-7.3c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.5-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.2c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.5.1-.8.4a3.5 3.5 0 0 0-1.1 2.6c0 1.5 1.1 3 1.3 3.2s2.2 3.4 5.4 4.8c.8.3 1.3.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>
+          </span>
+          +966554400000
+        </span>
+        <button class="signin">Sign in</button>
+      </div>
+    </div>
+    <div class="container row2" style="border-width: 0px">
+      <nav class="prodnav">
+        <a href="#">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12.3857 2.62695C13.738 2.62719 14.8339 3.72393 14.834 5.07617V12.8711C14.834 13.1471 14.61 13.3709 14.334 13.3711C14.0581 13.3708 13.834 13.1471 13.834 12.8711V11.2598H2.16699V12.8711C2.16699 13.1471 1.94298 13.3709 1.66699 13.3711C1.39085 13.3711 1.16699 13.1472 1.16699 12.8711V5.07617C1.16707 3.72378 2.2638 2.62695 3.61621 2.62695H12.3857ZM2.96582 8.33691C2.5247 8.33713 2.16715 8.69461 2.16699 9.13574V10.2598H13.834V9.13574C13.8338 8.69458 13.4763 8.33709 13.0352 8.33691H2.96582ZM3.61621 3.62695C2.81608 3.62695 2.16707 4.27606 2.16699 5.07617V7.52539C2.31115 7.45375 2.466 7.40005 2.62891 7.36914V7.1875C2.62898 6.19392 3.43415 5.38776 4.42773 5.3877H6.70117C7.21209 5.38779 7.67253 5.60226 8 5.94434C8.32753 5.60194 8.78857 5.38774 9.2998 5.3877H11.5732C12.5667 5.38787 13.373 6.19399 13.373 7.1875V7.36914C13.5356 7.40007 13.6901 7.45388 13.834 7.52539V5.07617C13.8339 4.27621 13.1857 3.62719 12.3857 3.62695H3.61621ZM4.42773 6.3877C3.98643 6.38776 3.62898 6.7462 3.62891 7.1875V7.33691H7.50098V7.1875C7.5009 6.74627 7.14238 6.38787 6.70117 6.3877H4.42773ZM9.2998 6.3877C8.85852 6.38778 8.50105 6.74622 8.50098 7.1875V7.33691H12.373V7.1875C12.373 6.74627 12.0144 6.38787 11.5732 6.3877H9.2998Z" fill="currentColor"/>
+          </svg>
+          Stays
+        </a>
+        <a href="#">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M2.50684 7.99316L1.50684 5.49316L3.50684 5.49316L4.50684 6.49316L6.50684 6.49316L5.50684 1.49316L7.50684 1.49316L10.0068 6.49316L13.0068 6.5002C13.4047 6.5002 13.7862 6.65823 14.0675 6.93954C14.3488 7.22084 14.5068 7.60237 14.5068 8.0002C14.5068 8.39802 14.3488 8.77955 14.0675 9.06086C13.7862 9.34216 13.4047 9.5002 13.0068 9.5002L10.0068 9.50723L7.50684 14.5072L5.50684 14.5072L6.50684 9.50723L4.50684 9.50723L3.50684 10.4932L1.50684 10.4932L2.50684 7.99316Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Flights
+        </a>
+        <a href="#">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M7.28729 12.4153C7.25135 12.4153 6.56836 10.6211 6.56836 10.6211" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.58105 12.4153C8.617 12.4153 9.29999 10.6211 9.29999 10.6211" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7.93419 1.33301C5.41792 1.33301 3.33301 3.26792 3.33301 5.625C3.33301 7.48956 4.77088 8.71339 5.99307 9.83916V10.9724C5.99307 11.078 6.06496 11.1483 6.1728 11.1483H9.69558C9.80342 11.1483 9.87532 11.078 9.87532 10.9724V9.83916C11.0975 8.71339 12.5354 7.48956 12.5354 5.625C12.5354 3.26792 10.4505 1.33301 7.93419 1.33301Z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.99316 10.3398V10.9731C5.99316 11.0786 6.06506 11.149 6.1729 11.149H9.69568C9.80352 11.149 9.87541 11.0786 9.87541 10.9731V10.3398" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.91892 4.5C9.97297 4.9441 10 5.42236 10 5.90062C10 7.74534 9.59459 9.31677 9 10" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6.92308 10C6.07692 9.32 5.5 7.756 5.5 5.92C5.5 3.472 6.53846 1.5 7.84615 1.5C8.5 1.5 9.07692 2.01 9.5 2.792C9.5 2.792 9.91699 3.75 9.91699 4.5" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 10L9.5 10" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.40848 14.6666H6.46084C6.24516 14.6666 6.06543 14.4907 6.06543 14.2796V12.802C6.06543 12.5909 6.24516 12.415 6.46084 12.415H9.40848C9.62416 12.415 9.80389 12.5909 9.80389 12.802V14.2444C9.80389 14.4555 9.62416 14.6666 9.40848 14.6666Z" fill="none" stroke="currentColor" stroke-miterlimit="10"/>
+          </svg>
+          Activities
+        </a>
+        <a href="#" class="active">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <mask id="rides-icon-mask" fill="white">
+              <path d="M14.7764 7.5C15.3609 7.50011 15.9269 7.705 16.376 8.0791L18.7314 10.042L21.1064 10.6357C22.2194 10.914 23 11.9144 23 13.0615V13.5C23 14.3284 22.3284 15 21.5 15H20.9346C20.7123 15.8623 19.9317 16.5 19 16.5C17.8954 16.5 17 15.6046 17 14.5C17 13.3954 17.8954 12.5 19 12.5C19.9317 12.5 20.7123 13.1377 20.9346 14H21.5C21.7761 14 22 13.7761 22 13.5V13.0615C22 12.3734 21.5318 11.7735 20.8643 11.6064L18.4375 11H3.5C2.67157 11 2 11.6716 2 12.5V13.5C2.00001 13.7761 2.22386 14 2.5 14H3.06543C3.28765 13.1377 4.06829 12.5 5 12.5C6.10457 12.5 7 13.3954 7 14.5C6.99999 15.6046 6.10457 16.5 5 16.5C4.0683 16.5 3.28766 15.8623 3.06543 15H2.5C1.67158 15 1.00001 14.3284 1 13.5V12.5C1 11.1193 2.11929 10 3.5 10H3.66211L4.0332 9.07129C4.41294 8.12232 5.33234 7.5 6.35449 7.5H14.7764ZM16 14C16.2761 14 16.5 14.2239 16.5 14.5C16.5 14.7761 16.2761 15 16 15H8C7.72386 15 7.50001 14.7761 7.5 14.5C7.5 14.2239 7.72386 14 8 14H16ZM6.35449 8.5C5.74114 8.5 5.18873 8.87387 4.96094 9.44336L4.73828 10H17.1191L15.7363 8.84766C15.4669 8.62311 15.1271 8.50011 14.7764 8.5H14V9C14 9.27614 13.7761 9.5 13.5 9.5C13.2239 9.5 13 9.27614 13 9V8.5H9V9C9 9.27614 8.77614 9.5 8.5 9.5C8.22386 9.5 8 9.27614 8 9V8.5H6.35449Z"/>
+            </mask>
+            <path d="M14.7764 7.5L14.7766 6.5H14.7764V7.5ZM16.376 8.0791L17.0162 7.31088L17.016 7.31075L16.376 8.0791ZM18.7314 10.042L18.0913 10.8102C18.2069 10.9066 18.3428 10.9756 18.4889 11.0121L18.7314 10.042ZM21.1064 10.6357L20.8639 11.6059H20.8639L21.1064 10.6357ZM23 13.0615H24V13.0615L23 13.0615ZM23 13.5L24 13.5V13.5H23ZM20.9346 15V14C20.4784 14 20.0801 14.3087 19.9662 14.7504L20.9346 15ZM17 14.5H16V14.5L17 14.5ZM20.9346 14L19.9662 14.2495C20.08 14.6913 20.4784 15 20.9346 15V14ZM22 13.5L23 13.5V13.5H22ZM22 13.0615H23V13.0615L22 13.0615ZM20.8643 11.6064L21.1071 10.6364L21.1067 10.6363L20.8643 11.6064ZM18.4375 11L18.6799 10.0298C18.6007 10.01 18.5192 10 18.4375 10V11ZM2 13.5H1L1 13.5L2 13.5ZM3.06543 14V15C3.5216 15 3.91996 14.6913 4.03379 14.2495L3.06543 14ZM7 14.5L8 14.5V14.5H7ZM3.06543 15L4.03379 14.7504C3.91995 14.3087 3.5216 14 3.06543 14V15ZM1 13.5H0V13.5L1 13.5ZM3.66211 10V11C4.07115 11 4.43895 10.7509 4.59072 10.3711L3.66211 10ZM4.0332 9.07129L3.10478 8.69977L3.10459 8.70024L4.0332 9.07129ZM16.5 14.5L17.5 14.5V14.5H16.5ZM7.5 14.5H6.5V14.5L7.5 14.5ZM4.96094 9.44336L4.03246 9.07197L4.03246 9.07197L4.96094 9.44336ZM4.73828 10L3.8098 9.62861C3.68657 9.9367 3.72418 10.2859 3.91021 10.5606C4.09624 10.8354 4.40646 11 4.73828 11V10ZM17.1191 10V11C17.5402 11 17.9161 10.7363 18.0594 10.3404C18.2027 9.94455 18.0828 9.50131 17.7593 9.23178L17.1191 10ZM15.7363 8.84766L16.3765 8.07943L16.3765 8.07943L15.7363 8.84766ZM14.7764 8.5L14.7767 7.5H14.7764V8.5ZM14 8.5V7.5C13.4477 7.5 13 7.94772 13 8.5H14ZM13 8.5H14C14 7.94772 13.5523 7.5 13 7.5V8.5ZM9 8.5V7.5C8.44772 7.5 8 7.94772 8 8.5H9ZM8 8.5H9C9 7.94772 8.55228 7.5 8 7.5V8.5ZM14.7764 7.5L14.7762 8.5C15.1269 8.50007 15.4665 8.62301 15.736 8.84746L16.376 8.0791L17.016 7.31075C16.3872 6.787 15.5948 6.50015 14.7766 6.5L14.7764 7.5ZM16.376 8.0791L15.7358 8.84732L18.0913 10.8102L18.7314 10.042L19.3716 9.27377L17.0162 7.31088L16.376 8.0791ZM18.7314 10.042L18.4889 11.0121L20.8639 11.6059L21.1064 10.6357L21.349 9.6656L18.974 9.07185L18.7314 10.042ZM21.1064 10.6357L20.8639 11.6059C21.5314 11.7728 22 12.373 22 13.0615L23 13.0615L24 13.0615C24 11.4558 22.9073 10.0552 21.349 9.6656L21.1064 10.6357ZM23 13.0615H22V13.5H23H24V13.0615H23ZM23 13.5L22 13.5C22 13.7761 21.7761 14 21.5 14V15V16C22.8807 16 24 14.8807 24 13.5L23 13.5ZM21.5 15V14H20.9346V15V16H21.5V15ZM20.9346 15L19.9662 14.7504C19.8546 15.1836 19.4627 15.5 19 15.5V16.5V17.5C20.4007 17.5 21.5701 16.541 21.9029 15.2496L20.9346 15ZM19 16.5V15.5C18.4477 15.5 18 15.0523 18 14.5L17 14.5L16 14.5C16 16.1568 17.3431 17.5 19 17.5V16.5ZM17 14.5H18C18 13.9477 18.4477 13.5 19 13.5V12.5V11.5C17.3431 11.5 16 12.8431 16 14.5H17ZM19 12.5V13.5C19.4627 13.5 19.8546 13.8164 19.9662 14.2495L20.9346 14L21.9029 13.7505C21.5701 12.459 20.4007 11.5 19 11.5V12.5ZM20.9346 14V15H21.5V14V13H20.9346V14ZM21.5 14V15C22.3284 15 23 14.3284 23 13.5L22 13.5L21 13.5C21 13.2239 21.2238 13 21.5 13V14ZM22 13.5H23V13.0615H22H21V13.5H22ZM22 13.0615L23 13.0615C23 11.9146 22.2196 10.9149 21.1071 10.6364L20.8643 11.6064L20.6214 12.5765C20.8439 12.6322 21 12.8322 21 13.0615L22 13.0615ZM20.8643 11.6064L21.1067 10.6363L18.6799 10.0298L18.4375 11L18.1951 11.9702L20.6218 12.5766L20.8643 11.6064ZM18.4375 11V10H3.5V11V12H18.4375V11ZM3.5 11V10C2.11929 10 1 11.1193 1 12.5H2H3C3 12.2239 3.22386 12 3.5 12V11ZM2 12.5H1V13.5H2H3V12.5H2ZM2 13.5L1 13.5C1.00002 14.3284 1.67155 15 2.5 15V14V13C2.77617 13 2.99999 13.2239 3 13.5L2 13.5ZM2.5 14V15H3.06543V14V13H2.5V14ZM3.06543 14L4.03379 14.2495C4.14542 13.8164 4.53731 13.5 5 13.5V12.5V11.5C3.59926 11.5 2.42989 12.459 2.09707 13.7505L3.06543 14ZM5 12.5V13.5C5.55228 13.5 6 13.9477 6 14.5H7H8C8 12.8431 6.65685 11.5 5 11.5V12.5ZM7 14.5L6 14.5C6 15.0523 5.55227 15.5 5 15.5V16.5V17.5C6.65686 17.5 7.99999 16.1568 8 14.5L7 14.5ZM5 16.5V15.5C4.53733 15.5 4.14542 15.1836 4.03379 14.7504L3.06543 15L2.09707 15.2496C2.4299 16.541 3.59926 17.5 5 17.5V16.5ZM3.06543 15V14H2.5V15V16H3.06543V15ZM2.5 15V14C2.22387 14 2 13.7761 2 13.5L1 13.5L0 13.5C1.11461e-05 14.8807 1.11928 16 2.5 16V15ZM1 13.5H2V12.5H1H0V13.5H1ZM1 12.5H2C2 11.6716 2.67157 11 3.5 11V10V9C1.567 9 0 10.567 0 12.5H1ZM3.5 10V11H3.66211V10V9H3.5V10ZM3.66211 10L4.59072 10.3711L4.96181 9.44234L4.0332 9.07129L3.10459 8.70024L2.7335 9.62895L3.66211 10ZM4.0332 9.07129L4.96163 9.44281C5.18945 8.87347 5.74116 8.5 6.35449 8.5V7.5V6.5C4.92353 6.5 3.63643 7.37117 3.10478 8.69977L4.0332 9.07129ZM6.35449 7.5V8.5H14.7764V7.5V6.5H6.35449V7.5ZM16 14V15C15.7239 15 15.5 14.7761 15.5 14.5H16.5H17.5C17.5 13.6716 16.8284 13 16 13V14ZM16.5 14.5L15.5 14.5C15.5 14.2239 15.7238 14 16 14V15V16C16.8284 16 17.5 15.3284 17.5 14.5L16.5 14.5ZM16 15V14H8V15V16H16V15ZM8 15V14C8.27617 14 8.49999 14.2239 8.5 14.5L7.5 14.5L6.5 14.5C6.50002 15.3284 7.17155 16 8 16V15ZM7.5 14.5H8.5C8.5 14.7761 8.27614 15 8 15V14V13C7.17157 13 6.5 13.6716 6.5 14.5H7.5ZM8 14V15H16V14V13H8V14ZM6.35449 8.5V7.5C5.33237 7.5 4.41217 8.1227 4.03246 9.07197L4.96094 9.44336L5.88941 9.81475C5.96529 9.62505 6.1499 9.5 6.35449 9.5V8.5ZM4.96094 9.44336L4.03246 9.07197L3.8098 9.62861L4.73828 10L5.66676 10.3714L5.88941 9.81475L4.96094 9.44336ZM4.73828 10V11H17.1191V10V9H4.73828V10ZM17.1191 10L17.7593 9.23178L16.3765 8.07943L15.7363 8.84766L15.0961 9.61588L16.479 10.7682L17.1191 10ZM15.7363 8.84766L16.3765 8.07943C15.9273 7.70512 15.3611 7.50018 14.7767 7.5L14.7764 8.5L14.7761 9.5C14.8931 9.50004 15.0064 9.54111 15.0961 9.61588L15.7363 8.84766ZM14.7764 8.5V7.5H14V8.5V9.5H14.7764V8.5ZM14 8.5H13V9H14H15V8.5H14ZM14 9H13C13 8.72386 13.2239 8.5 13.5 8.5V9.5V10.5C14.3284 10.5 15 9.82843 15 9H14ZM13.5 9.5V8.5C13.7761 8.5 14 8.72386 14 9H13H12C12 9.82843 12.6716 10.5 13.5 10.5V9.5ZM13 9H14V8.5H13H12V9H13ZM13 8.5V7.5H9V8.5V9.5H13V8.5ZM9 8.5H8V9H9H10V8.5H9ZM9 9H8C8 8.72386 8.22386 8.5 8.5 8.5V9.5V10.5C9.32843 10.5 10 9.82843 10 9H9ZM8.5 9.5V8.5C8.77614 8.5 9 8.72386 9 9H8H7C7 9.82843 7.67157 10.5 8.5 10.5V9.5ZM8 9H9V8.5H8H7V9H8ZM8 8.5V7.5H6.35449V8.5V9.5H8V8.5Z" fill="currentColor" mask="url(#rides-icon-mask)"/>
+          </svg>
+          Rides
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main grid -->
+  <section class="container grid" style="padding-top: 24px">
+
+    <!-- LEFT: input panel -->
+    <div class="panel" style="width: 504px">
+      <h2 class="panel-title">Book a ride now</h2>
+
+      <div class="combo-field">
+        <label class="combo-row">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+          </span>
+          <input type="text" placeholder="Pickup location" />
+        </label>
+        <div class="combo-divider"></div>
+        <label class="combo-row">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <input type="text" placeholder="Where to?" />
+        </label>
+      </div>
+      <p class="combo-hint">Rides must be booked 24 hours in advance</p>
+
+      <hr class="panel-divider" />
+
+      <p class="eyebrow" style="font-size: 14px; letter-spacing: 1.4px">BOOK FOR UPCOMING TRIPS</p>
+      <div class="trips">
+        <div class="trip flight" style="padding: 16px; border-width: 1px">
+          <span class="mark" aria-hidden="true" style="width: 40px; height: 40px">f</span>
+          <div class="body" style="justify-content: flex-start; align-items: stretch; flex-direction: column; gap: 3px">
+            <div class="title">
+              Riyadh
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+              London
+            </div>
+            <div class="meta">02:30 PM – 11:50 PM · Thu 14 May</div>
+            <div class="meta">Flynas · XY 30Z</div>
+          </div>
+          <button class="book-btn">Book a ride
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <div class="trip hotel">
+          <span class="mark" aria-hidden="true" style="width: 40px; height: 40px"></span>
+          <div class="body">
+            <div class="title">Sofitel Hotel London</div>
+            <div class="meta">London, United Kingdom</div>
+            <div class="meta">12 May – 14 May</div>
+          </div>
+          <button class="book-btn">Book a ride
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="or-divider">or</div>
+
+      <div class="hourly">
+        <span class="hicon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <span class="htxt">
+          <div class="htitle">Hourly rides</div>
+          <div class="hmeta">2-hour minimum · same driver waits</div>
+        </span>
+        <span class="harrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- RIGHT: hero + value props -->
+    <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+      <div class="hero-card">
+        <p class="hero-eyebrow">Introducing</p>
+        <h2>Rides for every journey</h2>
+        <p class="hero-lede">From the airport, around town, or by the hour. Book once, ride covered.</p>
+        <div class="ride-types">
+          <span class="ride-type airport"><span class="dot"></span>Airport rides</span>
+          <span class="ride-type city"><span class="dot"></span>Within city</span>
+          <span class="ride-type hourly"><span class="dot"></span>Hourly</span>
+        </div>
+        <div class="hero-image" aria-hidden="true">
+          <img src="Rides.png" alt="" />
+        </div>
+
+        <div class="value-props" style="margin-top: 24px">
+          <div class="value-card">
+            <span class="iicon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <div class="ititle">15 min free wait</div>
+            <div class="idesc">Included on every airport pickup, so a quick delay never costs extra.</div>
+          </div>
+          <div class="value-card">
+            <span class="iicon butter">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+            </span>
+            <div class="ititle">Live flight tracking</div>
+            <div class="idesc">We shift your pickup time if your flight runs early or late.</div>
+          </div>
+          <div class="value-card">
+            <span class="iicon success">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M8 15h3"/></svg>
+            </span>
+            <div class="ititle">Fare locked at booking</div>
+            <div class="idesc">No surge pricing — the price you see is the price you pay.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="foot">
+    <div class="container inner">
+      <div>© 2026 Almosafer</div>
+      <div>
+        <a href="#">Help</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
