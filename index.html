@@ -88,11 +88,32 @@
   .field.filled { background: var(--bg-subtle); border-color: var(--border-soft); cursor: default; }
   .field.filled:hover { border-color: var(--border); }
   .field.filled .value { font-size: 15px; color: var(--ink); font-weight: 500; }
+  .field.filled-white { background: #fff; border-color: var(--border); cursor: default; }
+  .field.filled-white:hover { border-color: #B7BFC3; }
+  .field.filled-white .value { font-size: 15px; color: var(--ink); font-weight: 500; }
   .field.active { border-color: var(--alm-teal); box-shadow: 0 0 0 3px var(--alm-teal-12); }
+
+  /* ── Calendar ── */
+  .cal-widget { border: 1px solid var(--border-soft); border-radius: var(--r-md); padding: 16px 12px; background: #fff; margin-top: 4px; }
+  .cal-section-title { font-size: 13px; font-weight: 600; color: var(--alm-navy); margin: 0 0 14px; }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .cal-title { font-size: 15px; font-weight: 600; color: var(--alm-navy); }
+  .cal-nav { width: 32px; height: 32px; border: none; background: none; cursor: pointer; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-2); padding: 0; }
+  .cal-nav:hover { background: var(--bg-subtle); color: var(--ink); }
+  .cal-nav svg { width: 16px; height: 16px; display: block; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-dayname { text-align: center; font-size: 11px; font-weight: 600; color: var(--text-2); padding: 2px 0 8px; }
+  .cal-day { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; border-radius: 8px; cursor: pointer; border: none; background: none; font-family: inherit; color: var(--ink); transition: background .1s, color .1s; }
+  .cal-day:not(.past):not(.empty):hover { background: var(--alm-teal-12); color: var(--alm-teal); }
+  .cal-day.today { font-weight: 700; color: var(--alm-teal); }
+  .cal-day.selected { background: var(--alm-teal) !important; color: #fff !important; font-weight: 600; border-radius: 50%; }
+  .cal-day.past { color: var(--border); cursor: default; }
+  .cal-day.empty { cursor: default; }
   .field .right-meta { font-size: 12px; color: var(--alm-teal); font-weight: 600; white-space: nowrap; }
   .hint { font-size: 12px; color: var(--text-2); margin: 8px 0 0; line-height: 1.5; }
 
   /* ── Combo field ── */
+  .combo-wrap { position: relative; }
   .combo-field { border: 1px solid var(--border); border-radius: var(--r-md); background: #fff; overflow: hidden; transition: border-color .15s, box-shadow .15s; }
   .combo-field:hover { border-color: #B7BFC3; }
   .combo-field:focus-within { border-color: var(--alm-teal); box-shadow: 0 0 0 3px var(--alm-teal-12); }
@@ -103,6 +124,27 @@
   .combo-row input::placeholder { color: var(--text-2); }
   .combo-divider { height: 1px; background: var(--border-soft); margin-left: 50px; }
   .combo-hint { font-size: 13px; color: var(--text-2); margin: 8px 0 0; }
+
+  /* ── Location autocomplete dropdown ── */
+  .loc-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: var(--shadow-pop); z-index: 50; display: none; }
+  .loc-dropdown.open { display: block; }
+  .loc-head { padding: 16px 16px 10px; font-size: 16px; font-weight: 700; color: var(--ink); }
+  .loc-list { }
+  .loc-item { display: flex; align-items: center; gap: 14px; padding: 12px 16px; cursor: pointer; border-top: 1px solid var(--border-soft); transition: background .12s; }
+  .loc-item:hover { background: var(--bg-subtle); }
+  .loc-thumb { width: 44px; height: 44px; border-radius: 50%; flex: 0 0 44px; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; }
+  .loc-thumb.t-airport { background: var(--alm-teal-12); color: var(--alm-teal); }
+  .loc-thumb.t-hotel   { background: #F0F2F3; color: var(--text-2); }
+  .loc-thumb.t-sofitel { background: linear-gradient(160deg, #1a6b8a 0%, #0BA0B7 60%, #68d5e3 100%); color: #fff; }
+  .loc-thumb.t-fourseasons { background: linear-gradient(160deg, #8B6914 0%, #C9972A 100%); color: #fff; }
+  .loc-thumb.t-ritz    { background: linear-gradient(160deg, #2a3a2a 0%, #4a6741 100%); color: #fff; }
+  .loc-thumb.t-rosewood { background: linear-gradient(160deg, #5c2e1a 0%, #9c5a38 100%); color: #fff; }
+  .loc-thumb svg { width: 22px; height: 22px; }
+  .loc-body { flex: 1; min-width: 0; }
+  .loc-name { font-size: 15px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
+  .loc-sub  { font-size: 13px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .loc-badge { flex: 0 0 auto; height: 26px; padding: 0 10px; border-radius: 100px; background: var(--alm-teal-12); color: var(--alm-teal); font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; white-space: nowrap; }
+  .loc-footer { padding: 14px 16px; text-align: center; font-size: 13px; color: var(--text-2); border-top: 1px solid var(--border-soft); line-height: 1.6; }
 
   /* ── Buttons ── */
   .btn { height: 48px; padding: 0 20px; border-radius: 100px; font-family: inherit; font-size: 15px; font-weight: 600; border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background-color .15s, border-color .15s, color .15s; }
@@ -130,15 +172,35 @@
   .or-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--text-3); font-size: 12px; }
   .or-divider::before, .or-divider::after { content: ""; flex: 1; height: 1px; background: var(--border-soft); }
 
+  /* ── Plan route view ── */
+  #s1-plan-view { display: none; }
+  .pr-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--text-2); margin: 0 0 10px; }
+  .trip-opts { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+  .trip-opt { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--border-soft); border-radius: var(--r-md); cursor: pointer; background: #fff; transition: border-color .15s, box-shadow .15s; }
+  .trip-opt:hover { border-color: var(--alm-teal); box-shadow: 0 0 0 3px var(--alm-teal-12); }
+  .trip-opt-art { width: 88px; height: 76px; flex: 0 0 88px; border-radius: 10px; overflow: hidden; }
+  .trip-opt-body { flex: 1; min-width: 0; }
+  .trip-opt-title { font-size: 15px; font-weight: 600; color: var(--ink); margin: 0 0 4px; line-height: 1.35; }
+  .trip-opt-sub { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+  .trip-opt-chevron { flex: 0 0 20px; color: var(--alm-teal); display: flex; align-items: center; }
+  .pr-loc-field { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--border-soft); border-radius: var(--r-md); background: var(--bg-subtle); margin-bottom: 10px; }
+  .pr-loc-field .ico { width: 18px; height: 18px; flex: 0 0 18px; color: var(--text-3); }
+  .pr-loc-field .body { flex: 1; }
+  .pr-loc-field .label { font-size: 11px; color: var(--text-2); }
+  .pr-loc-field .value { font-size: 14px; font-weight: 500; color: var(--ink); }
+
   /* ── Upcoming trips ── */
   .trips { display: flex; flex-direction: column; gap: 8px; }
-  .trip { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--border-soft); border-radius: var(--r-md); background: #fff; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  .trip { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--border-soft); border-radius: var(--r-md); background: #fff; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
   .trip:hover { border-color: var(--alm-teal); box-shadow: 0 0 0 3px var(--alm-teal-06); }
-  .trip .mark { width: 36px; height: 36px; border-radius: var(--r-sm); display: inline-flex; align-items: center; justify-content: center; flex: 0 0 36px; }
-  .trip.flight .mark { background: var(--alm-butter-12); color: var(--alm-butter); }
-  .trip.hotel  .mark { background: var(--alm-teal-12);  color: var(--alm-teal); }
+  .trip .mark { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 40px; font-weight: 700; font-size: 18px; color: #fff; }
+  .trip.flight .mark { background: var(--alm-teal); }
+  .trip.hotel  .mark { background: var(--alm-teal); }
   .trip .mark svg { width: 18px; height: 18px; }
   .trip .body { min-width: 0; }
+  .trip .f-title { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
+  .trip .f-times { font-size: 12px; color: var(--text-2); margin: 0 0 1px; }
+  .trip .f-airline { font-size: 12px; color: var(--text-2); }
   .trip .title { font-size: 15px; font-weight: 600; color: var(--ink); margin: 0 0 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .trip .meta { font-size: 13px; color: var(--text-2); }
   .trip .cta { font-size: 13px; font-weight: 600; color: var(--alm-teal); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
@@ -182,29 +244,27 @@
   .flight-dropdown { margin-top: 6px; background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: var(--shadow-pop); overflow: hidden; }
   .flight-dropdown .dropdown-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; font-size: 12px; color: var(--text-2); background: var(--bg-subtle); border-bottom: 1px solid var(--border-soft); }
   .flight-dropdown .dropdown-header b { color: var(--ink); font-weight: 600; }
-  .flight-option { display: grid; grid-template-columns: 36px 1fr auto; column-gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background-color .15s; }
+  .airline-mark { width: 40px; height: 40px; border-radius: 50%; background: var(--alm-teal); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex: 0 0 40px; }
+  .airline-mark.red { background: #C01515; }
+  .flight-option { display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background-color .15s; }
   .flight-option:last-child { border-bottom: 0; }
   .flight-option:hover { background: var(--alm-teal-06); }
-  .flight-option .airline-mark { width: 36px; height: 36px; border-radius: var(--r-sm); background: var(--alm-teal-12); color: var(--alm-teal); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; letter-spacing: .04em; }
-  .flight-option .route { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
-  .flight-option .meta  { font-size: 12px; color: var(--text-2); }
-  .flight-option .time  { font-size: 14px; font-weight: 600; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; line-height: 1.2; }
-  .flight-option .time .meta { font-weight: 400; margin-top: 2px; font-size: 11px; }
+  .flight-option .f-title { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
+  .flight-option .f-times { font-size: 12px; color: var(--text-2); margin: 0 0 1px; }
+  .flight-option .f-airline { font-size: 12px; color: var(--text-2); }
 
   /* ── Flight summary card (step 3) ── */
-  .flight-summary { display: grid; grid-template-columns: 36px 1fr auto; column-gap: 12px; align-items: center; padding: 14px 16px; border: 1px solid var(--alm-teal); border-radius: var(--r-md); background: var(--alm-teal-06); margin-bottom: 20px; }
-  .flight-summary .airline-mark { width: 36px; height: 36px; border-radius: var(--r-sm); background: var(--alm-teal-12); color: var(--alm-teal); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; letter-spacing: .04em; }
-  .flight-summary .route { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
-  .flight-summary .meta  { font-size: 12px; color: var(--text-2); }
-  .flight-summary .time  { font-size: 14px; font-weight: 600; color: var(--ink); text-align: right; line-height: 1.2; }
-  .flight-summary .time .meta { font-size: 11px; font-weight: 400; margin-top: 2px; }
+  .flight-summary { display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; align-items: center; padding: 14px 16px; border: 1px solid var(--alm-teal); border-radius: var(--r-md); background: var(--alm-teal-06); margin-bottom: 20px; }
+  .flight-summary .f-title { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
+  .flight-summary .f-times { font-size: 12px; color: var(--text-2); margin: 0 0 1px; }
+  .flight-summary .f-airline { font-size: 12px; color: var(--text-2); }
 
   /* ── Detail rows (step 3) ── */
-  .detail-row { height: 56px; border: 1px solid var(--border); border-radius: var(--r-md); background: #fff; display: flex; align-items: center; padding: 0 16px; gap: 12px; }
-  .detail-row .dr-label { font-size: 13px; color: var(--text-2); min-width: 110px; flex: 0 0 110px; }
-  .detail-row .dr-value { flex: 1; font-size: 15px; font-weight: 500; color: var(--ink); }
-  .detail-row.pax { justify-content: space-between; }
-  .detail-row.pax .dr-label { flex: 1; min-width: 0; }
+  .detail-row { min-height: 56px; border: 1px solid var(--border); border-radius: var(--r-md); background: #fff; display: flex; flex-direction: column; justify-content: center; padding: 10px 16px; gap: 2px; }
+  .detail-row .dr-label { font-size: 11px; color: var(--text-2); line-height: 1.2; }
+  .detail-row .dr-value { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+  .detail-row.pax { flex-direction: row; align-items: center; min-height: 56px; }
+  .detail-row.pax .dr-label { flex: 1; font-size: 11px; color: var(--text-2); }
   .pax-controls { display: flex; align-items: center; gap: 16px; }
   .pax-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: #fff; color: var(--ink); font-size: 18px; font-weight: 400; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: border-color .15s, background-color .15s; line-height: 1; }
   .pax-btn:hover { border-color: var(--alm-teal); color: var(--alm-teal); }
@@ -294,6 +354,81 @@
   .success-modal .ref { font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
   .success-modal .ref b { color: var(--ink); font-weight: 600; }
 
+  /* ── Edit search modal ── */
+  .edit-overlay { position: fixed; inset: 0; background: rgba(0,49,67,.55); display: flex; align-items: center; justify-content: center; z-index: 90; opacity: 0; pointer-events: none; transition: opacity .22s; }
+  .edit-overlay.show { opacity: 1; pointer-events: all; }
+  .edit-modal { background: #fff; border-radius: var(--r-lg); padding: 0; max-width: 500px; width: calc(100% - 32px); box-shadow: var(--shadow-pop); max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; }
+  .edit-modal-header { display: flex; align-items: center; gap: 10px; padding: 18px 20px 16px; border-bottom: 1px solid var(--border-soft); min-height: 62px; flex-shrink: 0; }
+  .edit-modal-header h3 { font-size: 17px; font-weight: 600; color: var(--alm-navy); margin: 0; flex: 1; }
+  .edit-modal-close { width: 32px; height: 32px; border: none; background: var(--bg-subtle); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-2); flex: 0 0 32px; }
+  .edit-modal-close:hover, .edit-modal-back:hover { background: var(--border-soft); }
+  .edit-modal-back { width: 32px; height: 32px; border: none; background: var(--bg-subtle); border-radius: 50%; cursor: pointer; align-items: center; justify-content: center; color: var(--ink); flex: 0 0 32px; display: none; }
+  .edit-modal-body { padding: 18px 20px 0; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .edit-modal-section { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-2); margin: 2px 0 8px; }
+  .em-section { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.30s ease-in-out; }
+  .em-section.em-collapsed { grid-template-rows: 0fr; opacity: 0; pointer-events: none; }
+  .em-inner { overflow: hidden; min-height: 0; padding-bottom: 10px; }
+  .edit-flight-row { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--alm-teal); border-radius: var(--r-md); background: var(--alm-teal-06); }
+  .edit-flight-change { font-size: 13px; font-weight: 600; color: var(--alm-teal); border: none; background: none; cursor: pointer; padding: 0; white-space: nowrap; }
+  .em-field-row { padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--r-md); background: #fff; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: border-color .22s, box-shadow .22s, opacity .32s ease; }
+  .em-field-row .ico { width: 18px; height: 18px; flex: 0 0 18px; color: var(--text-3); display: inline-flex; align-items: center; justify-content: center; }
+  .em-field-row .ico svg { width: 18px; height: 18px; display: block; }
+  .em-field-row .body { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .em-field-row .label { font-size: 11px; color: var(--text-2); line-height: 1.2; }
+  .em-field-row .em-display { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.35; }
+  .em-field-row .em-input { display: none; border: none; outline: none; background: transparent; font-family: inherit; font-size: 15px; color: var(--ink); width: 100%; padding: 0; line-height: 1.35; }
+  .em-field-row .em-input::placeholder { color: var(--text-3); }
+  .em-field-row:hover:not(.active):not(.dimmed) { border-color: #B7BFC3; }
+  .em-field-row.active { border-color: var(--alm-teal); box-shadow: 0 0 0 3px var(--alm-teal-12); cursor: text; }
+  .em-field-row.dimmed { opacity: 0.38; pointer-events: none; }
+  .modal-loc-dropdown { background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: 0 4px 16px rgba(0,0,0,.10); overflow-y: auto; display: none; margin-top: 6px; }
+  .modal-loc-dropdown.open { display: flex; flex-direction: column; flex: 1; min-height: 0; max-height: none; animation: dropIn 0.28s cubic-bezier(0.4,0,0.2,1); }
+  .modal-loc-dropdown.open .loc-list { flex: 1; overflow-y: auto; }
+  @keyframes dropIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  /* Loc section fills remaining space; inactive field pinned to bottom in pickup-focus mode */
+  #em-loc-section { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .em-loc-pickup-focused #em-dropoff-row { margin-top: auto; }
+  .em-loc-dropoff-focused #em-pickup-row { flex-shrink: 0; }
+  .modal-loc-dropdown .loc-head { font-size: 11px; font-weight: 600; color: var(--text-2); padding: 10px 14px 6px; text-transform: uppercase; letter-spacing: .06em; }
+  .em-footer { padding: 16px 20px 20px; overflow: hidden; }
+
+  /* ── Edit modal – datetime section ── */
+  #em-loc-section { transition: height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+  .em-dt-mode #em-loc-section { opacity: 0; pointer-events: none; margin-bottom: 0 !important; }
+  #em-datetime-section.em-dt-focus { display: flex !important; flex-direction: column; flex: 1; min-height: 0; }
+  #em-datetime-section.em-dt-focus > .em-inner { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding-bottom: 0; }
+  .em-dt-picker-wrap { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .em-dt-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; flex-shrink: 0; }
+  .em-dt-tab { padding: 10px 12px; border: 1.5px solid var(--border); border-radius: var(--r-md); background: #fff; font-family: inherit; cursor: pointer; text-align: left; transition: border-color .18s, background .18s; }
+  .em-dt-tab.active { border-color: var(--alm-teal); background: var(--alm-teal-06); }
+  .em-dt-tab .dt-tab-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; display: block; margin-bottom: 3px; }
+  .em-dt-tab.active .dt-tab-label { color: var(--alm-teal); }
+  .em-dt-tab .dt-tab-val { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .em-dt-content { flex: 1; min-height: 0; overflow-y: auto; }
+  .em-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
+  .em-cal-nav-label { font-size: 15px; font-weight: 600; color: var(--alm-navy); }
+  .em-cal-nav-btn { width: 30px; height: 30px; border: none; background: var(--bg-subtle); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+  .em-cal-nav-btn:hover { background: var(--border-soft); }
+  .em-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .em-cal-dayname { text-align: center; font-size: 11px; font-weight: 600; color: var(--text-2); padding: 2px 0 8px; }
+  .em-cal-day { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; border-radius: 8px; cursor: pointer; border: none; background: none; color: var(--ink); transition: background .1s, color .1s; }
+  .em-cal-day:hover:not(.past):not(.selected):not(.empty) { background: var(--bg-subtle); }
+  .em-cal-day.selected { background: var(--alm-teal) !important; color: #fff !important; font-weight: 600; border-radius: 50%; }
+  .em-cal-day.today { font-weight: 700; color: var(--alm-teal); }
+  .em-cal-day.past { color: var(--border); cursor: default; }
+  .em-cal-day.empty { cursor: default; }
+  .em-cal-flight-note { font-size: 12px; color: var(--text-2); margin-top: 10px; padding: 7px 10px; background: var(--alm-teal-06); border-radius: 6px; flex-shrink: 0; }
+  .em-time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding-bottom: 4px; }
+  .em-time-slot { padding: 9px 4px; text-align: center; font-size: 13px; font-weight: 500; color: var(--ink); border: 1.5px solid var(--border); border-radius: var(--r-md); cursor: pointer; transition: background .12s, border-color .12s; background: #fff; }
+  .em-time-slot:hover:not(.disabled):not(.selected) { border-color: #B7BFC3; background: var(--bg-subtle); }
+  .em-time-slot.selected { background: var(--alm-teal); border-color: var(--alm-teal); color: #fff; font-weight: 600; }
+  .em-time-slot.disabled { color: var(--border); cursor: default; background: #fafafa; }
+  .em-time-slot.cutting { border-color: #F59E0B; color: #92400E; background: #FFFBEB; }
+  .em-dt-msg { font-size: 12px; line-height: 1.45; padding: 8px 10px; border-radius: 6px; margin-top: 10px; flex-shrink: 0; }
+  .em-dt-msg.info { background: var(--alm-teal-06); color: var(--alm-navy); }
+  .em-dt-msg.warn { background: #FEF3C7; color: #92400E; }
+  .em-dt-msg.error { background: #FEE2E2; color: #B91C1C; }
+
   /* ── Footer ── */
   .foot { border-top: 1px solid var(--border-soft); background: #fff; flex: 0 0 auto; }
   .foot .inner { padding: 24px 0; display: flex; justify-content: space-between; font-size: 13px; color: var(--text-2); }
@@ -369,22 +504,35 @@
   <div class="container grid">
     <!-- Left panel -->
     <div class="panel">
+
+      <!-- ── Default view ── -->
+      <div id="s1-default-view">
       <h2 class="panel-title">Book a ride now</h2>
 
-      <div class="combo-field" id="s1-combo">
-        <label class="combo-row">
-          <span class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
-          </span>
-          <input id="s1-pickup" type="text" placeholder="Pickup location" oninput="checkComboReady()" />
-        </label>
-        <div class="combo-divider"></div>
-        <label class="combo-row">
-          <span class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
-          </span>
-          <input id="s1-dropoff" type="text" placeholder="Where to?" oninput="checkComboReady()" />
-        </label>
+      <div class="combo-wrap">
+        <div class="combo-field" id="s1-combo">
+          <label class="combo-row">
+            <span class="ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+            </span>
+            <input id="s1-pickup" type="text" placeholder="Pickup location"
+              onfocus="openLocDrop('pickup')" oninput="filterLoc(this.value,'pickup')" autocomplete="off" />
+          </label>
+          <div class="combo-divider"></div>
+          <label class="combo-row">
+            <span class="ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <input id="s1-dropoff" type="text" placeholder="Where to?"
+              onfocus="openLocDrop('dropoff')" oninput="filterLoc(this.value,'dropoff')" autocomplete="off" />
+          </label>
+        </div>
+        <!-- Location autocomplete dropdown -->
+        <div class="loc-dropdown" id="loc-dropdown">
+          <div class="loc-head">Suggested locations</div>
+          <div class="loc-list" id="loc-list"></div>
+          <div class="loc-footer">Did you not find what you are looking for?<br>Try to type more information on the search.</div>
+        </div>
       </div>
 
       <div id="s1-find-btn" style="display:none; margin-top:12px;">
@@ -398,14 +546,12 @@
 
       <p class="eyebrow" style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.08em">Book for upcoming trips</p>
       <div class="trips">
-        <div class="trip flight" onclick="bookTripFlight()">
-          <span class="mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
-          </span>
+        <div class="trip flight" onclick="planFlight(0)">
+          <span class="mark">F</span>
           <div class="body">
-            <div class="title">Riyadh → London</div>
-            <div class="meta">02:30 PM – 11:50 PM · Thu 14 May</div>
-            <div class="meta">Flynas · XY 30Z</div>
+            <div class="f-title">Cairo → Riyadh</div>
+            <div class="f-times">19:25 – 22:10 • Sat 14 Jun</div>
+            <div class="f-airline">Flynas • XY 304</div>
           </div>
           <span class="cta">Book a ride
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
@@ -440,6 +586,84 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
         </span>
       </div>
+      </div><!-- /s1-default-view -->
+
+      <!-- ── Plan route view ── -->
+      <div id="s1-plan-view">
+        <div class="panel-header" style="margin-bottom:16px">
+          <button class="back-btn" aria-label="Back" onclick="closePlanRoute()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <h2 class="panel-title" style="margin:0">Plan your route</h2>
+        </div>
+
+        <!-- Flight card (populated by JS) -->
+        <p class="pr-eyebrow">Your flight</p>
+        <div class="flight-summary" id="s1-pr-flight-card" style="margin-bottom:20px">
+          <span class="airline-mark" id="s1-pr-mark">F</span>
+          <div>
+            <div class="f-title" id="s1-pr-title">Cairo → Riyadh</div>
+            <div class="f-times" id="s1-pr-times">19:25 – 22:10 • Sat 14 Jun</div>
+            <div class="f-airline" id="s1-pr-airline">Flynas • XY 304</div>
+          </div>
+        </div>
+
+        <!-- Step 1: choose direction -->
+        <div id="s1-pr-choose">
+          <p class="panel-section-title" style="margin:0 0 12px">Select your trip</p>
+          <div class="trip-opts">
+
+            <div class="trip-opt" id="s1-pr-opt-pickup" onclick="chooseTripDirection('pickup')">
+              <div class="trip-opt-art">
+                <svg viewBox="0 0 88 76" xmlns="http://www.w3.org/2000/svg"><rect width="88" height="76" fill="#f0faf9"/><rect x="6" y="38" width="58" height="16" rx="4" fill="#1a1a2e"/><path d="M15 38 L23 26 L47 26 L55 38Z" fill="#1a1a2e"/><path d="M25 27 L27 37 L43 37 L45 27Z" fill="#87d8e8" opacity="0.75"/><circle cx="19" cy="55" r="7" fill="#333"/><circle cx="19" cy="55" r="3.5" fill="#777"/><circle cx="51" cy="55" r="7" fill="#333"/><circle cx="51" cy="55" r="3.5" fill="#777"/><circle cx="74" cy="22" r="6" fill="#0BA0B7"/><rect x="70" y="28" width="8" height="10" rx="2" fill="#0BA0B7"/><line x1="74" y1="38" x2="71" y2="48" stroke="#0BA0B7" stroke-width="2.5" stroke-linecap="round"/><line x1="74" y1="38" x2="77" y2="48" stroke="#0BA0B7" stroke-width="2.5" stroke-linecap="round"/><rect x="78" y="42" width="6" height="7" rx="1.5" fill="#0BA0B7" opacity="0.7"/></svg>
+              </div>
+              <div class="trip-opt-body">
+                <div class="trip-opt-title" id="s1-pr-pickup-title">Pickup from airport</div>
+                <div class="trip-opt-sub" id="s1-pr-pickup-sub">From the airport to any location</div>
+              </div>
+              <span class="trip-opt-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+            </div>
+
+            <div class="trip-opt" id="s1-pr-opt-dropoff" onclick="chooseTripDirection('dropoff')">
+              <div class="trip-opt-art">
+                <svg viewBox="0 0 88 76" xmlns="http://www.w3.org/2000/svg"><rect width="88" height="76" fill="#f0faf9"/><rect x="60" y="10" width="3" height="42" fill="#aaa"/><rect x="55" y="10" width="28" height="16" rx="3" fill="#0BA0B7"/><path d="M59 18 L67 18 M64 15 L67 18 L64 21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M71 15.5 L80 14 L78 18 L69 19Z" fill="white" opacity="0.85"/><rect x="4" y="38" width="58" height="16" rx="4" fill="#1a1a2e"/><path d="M14 38 L22 26 L46 26 L54 38Z" fill="#1a1a2e"/><path d="M24 27 L26 37 L42 37 L44 27Z" fill="#87d8e8" opacity="0.75"/><circle cx="18" cy="55" r="7" fill="#333"/><circle cx="18" cy="55" r="3.5" fill="#777"/><circle cx="50" cy="55" r="7" fill="#333"/><circle cx="50" cy="55" r="3.5" fill="#777"/></svg>
+              </div>
+              <div class="trip-opt-body">
+                <div class="trip-opt-title" id="s1-pr-dropoff-title">Drop-off to airport</div>
+                <div class="trip-opt-sub" id="s1-pr-dropoff-sub">From any location to the airport</div>
+              </div>
+              <span class="trip-opt-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Step 2: single location picker -->
+        <div id="s1-pr-loc-step" style="display:none">
+          <div class="pr-loc-field">
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></span>
+            <div class="body">
+              <div class="label" id="s1-pr-pre-label">Pickup · airport</div>
+              <div class="value" id="s1-pr-pre-val">King Khalid International Airport</div>
+            </div>
+          </div>
+          <div class="combo-wrap">
+            <div class="combo-field">
+              <label class="combo-row">
+                <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                <input id="s1-pr-input" type="text" placeholder="Where to?"
+                  onfocus="openPRLocDrop()" oninput="filterPRLoc(this.value)" autocomplete="off" />
+              </label>
+            </div>
+            <div class="loc-dropdown" id="s1-pr-dropdown" style="display:none">
+              <div class="loc-head">Suggested locations</div>
+              <div class="loc-list" id="s1-pr-loc-list"></div>
+              <div class="loc-footer">Did you not find what you are looking for?<br>Try to type more information on the search.</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /s1-plan-view -->
     </div>
 
     <!-- Right: hero -->
@@ -461,7 +685,7 @@
         <h2 class="panel-title">Select flight details</h2>
       </div>
 
-      <div class="field-stack">
+      <div class="field-stack" style="margin-bottom:16px">
         <div class="field filled">
           <span class="ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
@@ -473,20 +697,37 @@
         </div>
       </div>
 
-      <p class="panel-section-title" style="margin-top:16px">Flight details</p>
-      <div class="field-stack">
-        <div class="field filled" id="s2-date-field" onclick="toggleDateEdit()" style="cursor:pointer">
-          <span class="ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
-          </span>
-          <span class="body">
-            <span class="label">Arrival date</span>
-            <span class="value" id="s2-date-val">Sat 14 Jun 2026</span>
-          </span>
-          <button class="edit-link" onclick="toggleDateEdit();event.stopPropagation()">Edit</button>
-        </div>
+      <!-- Date field: active until a date is chosen -->
+      <div class="field active" id="s2-date-field" style="cursor:pointer" onclick="focusCalendar()">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
+        </span>
+        <span class="body">
+          <span class="label">Departure date</span>
+          <span id="s2-date-placeholder" class="placeholder">Select a date</span>
+          <span id="s2-date-val" class="value" style="display:none">Sat 14 Jun 2026</span>
+        </span>
+        <button class="edit-link" id="s2-date-edit" onclick="editDate();event.stopPropagation()" style="display:none">Edit</button>
+      </div>
 
-        <div class="field active" id="s2-flight-field">
+      <!-- Calendar: shown right under date field -->
+      <div id="s2-calendar" class="cal-widget" style="margin-top:4px">
+        <p class="cal-section-title">Select departure date</p>
+        <div class="cal-header">
+          <button class="cal-nav" onclick="calNav(-1)" aria-label="Previous month">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span class="cal-title" id="cal-title">June 2026</span>
+          <button class="cal-nav" onclick="calNav(1)" aria-label="Next month">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+
+      <!-- Revealed after date selected -->
+      <div id="s2-after-date" style="display:none">
+        <div class="field active" id="s2-flight-field" style="margin-top:12px">
           <span class="ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
           </span>
@@ -500,41 +741,18 @@
         <div class="flight-dropdown" id="s2-dropdown" style="display:none">
           <div class="dropdown-header">
             <span id="s2-dropdown-count"><b>3 flights</b> match</span>
-            <span>Sat 14 Jun</span>
+            <span id="s2-dropdown-date">Sat 14 Jun</span>
           </div>
-          <div class="flight-option" onclick="selectFlight('XY 304','Flynas XY 304 · CAI → RUH','Cairo Intl 19:25 → King Khalid 22:10','22:10','Terminal 5')">
-            <span class="airline-mark">XY</span>
-            <div>
-              <div class="route">Flynas XY 304 · CAI → RUH</div>
-              <div class="meta">Cairo Intl 19:25 → King Khalid 22:10</div>
-            </div>
-            <div class="time">22:10<div class="meta">Terminal 5</div></div>
-          </div>
-          <div class="flight-option" onclick="selectFlight('XY 306','Flynas XY 306 · DXB → RUH','Dubai Intl 21:00 → King Khalid 23:55','23:55','Terminal 5')">
-            <span class="airline-mark">XY</span>
-            <div>
-              <div class="route">Flynas XY 306 · DXB → RUH</div>
-              <div class="meta">Dubai Intl 21:00 → King Khalid 23:55</div>
-            </div>
-            <div class="time">23:55<div class="meta">Terminal 5</div></div>
-          </div>
-          <div class="flight-option" onclick="selectFlight('XY 308','Flynas XY 308 · JED → RUH','Jeddah 23:10 → King Khalid 00:40 (+1)','00:40','Terminal 5')">
-            <span class="airline-mark">XY</span>
-            <div>
-              <div class="route">Flynas XY 308 · JED → RUH</div>
-              <div class="meta">Jeddah 23:10 → King Khalid 00:40 (+1)</div>
-            </div>
-            <div class="time">00:40<div class="meta">Terminal 5</div></div>
-          </div>
+          <div id="s2-flight-list"></div>
         </div>
+
+        <p class="hint" style="margin-top:8px">Accepts "Flynas", "XY304", or partials. Matches narrow as you type.</p>
+
+        <button class="link-quiet" style="margin-top:16px" onclick="goToScreen(3)">
+          I don't have my flight details yet
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
       </div>
-
-      <p class="hint">Accepts "Flynas", "XY304", or partials. Matches narrow as you type.</p>
-
-      <button class="link-quiet" style="margin-top:16px" onclick="goToScreen(3)">
-        I don't have my flight details yet
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </button>
     </div>
 
     <!-- Right: hero -->
@@ -553,17 +771,17 @@
         <button class="back-btn" aria-label="Back" onclick="goToScreen(2)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
-        <h2 class="panel-title">Last details</h2>
+        <h2 class="panel-title">Confirm your ride</h2>
       </div>
 
       <!-- Flight summary -->
       <div class="flight-summary" id="s3-flight-card">
-        <span class="airline-mark" id="s3-airline-mark">XY</span>
+        <span class="airline-mark" id="s3-airline-mark">F</span>
         <div>
-          <div class="route" id="s3-route">Flynas XY 304 · CAI → RUH</div>
-          <div class="meta" id="s3-flight-meta">Cairo Intl 19:25 → King Khalid 22:10</div>
+          <div class="f-title" id="s3-route">Cairo → Riyadh</div>
+          <div class="f-times" id="s3-flight-meta">19:25 – 22:10 • Sat 14 Jun</div>
+          <div class="f-airline" id="s3-flight-airline">Flynas • XY 304</div>
         </div>
-        <div class="time"><span id="s3-lands">22:10</span><div class="meta">lands</div></div>
       </div>
 
       <!-- Trip detail rows -->
@@ -628,18 +846,18 @@
         <span class="dot"></span>
         <b id="s4-flight-label">Flynas XY 304</b>
         · Sat 14 Jun · lands 22:10
-        <button class="change" onclick="goToScreen(2)">Change</button>
+        <button class="change" onclick="openEditModal()">Change</button>
       </span>
       <span class="div"></span>
       <span class="seg">
         <span class="dot"></span>
-        RUH · King Khalid Intl → <span id="s4-dropoff-label">Marriott Diplomatic Quarter</span>
+        <span id="s4-pickup-label">RUH · King Khalid Intl</span> → <span id="s4-dropoff-label">Marriott Diplomatic Quarter</span>
       </span>
       <span class="div"></span>
       <span class="seg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 3v1h14v-1c0-1-3-3-7-3z"/></svg>
         <span id="s4-pax-label">2</span> passengers
-        <button class="change" onclick="goToScreen(3)">Edit</button>
+        <button class="change" onclick="openEditModal()">Edit</button>
       </span>
       <span class="div"></span>
       <span class="seg" style="color:var(--text-2)">Pickup: <b style="color:var(--ink)">22:25</b> · auto-adjusts to flight</span>
@@ -804,6 +1022,113 @@
   </div>
 </footer>
 
+<!-- ── Edit search modal ── -->
+<div class="edit-overlay" id="edit-overlay" onclick="closeEditModal(event)">
+  <div class="edit-modal" onclick="event.stopPropagation()">
+    <div class="edit-modal-header">
+      <button class="edit-modal-back" id="em-back-btn" onclick="modalBack()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <h3 id="em-modal-title">Edit your booking</h3>
+      <button class="edit-modal-close" onclick="closeEditModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="edit-modal-body">
+
+      <!-- Flight section -->
+      <div class="em-section" id="em-flight-section">
+        <div class="em-inner">
+          <div class="edit-flight-row">
+            <span class="airline-mark" id="em-flight-mark">F</span>
+            <div>
+              <div class="f-title" id="em-flight-title">Cairo → Riyadh</div>
+              <div class="f-times" id="em-flight-times">19:25 – 22:10 • Sat 14 Jun</div>
+              <div class="f-airline" id="em-flight-airline">Flynas • XY 304</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location section -->
+      <div id="em-loc-section" style="margin-bottom:10px">
+        <div class="em-field-row" id="em-pickup-row" onclick="focusModalField('pickup')">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+          <span class="body">
+            <span class="label">Pickup</span>
+            <span class="em-display" id="em-pickup-display">King Khalid Intl</span>
+            <input class="em-input" id="em-pickup-input" type="text" placeholder="Pickup location"
+              oninput="filterModalLoc(this.value,'pickup')" autocomplete="off" />
+          </span>
+        </div>
+        <div class="modal-loc-dropdown" id="em-pickup-dropdown">
+          <div class="loc-head">Suggested</div>
+          <div class="loc-list" id="em-pickup-list"></div>
+        </div>
+        <div class="em-field-row" id="em-dropoff-row" style="margin-top:8px" onclick="focusModalField('dropoff')">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <span class="body">
+            <span class="label">Drop-off</span>
+            <span class="em-display" id="em-dropoff-display">Marriott Diplomatic Quarter</span>
+            <input class="em-input" id="em-dropoff-input" type="text" placeholder="Drop-off location"
+              oninput="filterModalLoc(this.value,'dropoff')" autocomplete="off" />
+          </span>
+        </div>
+        <div class="modal-loc-dropdown" id="em-dropoff-dropdown">
+          <div class="loc-head">Suggested</div>
+          <div class="loc-list" id="em-dropoff-list"></div>
+        </div>
+      </div>
+
+      <!-- Date/Time section -->
+      <div class="em-section" id="em-datetime-section" style="margin-bottom:10px">
+        <div class="em-inner" id="em-dt-inner">
+          <div id="em-dt-field-rows">
+            <div class="em-field-row" id="em-date-row" onclick="focusModalDatetime('date')">
+              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+              <span class="body"><span class="label">Pickup date</span><span class="em-display" id="em-date-display">Sat, 14 Jun</span></span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3);flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+            <div class="em-field-row" id="em-time-row" style="margin-top:8px" onclick="focusModalDatetime('time')">
+              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <span class="body"><span class="label">Pickup time</span><span class="em-display" id="em-time-display">22:25</span></span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3);flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          <div class="em-dt-picker-wrap" id="em-dt-picker" style="display:none">
+            <div class="em-dt-tabs" id="em-dt-tabs"></div>
+            <div class="em-dt-content" id="em-dt-content"></div>
+            <div id="em-dt-msg" class="em-dt-msg" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passengers section -->
+      <div class="em-section" id="em-pax-section">
+        <div class="em-inner">
+          <div class="detail-row pax" style="border:1px solid var(--border)">
+            <span class="dr-label">Passengers</span>
+            <div class="pax-controls">
+              <button class="pax-btn" id="em-pax-minus" onclick="adjustModalPax(-1)">−</button>
+              <span class="pax-count" id="em-pax-count">2</span>
+              <button class="pax-btn" id="em-pax-plus" onclick="adjustModalPax(1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="em-section" id="em-footer-section">
+      <div class="em-inner" style="padding: 6px 20px 20px">
+        <button class="btn btn-primary btn-block" onclick="applyEditModal()">
+          Update search
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── Success modal ── -->
 <div class="success-overlay" id="success-overlay" onclick="closeSuccess(event)">
   <div class="success-modal" onclick="event.stopPropagation()">
@@ -824,12 +1149,14 @@
 // ── State ──
 const state = {
   screen: 1,
-  pickup: 'RUH · King Khalid Intl',
+  pickup: 'King Khalid International Airport',
   dropoff: 'Marriott Diplomatic Quarter',
   tripType: 'flight', // 'flight' | 'hotel'
-  flight: { code: 'XY 304', route: 'Flynas XY 304 · CAI → RUH', meta: 'Cairo Intl 19:25 → King Khalid 22:10', lands: '22:10', terminal: 'Terminal 5' },
+  flight: { code: 'XY 304', airline: 'Flynas', initial: 'F', color: 'teal', originCity: 'Cairo', destCity: 'Riyadh', depTime: '19:25', arrTime: '22:10', route: 'Cairo → Riyadh', meta: '19:25 – 22:10', lands: '22:10' },
   pax: 2,
   addons: new Set(),
+  pickupDate: '2026-06-14',
+  pickupTime: '22:25',
 };
 
 // ── Hero HTML (reused on screens 1-3) ──
@@ -893,28 +1220,337 @@ function injectHero(id) {
 // ── Screen 2 sync ──
 function syncScreen2() {
   document.getElementById('s2-airport-val').textContent = state.pickup;
+  const today = new Date();
+  calState = { year: today.getFullYear(), month: today.getMonth() };
+  renderCalendar();
+  if (state.arrivalDate) {
+    showDateSelected(state.arrivalDateStr);
+  } else {
+    showDatePicker();
+  }
+}
+
+function showDatePicker() {
+  const field = document.getElementById('s2-date-field');
+  field.className = 'field active';
+  field.style.cursor = 'pointer';
+  document.getElementById('s2-date-placeholder').style.display = '';
+  document.getElementById('s2-date-val').style.display = 'none';
+  document.getElementById('s2-date-edit').style.display = 'none';
+  document.getElementById('s2-calendar').style.display = 'block';
+  document.getElementById('s2-after-date').style.display = 'none';
+}
+
+function showDateSelected(dateStr) {
+  const field = document.getElementById('s2-date-field');
+  field.className = 'field filled-white';
+  field.style.cursor = 'default';
+  document.getElementById('s2-date-placeholder').style.display = 'none';
+  const valEl = document.getElementById('s2-date-val');
+  valEl.style.display = '';
+  valEl.textContent = dateStr;
+  document.getElementById('s2-date-edit').style.display = '';
+  document.getElementById('s2-calendar').style.display = 'none';
+  document.getElementById('s2-after-date').style.display = 'block';
+}
+
+function focusCalendar() {
+  if (!state.arrivalDate) document.getElementById('s2-calendar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── Calendar ──
+let calState = { year: 2026, month: 5 };
+const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CAL_DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const CAL_MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function renderCalendar() {
+  const { year, month } = calState;
+  document.getElementById('cal-title').textContent = CAL_MONTHS[month] + ' ' + year;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dayname';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const todayStr = new Date().toDateString();
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('button');
+    el.className = 'cal-day';
+    el.textContent = d;
+    const thisDate = new Date(year, month, d);
+    const isPast = thisDate < new Date(new Date().setHours(0,0,0,0));
+    if (isPast) el.classList.add('past');
+    if (thisDate.toDateString() === todayStr) el.classList.add('today');
+    if (state.arrivalDate && state.arrivalDate.year === year && state.arrivalDate.month === month && state.arrivalDate.day === d) el.classList.add('selected');
+    if (!isPast) el.onclick = () => selectDate(year, month, d);
+    grid.appendChild(el);
+  }
+}
+
+function calNav(dir) {
+  calState.month += dir;
+  if (calState.month < 0) { calState.month = 11; calState.year--; }
+  if (calState.month > 11) { calState.month = 0; calState.year++; }
+  renderCalendar();
+}
+
+function selectDate(year, month, day) {
+  state.arrivalDate = { year, month, day };
+  const d = new Date(year, month, day);
+  state.arrivalDateStr = CAL_DAYS_SHORT[d.getDay()] + ' ' + day + ' ' + CAL_MONTHS_SHORT[month] + ' ' + year;
+  const shortDate = CAL_DAYS_SHORT[d.getDay()].substr(0,3) + ' ' + day + ' ' + CAL_MONTHS_SHORT[month];
+  document.getElementById('s2-dropdown-date').textContent = shortDate;
+  showDateSelected(state.arrivalDateStr);
+  renderCalendar();
+  setTimeout(() => document.getElementById('s2-flight-input').focus(), 60);
+}
+
+function editDate() {
+  state.arrivalDate = null;
+  state.arrivalDateStr = null;
+  document.getElementById('s2-flight-input').value = '';
+  hideDropdown();
+  renderCalendar();
+  showDatePicker();
 }
 
 // ── Screen 3 sync ──
 function syncScreen3() {
   const f = state.flight;
-  document.getElementById('s3-airline-mark').textContent = f.code.split(' ')[0];
-  document.getElementById('s3-route').textContent = f.route;
-  document.getElementById('s3-flight-meta').textContent = f.meta;
-  document.getElementById('s3-lands').textContent = f.lands;
+  const dateShort = state.arrivalDateStr ? state.arrivalDateStr.split(' ').slice(0,3).join(' ') : 'Sat 14 Jun';
+  document.getElementById('s3-airline-mark').textContent = f.airline ? f.airline[0] : f.code[0];
+  document.getElementById('s3-route').textContent = f.originCity + ' → ' + f.destCity;
+  document.getElementById('s3-flight-meta').textContent = f.depTime + ' – ' + f.arrTime + ' • ' + dateShort;
+  document.getElementById('s3-flight-airline').textContent = f.airline + ' • ' + f.code;
   document.getElementById('s3-pickup-val').textContent = state.pickup;
   document.getElementById('s3-dropoff-val').textContent = state.dropoff;
   const pickupTime = computePickupTime(f.lands);
-  document.getElementById('s3-pickup-time').textContent = 'Sat 14 Jun · ' + pickupTime + ' · auto-adjusts to flight';
+  document.getElementById('s3-pickup-time').textContent = dateShort + ' · ' + pickupTime + ' · auto-adjusts to flight';
   document.getElementById('pax-count').textContent = state.pax;
   updatePaxButtons();
 }
 
 // ── Screen 4 sync ──
 function syncScreen4() {
-  document.getElementById('s4-flight-label').textContent = state.flight.route.split(' · ')[0];
+  document.getElementById('s4-flight-label').textContent = state.flight.originCity + ' → ' + state.flight.destCity;
+  document.getElementById('s4-pickup-label').textContent = state.pickup;
   document.getElementById('s4-dropoff-label').textContent = state.dropoff;
   document.getElementById('s4-pax-label').textContent = state.pax;
+}
+
+// ── Edit search modal ──
+let modalPax = 2;
+let emLocMode = false;
+let emFocusedField = null;
+
+function focusModalField(field) {
+  if (emLocMode && emFocusedField === field) return;
+  emFocusedField = field;
+  emLocMode = true;
+
+  document.getElementById('em-back-btn').style.display = 'flex';
+  document.getElementById('em-modal-title').textContent = field === 'pickup' ? 'Update pickup' : 'Update drop-off';
+
+  // Lock min-height so modal doesn't shrink while dropdown is open
+  const modal = document.querySelector('.edit-modal');
+  modal.style.minHeight = modal.offsetHeight + 'px';
+
+  // Collapse flight, datetime, pax, footer simultaneously
+  document.getElementById('em-flight-section').classList.add('em-collapsed');
+  document.getElementById('em-datetime-section').classList.add('em-collapsed');
+  document.getElementById('em-pax-section').classList.add('em-collapsed');
+  document.getElementById('em-footer-section').classList.add('em-collapsed');
+
+  // Mark loc section so inactive field pins to bottom (pickup focus) or top (dropoff focus)
+  const locSection = document.getElementById('em-loc-section');
+  locSection.classList.toggle('em-loc-pickup-focused', field === 'pickup');
+  locSection.classList.toggle('em-loc-dropoff-focused', field === 'dropoff');
+
+  const otherField = field === 'pickup' ? 'dropoff' : 'pickup';
+  document.getElementById('em-' + field + '-row').classList.add('active');
+  document.getElementById('em-' + otherField + '-row').classList.add('dimmed');
+
+  document.getElementById('em-' + field + '-display').style.display = 'none';
+  const inp = document.getElementById('em-' + field + '-input');
+  inp.style.display = 'block';
+  inp.value = field === 'pickup' ? (state.pickup || '') : (state.dropoff || '');
+  inp.select();
+
+  renderModalLocList('', field);
+  const dd = document.getElementById('em-' + field + '-dropdown');
+  dd.classList.remove('open');
+  dd.style.display = '';
+  requestAnimationFrame(() => dd.classList.add('open'));
+  setTimeout(() => inp.focus(), 60);
+}
+
+function exitLocMode() {
+  emLocMode = false;
+  emFocusedField = null;
+
+  document.getElementById('em-back-btn').style.display = 'none';
+  document.getElementById('em-modal-title').textContent = 'Edit your booking';
+  document.querySelector('.edit-modal').style.minHeight = '';
+
+  if (state.flight && state.flight.code) {
+    document.getElementById('em-flight-section').classList.remove('em-collapsed');
+  }
+  document.getElementById('em-datetime-section').classList.remove('em-collapsed');
+  document.getElementById('em-pax-section').classList.remove('em-collapsed');
+  document.getElementById('em-footer-section').classList.remove('em-collapsed');
+
+  const locSection = document.getElementById('em-loc-section');
+  locSection.classList.remove('em-loc-pickup-focused', 'em-loc-dropoff-focused');
+
+  document.getElementById('em-pickup-row').classList.remove('active', 'dimmed');
+  document.getElementById('em-dropoff-row').classList.remove('active', 'dimmed');
+
+  ['pickup', 'dropoff'].forEach(f => {
+    document.getElementById('em-' + f + '-display').style.display = '';
+    document.getElementById('em-' + f + '-input').style.display = 'none';
+    const dd = document.getElementById('em-' + f + '-dropdown');
+    dd.classList.remove('open');
+    dd.style.display = 'none';
+  });
+}
+
+function filterModalLoc(val, field) {
+  renderModalLocList(val, field);
+  const dd = document.getElementById('em-' + field + '-dropdown');
+  if (!dd.classList.contains('open')) {
+    dd.style.display = '';
+    dd.classList.add('open');
+  }
+}
+
+function renderModalLocList(query, field) {
+  const list = field === 'dropoff' ? getDropoffList(query) : getPickupList(query);
+  const listEl = document.getElementById('em-' + field + '-list');
+  listEl.innerHTML = list.map(loc => `
+    <div class="loc-item" onmousedown="selectModalLoc('${loc.id}','${field}');event.preventDefault()">
+      <span class="loc-thumb ${loc.thumb}">${thumbIcon(loc.type)}</span>
+      <span class="loc-body">
+        <div class="loc-name">${loc.name}${loc.upcoming ? ` <span class="upcoming-badge">${loc.upcoming}</span>` : ''}</div>
+        <div class="loc-sub">${loc.sub}</div>
+      </span>
+    </div>
+  `).join('') || '<div class="loc-item" style="cursor:default;color:var(--text-2);font-size:13px">No results found</div>';
+}
+
+function selectModalLoc(id, field) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  if (!loc) return;
+  if (field === 'pickup') {
+    state.pickup = loc.name;
+    state.pickupCity = loc.city || null;
+    document.getElementById('em-pickup-display').textContent = loc.name;
+    if (loc.type !== 'airport') state.flight = null;
+  } else {
+    state.dropoff = loc.name;
+    document.getElementById('em-dropoff-display').textContent = loc.name;
+  }
+  exitLocMode();
+}
+
+function openEditModal() {
+  const f = state.flight;
+  const dateShort = state.arrivalDateStr ? state.arrivalDateStr.split(' ').slice(0,3).join(' ') : 'Sat 14 Jun';
+
+  const flightSection = document.getElementById('em-flight-section');
+  if (f && f.code) {
+    const mark = document.getElementById('em-flight-mark');
+    mark.textContent = f.initial || (f.airline ? f.airline[0] : '?');
+    mark.className = 'airline-mark' + (f.color === 'red' ? ' red' : '');
+    document.getElementById('em-flight-title').textContent = (f.originCity || '') + ' → ' + (f.destCity || '');
+    document.getElementById('em-flight-times').textContent = f.depTime + ' – ' + f.arrTime + ' • ' + dateShort;
+    document.getElementById('em-flight-airline').textContent = f.airline + ' • ' + f.code;
+    flightSection.classList.remove('em-collapsed');
+  } else {
+    flightSection.classList.add('em-collapsed');
+  }
+
+  document.getElementById('em-pickup-display').textContent = state.pickup;
+  document.getElementById('em-dropoff-display').textContent = state.dropoff;
+  ['pickup', 'dropoff'].forEach(fi => {
+    document.getElementById('em-' + fi + '-display').style.display = '';
+    document.getElementById('em-' + fi + '-input').style.display = 'none';
+    const dd = document.getElementById('em-' + fi + '-dropdown');
+    dd.classList.remove('open');
+    dd.style.display = 'none';
+  });
+  document.getElementById('em-pickup-row').classList.remove('active', 'dimmed');
+  document.getElementById('em-dropoff-row').classList.remove('active', 'dimmed');
+
+  // Ensure datetime section is visible and in field-row mode
+  const dtSec = document.getElementById('em-datetime-section');
+  dtSec.classList.remove('em-collapsed', 'em-dt-focus');
+  document.getElementById('em-dt-picker').style.display = 'none';
+  document.getElementById('em-dt-field-rows').style.display = '';
+  // Prefill date/time from flight if not already set
+  if (!state.pickupDate) {
+    state.pickupDate = getFlightIsoDate();
+  }
+  if (!state.pickupTime && state.flight && state.flight.lands) {
+    state.pickupTime = computePickupTime(state.flight.lands);
+  }
+  document.getElementById('em-date-display').textContent = formatDtDate(state.pickupDate);
+  document.getElementById('em-time-display').textContent = state.pickupTime || '—';
+
+  document.getElementById('em-pax-section').classList.remove('em-collapsed');
+  document.getElementById('em-footer-section').classList.remove('em-collapsed');
+
+  modalPax = state.pax;
+  document.getElementById('em-pax-count').textContent = modalPax;
+  updateModalPaxButtons();
+
+  document.getElementById('em-back-btn').style.display = 'none';
+  document.getElementById('em-modal-title').textContent = 'Edit your booking';
+  emLocMode = false;
+  emFocusedField = null;
+  emDtMode = false;
+  document.querySelector('.edit-modal').classList.remove('em-dt-mode');
+
+  const modal = document.querySelector('.edit-modal');
+  modal.style.height = '';
+  modal.style.minHeight = '';
+  document.getElementById('edit-overlay').classList.add('show');
+}
+
+function closeEditModal(e) {
+  if (!e || e.target === document.getElementById('edit-overlay')) {
+    document.getElementById('edit-overlay').classList.remove('show');
+    const modal = document.querySelector('.edit-modal');
+    modal.style.height = '';
+    modal.style.minHeight = '';
+  }
+}
+
+function adjustModalPax(delta) {
+  modalPax = Math.max(1, Math.min(8, modalPax + delta));
+  document.getElementById('em-pax-count').textContent = modalPax;
+  updateModalPaxButtons();
+}
+
+function updateModalPaxButtons() {
+  document.getElementById('em-pax-minus').disabled = modalPax <= 1;
+  document.getElementById('em-pax-plus').disabled = modalPax >= 8;
+}
+
+function applyEditModal() {
+  state.pax = modalPax;
+  document.getElementById('edit-overlay').classList.remove('show');
+  syncScreen4();
+  syncScreen3();
 }
 
 function computePickupTime(landsStr) {
@@ -923,14 +1559,425 @@ function computePickupTime(landsStr) {
   return String(Math.floor(total / 60) % 24).padStart(2, '0') + ':' + String(total % 60).padStart(2, '0');
 }
 
-// ── Screen 1: combo field ──
+// ── Edit modal – datetime mode ──
+let emDtMode = false;
+let emDtSub = 'date';
+let emDtCalYear = 2026;
+let emDtCalMonth = 5;
+
+function timeToMins(hhmm) {
+  const [h, m] = (hhmm || '0:0').split(':').map(Number);
+  return h * 60 + m;
+}
+
+function minsToTime(mins) {
+  return String(Math.floor(mins / 60) % 24).padStart(2,'0') + ':' + String(mins % 60).padStart(2,'0');
+}
+
+function formatDtDate(isoDate) {
+  if (!isoDate) return '—';
+  const [y, mo, d] = isoDate.split('-').map(Number);
+  const dt = new Date(y, mo - 1, d);
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[dt.getDay()] + ', ' + d + ' ' + months[mo - 1];
+}
+
+function getFlightIsoDate() {
+  if (state.arrivalDate) {
+    const { year, month, day } = state.arrivalDate;
+    return year + '-' + String(month + 1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+  }
+  return '2026-06-14';
+}
+
+function modalBack() {
+  if (emLocMode) exitLocMode();
+  else if (emDtMode) exitDatetimeMode();
+}
+
+function focusModalDatetime(sub) {
+  if (emDtMode && emDtSub === sub) return;
+  emDtSub = sub;
+  emDtMode = true;
+  emLocMode = false;
+  emFocusedField = null;
+
+  document.getElementById('em-back-btn').style.display = 'flex';
+  document.getElementById('em-modal-title').textContent = sub === 'date' ? 'Pickup date' : 'Pickup time';
+
+  // Lock min-height so modal keeps its size while sections collapse
+  const modal = document.querySelector('.edit-modal');
+  modal.style.minHeight = modal.offsetHeight + 'px';
+
+  document.getElementById('em-flight-section').classList.add('em-collapsed');
+  document.getElementById('em-pax-section').classList.add('em-collapsed');
+  document.getElementById('em-footer-section').classList.add('em-collapsed');
+
+  // Collapse loc section: lock current height then animate to 0
+  const locSec = document.getElementById('em-loc-section');
+  locSec.style.flex = '0 0 auto'; // prevent flex-grow from fighting the transition
+  locSec.style.height = locSec.offsetHeight + 'px';
+  locSec.style.overflow = 'hidden';
+  requestAnimationFrame(() => {
+    locSec.style.height = '0';
+    document.querySelector('.edit-modal').classList.add('em-dt-mode');
+  });
+
+  const dtSec = document.getElementById('em-datetime-section');
+  dtSec.classList.remove('em-collapsed');
+  requestAnimationFrame(() => dtSec.classList.add('em-dt-focus'));
+
+  document.getElementById('em-dt-field-rows').style.display = 'none';
+  document.getElementById('em-dt-picker').style.display = 'flex';
+
+  // Init calendar to flight month
+  const flightIso = getFlightIsoDate();
+  const [fy, fm] = flightIso.split('-').map(Number);
+  if (state.pickupDate) {
+    const [py, pm] = state.pickupDate.split('-').map(Number);
+    emDtCalYear = py; emDtCalMonth = pm - 1;
+  } else {
+    emDtCalYear = fy; emDtCalMonth = fm - 1;
+  }
+
+  renderDtPicker();
+}
+
+function exitDatetimeMode() {
+  emDtMode = false;
+
+  document.getElementById('em-back-btn').style.display = 'none';
+  document.getElementById('em-modal-title').textContent = 'Edit your booking';
+  document.querySelector('.edit-modal').style.minHeight = '';
+
+  if (state.flight && state.flight.code) {
+    document.getElementById('em-flight-section').classList.remove('em-collapsed');
+  }
+  document.getElementById('em-pax-section').classList.remove('em-collapsed');
+  document.getElementById('em-footer-section').classList.remove('em-collapsed');
+  document.querySelector('.edit-modal').classList.remove('em-dt-mode');
+
+  // Restore loc section height and flex
+  const locSec = document.getElementById('em-loc-section');
+  locSec.style.height = '';
+  locSec.style.overflow = '';
+  locSec.style.flex = '';
+
+  const dtSec = document.getElementById('em-datetime-section');
+  dtSec.classList.remove('em-dt-focus');
+  document.getElementById('em-dt-picker').style.display = 'none';
+  document.getElementById('em-dt-field-rows').style.display = '';
+
+  document.getElementById('em-date-display').textContent = formatDtDate(state.pickupDate);
+  document.getElementById('em-time-display').textContent = state.pickupTime || '—';
+}
+
+function switchDtSub(sub) {
+  if (emDtSub === sub) return;
+  emDtSub = sub;
+  document.getElementById('em-modal-title').textContent = sub === 'date' ? 'Pickup date' : 'Pickup time';
+  renderDtPicker();
+}
+
+function renderDtPicker() {
+  const dateDisp = state.pickupDate ? formatDtDate(state.pickupDate) : '—';
+  const timeDisp = state.pickupTime || '—';
+
+  document.getElementById('em-dt-tabs').innerHTML = `
+    <button class="em-dt-tab ${emDtSub === 'date' ? 'active' : ''}" onclick="switchDtSub('date')">
+      <span class="dt-tab-label">Date</span>
+      <span class="dt-tab-val">${dateDisp}</span>
+    </button>
+    <button class="em-dt-tab ${emDtSub === 'time' ? 'active' : ''}" onclick="switchDtSub('time')">
+      <span class="dt-tab-label">Time</span>
+      <span class="dt-tab-val">${timeDisp}</span>
+    </button>`;
+
+  if (emDtSub === 'date') {
+    renderDtCalendar();
+  } else {
+    renderDtTimePicker();
+  }
+  updateDtValidation();
+}
+
+function renderDtCalendar() {
+  const year = emDtCalYear;
+  const month = emDtCalMonth;
+  const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
+  const todayStr = new Date().toDateString();
+
+  let html = `
+    <div class="em-cal-nav">
+      <button class="em-cal-nav-btn" onclick="emDtCalNav(-1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="em-cal-nav-label">${CAL_MONTHS[month]} ${year}</span>
+      <button class="em-cal-nav-btn" onclick="emDtCalNav(1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+    <div class="em-cal-grid">`;
+
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => { html += `<div class="em-cal-dayname">${d}</div>`; });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let i = 0; i < firstDay; i++) html += `<div class="em-cal-day empty"></div>`;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const thisDate = new Date(year, month, d);
+    const isPast = thisDate < todayMidnight;
+    const isToday = thisDate.toDateString() === todayStr;
+    const iso = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isSel = state.pickupDate === iso;
+    let cls = 'em-cal-day' + (isPast ? ' past' : '') + (isToday ? ' today' : '') + (isSel ? ' selected' : '');
+    const oc = isPast ? '' : `onclick="selectDtDate('${iso}')"`;
+    html += `<button class="${cls}" ${oc}>${d}</button>`;
+  }
+  html += `</div>`;
+
+  // Note if selected date differs from flight date
+  const flightIso = getFlightIsoDate();
+  if (state.flight && state.flight.code && state.pickupDate && state.pickupDate !== flightIso) {
+    html += `<div class="em-cal-flight-note">Your flight arrives on ${formatDtDate(flightIso)}</div>`;
+  }
+
+  document.getElementById('em-dt-content').innerHTML = html;
+}
+
+function emDtCalNav(dir) {
+  emDtCalMonth += dir;
+  if (emDtCalMonth < 0) { emDtCalMonth = 11; emDtCalYear--; }
+  if (emDtCalMonth > 11) { emDtCalMonth = 0; emDtCalYear++; }
+  renderDtCalendar();
+}
+
+function selectDtDate(iso) {
+  state.pickupDate = iso;
+  renderDtCalendar();
+  updateDtValidation();
+  document.getElementById('em-date-display').textContent = formatDtDate(iso);
+  // Auto-advance to time tab
+  setTimeout(() => { switchDtSub('time'); }, 320);
+}
+
+function renderDtTimePicker() {
+  const flightIso = getFlightIsoDate();
+  const isSameDay = state.pickupDate === flightIso;
+  const f = state.flight;
+
+  const isPickupAirport = f && isSameDay && LOCATIONS.some(l => l.name === state.pickup && l.type === 'airport');
+  const isDropoffAirport = f && isSameDay && LOCATIONS.some(l => l.name === state.dropoff && l.type === 'airport');
+
+  const arrMins = isPickupAirport ? timeToMins(f.arrTime) : -1;
+  const depMins = isDropoffAirport ? timeToMins(f.depTime) : 99999;
+
+  let html = `<div class="em-time-grid">`;
+  for (let m = 0; m < 24 * 60; m += 30) {
+    const t = minsToTime(m);
+    const isSel = state.pickupTime === t;
+    let isDisabled = false, isCutting = false;
+
+    if (isPickupAirport) isDisabled = m < arrMins;
+    if (isDropoffAirport) {
+      isDisabled = m > depMins - 60;
+      if (!isDisabled && m > depMins - 90) isCutting = true;
+    }
+
+    let cls = 'em-time-slot' + (isSel ? ' selected' : isDisabled ? ' disabled' : isCutting ? ' cutting' : '');
+    const oc = isDisabled ? '' : `onclick="selectDtTime('${t}')"`;
+    html += `<button class="${cls}" ${oc}>${t}</button>`;
+  }
+  html += `</div>`;
+  document.getElementById('em-dt-content').innerHTML = html;
+
+  // Scroll selected time into view
+  requestAnimationFrame(() => {
+    const sel = document.querySelector('#em-dt-content .em-time-slot.selected');
+    if (sel) sel.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+function selectDtTime(t) {
+  state.pickupTime = t;
+  document.getElementById('em-time-display').textContent = t;
+  renderDtTimePicker();
+  updateDtValidation();
+  // Update tab
+  document.querySelectorAll('.em-dt-tab')[1].querySelector('.dt-tab-val').textContent = t;
+}
+
+function getDtValidation() {
+  if (!state.flight || !state.flight.code || !state.pickupDate || !state.pickupTime) return null;
+  const f = state.flight;
+  const flightIso = getFlightIsoDate();
+  const isSameDay = state.pickupDate === flightIso;
+
+  if (!isSameDay) {
+    return { type: 'info', msg: `Pickup date differs from your flight date (${formatDtDate(flightIso)})` };
+  }
+
+  const isPickupAirport = LOCATIONS.some(l => l.name === state.pickup && l.type === 'airport');
+  const isDropoffAirport = LOCATIONS.some(l => l.name === state.dropoff && l.type === 'airport');
+  const pickMins = timeToMins(state.pickupTime);
+
+  if (isPickupAirport && f.arrTime) {
+    const arrMins = timeToMins(f.arrTime);
+    if (pickMins < arrMins) return { type: 'error', msg: `Pickup must be after your flight lands at ${f.arrTime}` };
+    if (pickMins < arrMins + 15) return { type: 'warn', msg: `Allow at least 15 min after landing (${f.arrTime}) to clear arrivals` };
+  }
+
+  if (isDropoffAirport && f.depTime) {
+    const depMins = timeToMins(f.depTime);
+    if (pickMins + 60 > depMins) return { type: 'error', msg: `Need at least 1 hour before departure at ${f.depTime}` };
+    if (pickMins + 90 > depMins) return { type: 'warn', msg: `Tight timing — allow more time before your ${f.depTime} flight` };
+  }
+
+  return null;
+}
+
+function updateDtValidation() {
+  const msgEl = document.getElementById('em-dt-msg');
+  if (!msgEl) return;
+  const v = getDtValidation();
+  if (v) {
+    msgEl.className = 'em-dt-msg ' + v.type;
+    msgEl.textContent = v.msg;
+    msgEl.style.display = '';
+  } else {
+    msgEl.style.display = 'none';
+  }
+}
+
+// ── Location data ──
+const LOCATIONS = [
+  // Riyadh airport
+  { id:'ruh',  name:'King Khalid International Airport', sub:'RUH · Riyadh, Saudi Arabia',                              city:'riyadh', type:'airport', thumb:'t-airport',     keywords:'ruh riyadh airport khalid' },
+  // London airports
+  { id:'lhr',  name:'Heathrow Airport',                  sub:'LHR · London, United Kingdom',                            city:'london', type:'airport', thumb:'t-airport',     keywords:'lhr heathrow london airport' },
+  { id:'lgw',  name:'Gatwick Airport',                   sub:'LGW · London, United Kingdom',                            city:'london', type:'airport', thumb:'t-airport',     keywords:'lgw gatwick london airport' },
+  // London hotels — upcoming first
+  { id:'sofitel-lon',   name:'Sofitel Hotel London',        sub:'London, United Kingdom',                               city:'london', type:'hotel',   thumb:'t-sofitel',     keywords:'sofitel london',            upcoming:'Upcoming stay' },
+  { id:'ritz-lon',      name:'The Ritz London',             sub:'Piccadilly, London, United Kingdom',                   city:'london', type:'hotel',   thumb:'t-ritz',        keywords:'ritz london piccadilly' },
+  { id:'savoy-lon',     name:'The Savoy',                   sub:'Strand, London, United Kingdom',                       city:'london', type:'hotel',   thumb:'t-hotel',       keywords:'savoy london strand' },
+  { id:'claridges-lon', name:"Claridge's",                  sub:'Mayfair, London, United Kingdom',                      city:'london', type:'hotel',   thumb:'t-hotel',       keywords:'claridges london mayfair' },
+  // Riyadh hotels
+  { id:'fourseasons-ruh', name:'Four Seasons Hotel Riyadh',  sub:'Kingdom Centre, Riyadh, Saudi Arabia',               city:'riyadh', type:'hotel',   thumb:'t-fourseasons', keywords:'four seasons riyadh kingdom' },
+  { id:'ritz-ruh',        name:'The Ritz-Carlton, Riyadh',   sub:'AlHada Area, Riyadh, Saudi Arabia',                  city:'riyadh', type:'hotel',   thumb:'t-ritz',        keywords:'ritz carlton riyadh alhada' },
+  { id:'rosewood-ruh',    name:'Rosewood Riyadh',            sub:'King Abdullah Financial District, Riyadh, Saudi Arabia', city:'riyadh', type:'hotel', thumb:'t-rosewood',  keywords:'rosewood riyadh kafd king abdullah' },
+  { id:'marriott-ruh',    name:'Marriott Diplomatic Quarter', sub:'Diplomatic Quarter, Riyadh, Saudi Arabia',          city:'riyadh', type:'hotel',   thumb:'t-hotel',       keywords:'marriott diplomatic riyadh' },
+  { id:'hyatt-ruh',       name:'Park Hyatt Riyadh',          sub:'Olaya, Riyadh, Saudi Arabia',                        city:'riyadh', type:'hotel',   thumb:'t-hotel',       keywords:'hyatt park riyadh olaya' },
+];
+
+// thumb SVGs
+function thumbIcon(type) {
+  if (type === 'airport') return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>`;
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><rect x="9" y="10" width="2" height="2"/><rect x="13" y="10" width="2" height="2"/><rect x="9" y="14" width="2" height="2"/><rect x="13" y="14" width="2" height="2"/></svg>`;
+}
+
+// Sort upcoming to top, then airports, then hotels
+function sortedLocs(list) {
+  return [...list].sort((a, b) => {
+    if (a.upcoming && !b.upcoming) return -1;
+    if (!a.upcoming && b.upcoming) return 1;
+    if (a.type === 'airport' && b.type !== 'airport') return -1;
+    if (a.type !== 'airport' && b.type === 'airport') return 1;
+    return 0;
+  });
+}
+
+function getDropoffList(query) {
+  const pickupCity = state.pickupCity; // set when airport selected as pickup
+  let base = pickupCity
+    ? LOCATIONS.filter(l => l.type !== 'airport' && (l.city === pickupCity || l.upcoming))
+    : LOCATIONS.filter(l => l.type !== 'airport'); // dropoff = hotels only by default
+  if (query) {
+    const q = query.toLowerCase();
+    base = base.filter(l => l.name.toLowerCase().includes(q) || l.sub.toLowerCase().includes(q) || l.keywords.includes(q));
+  }
+  return sortedLocs(base);
+}
+
+function getPickupList(query) {
+  let base = [...LOCATIONS];
+  if (query) {
+    const q = query.toLowerCase();
+    base = base.filter(l => l.name.toLowerCase().includes(q) || l.sub.toLowerCase().includes(q) || l.keywords.includes(q));
+  }
+  return sortedLocs(base);
+}
+
+function renderLocItems(list, activeField) {
+  if (!list.length) {
+    return `<div class="loc-item" style="cursor:default;color:var(--text-2);font-size:13px;border-top:1px solid var(--border-soft)">No results found</div>`;
+  }
+  return list.map(loc => `
+    <div class="loc-item" onmousedown="selectLoc('${loc.id}','${activeField}');event.preventDefault()">
+      <span class="loc-thumb ${loc.thumb}">${thumbIcon(loc.type)}</span>
+      <span class="loc-body">
+        <div class="loc-name">${loc.name}</div>
+        <div class="loc-sub">${loc.sub}</div>
+      </span>
+      ${loc.upcoming ? `<span class="loc-badge">${loc.upcoming}</span>` : ''}
+    </div>`).join('');
+}
+
+let activeLocField = 'pickup';
+
+function openLocDrop(field) {
+  activeLocField = field;
+  const query = document.getElementById(field === 'pickup' ? 's1-pickup' : 's1-dropoff').value.trim();
+  const list = field === 'pickup' ? getPickupList(query) : getDropoffList(query);
+  document.getElementById('loc-list').innerHTML = renderLocItems(list, field);
+  document.getElementById('loc-dropdown').classList.add('open');
+}
+
+function filterLoc(query, field) {
+  activeLocField = field;
+  const list = field === 'pickup' ? getPickupList(query) : getDropoffList(query);
+  document.getElementById('loc-list').innerHTML = renderLocItems(list, field);
+  document.getElementById('loc-dropdown').classList.add('open');
+  checkComboReady();
+}
+
+function selectLoc(id, field) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  if (!loc) return;
+  const inputId = field === 'pickup' ? 's1-pickup' : 's1-dropoff';
+  document.getElementById(inputId).value = loc.name;
+  if (field === 'pickup') {
+    state.pickup = loc.name;
+    // Track city context for dropoff filtering
+    state.pickupCity = loc.city || null;
+    if (loc.type === 'airport') state.pickup = loc.name; // keep airport name in state
+  } else {
+    state.dropoff = loc.name;
+  }
+  closeLocDrop();
+  checkComboReady();
+  // Auto-focus dropoff after pickup selected
+  if (field === 'pickup') {
+    setTimeout(() => document.getElementById('s1-dropoff').focus(), 60);
+  }
+}
+
+function closeLocDrop() {
+  document.getElementById('loc-dropdown').classList.remove('open');
+}
+
+// ── Screen 1: combo — auto-advance when both fields filled ──
 function checkComboReady() {
   const pickup = document.getElementById('s1-pickup').value.trim();
   const dropoff = document.getElementById('s1-dropoff').value.trim();
-  const btn = document.getElementById('s1-find-btn');
-  btn.style.display = (pickup && dropoff) ? 'block' : 'none';
   if (pickup) state.pickup = pickup;
   if (dropoff) state.dropoff = dropoff;
+  if (pickup && dropoff) {
+    closeLocDrop();
+    // Brief pause so user sees both fields filled, then advance
+    setTimeout(() => goToScreen(2), 400);
+  }
 }
 
 // ── Trip shortcuts ──
@@ -939,6 +1986,140 @@ function bookTripFlight() {
   state.dropoff = 'Marriott Diplomatic Quarter';
   state.tripType = 'flight';
   goToScreen(2);
+}
+
+// ── Plan route flow ──
+const UPCOMING_TRIPS = [
+  { id:0, airline:'Flynas', initial:'F', color:'teal',
+    code:'XY 304', originCity:'Cairo', destCity:'Riyadh',
+    originAirport:'Cairo International Airport', originAirportShort:'Cairo Intl Airport',
+    destAirport:'King Khalid International Airport', destAirportShort:'King Khalid Intl Airport',
+    depTime:'19:25', arrTime:'22:10', dateStr:'Sat 14 Jun 2026', dateShort:'Sat 14 Jun' }
+];
+
+function planFlight(idx) {
+  const trip = UPCOMING_TRIPS[idx];
+  state.selectedTrip = trip;
+
+  const mark = document.getElementById('s1-pr-mark');
+  mark.textContent = trip.initial;
+  mark.className = 'airline-mark' + (trip.color === 'red' ? ' red' : '');
+  document.getElementById('s1-pr-title').textContent = trip.originCity + ' → ' + trip.destCity;
+  document.getElementById('s1-pr-times').textContent = trip.depTime + ' – ' + trip.arrTime + ' • ' + trip.dateShort;
+  document.getElementById('s1-pr-airline').textContent = trip.airline + ' • ' + trip.code;
+  document.getElementById('s1-pr-pickup-title').textContent = 'Pickup from ' + trip.destCity + ' airport';
+  document.getElementById('s1-pr-pickup-sub').textContent = 'From the airport to any location in ' + trip.destCity;
+  document.getElementById('s1-pr-dropoff-title').textContent = 'Drop-off to ' + trip.originCity + ' airport';
+  document.getElementById('s1-pr-dropoff-sub').textContent = 'From any location in ' + trip.originCity + ' to the airport';
+
+  document.getElementById('s1-pr-choose').style.cssText = 'display:block;opacity:1';
+  document.getElementById('s1-pr-loc-step').style.display = 'none';
+
+  const dv = document.getElementById('s1-default-view');
+  const pv = document.getElementById('s1-plan-view');
+  dv.style.transition = 'opacity .22s ease, transform .22s ease';
+  dv.style.opacity = '0';
+  dv.style.transform = 'translateY(-10px)';
+  setTimeout(() => {
+    dv.style.cssText = 'display:none';
+    pv.style.cssText = 'display:block;opacity:0;transform:translateY(14px)';
+    requestAnimationFrame(() => {
+      pv.style.transition = 'opacity .28s ease, transform .28s ease';
+      pv.style.opacity = '1';
+      pv.style.transform = 'translateY(0)';
+    });
+  }, 220);
+}
+
+function closePlanRoute() {
+  const dv = document.getElementById('s1-default-view');
+  const pv = document.getElementById('s1-plan-view');
+  pv.style.transition = 'opacity .2s ease, transform .2s ease';
+  pv.style.opacity = '0';
+  pv.style.transform = 'translateY(-10px)';
+  setTimeout(() => {
+    pv.style.cssText = 'display:none';
+    dv.style.cssText = 'display:block;opacity:0;transform:translateY(10px)';
+    requestAnimationFrame(() => {
+      dv.style.transition = 'opacity .25s ease, transform .25s ease';
+      dv.style.opacity = '1';
+      dv.style.transform = 'translateY(0)';
+    });
+  }, 200);
+}
+
+function chooseTripDirection(direction) {
+  const trip = state.selectedTrip;
+  if (direction === 'pickup') {
+    state.pickup = trip.destAirport;
+    state.pickupCity = trip.destCity.toLowerCase();
+    document.getElementById('s1-pr-pre-label').textContent = 'Pickup · airport';
+    document.getElementById('s1-pr-pre-val').textContent = trip.destAirportShort;
+    document.getElementById('s1-pr-input').placeholder = 'Drop-off location';
+    state.prInputField = 'dropoff';
+  } else {
+    state.dropoff = trip.originAirport;
+    state.pickupCity = null;
+    document.getElementById('s1-pr-pre-label').textContent = 'Drop-off · airport';
+    document.getElementById('s1-pr-pre-val').textContent = trip.originAirportShort;
+    document.getElementById('s1-pr-input').placeholder = 'Pickup location';
+    state.prInputField = 'pickup';
+  }
+  state.flight = { code:trip.code, airline:trip.airline, initial:trip.initial,
+    originCity:trip.originCity, destCity:trip.destCity,
+    depTime:trip.depTime, arrTime:trip.arrTime, lands:trip.arrTime,
+    route:trip.originCity+' → '+trip.destCity, meta:trip.depTime+' – '+trip.arrTime };
+  state.arrivalDate = { year:2026, month:5, day:14 };
+  state.arrivalDateStr = trip.dateStr;
+
+  const choose = document.getElementById('s1-pr-choose');
+  const locStep = document.getElementById('s1-pr-loc-step');
+  choose.style.transition = 'opacity .18s ease';
+  choose.style.opacity = '0';
+  setTimeout(() => {
+    choose.style.display = 'none';
+    locStep.style.cssText = 'display:block;opacity:0';
+    document.getElementById('s1-pr-input').value = '';
+    renderPRLocList('');
+    requestAnimationFrame(() => {
+      locStep.style.transition = 'opacity .22s ease';
+      locStep.style.opacity = '1';
+    });
+    setTimeout(() => document.getElementById('s1-pr-input').focus(), 60);
+  }, 180);
+}
+
+function openPRLocDrop() {
+  document.getElementById('s1-pr-dropdown').style.display = 'block';
+  renderPRLocList(document.getElementById('s1-pr-input').value);
+}
+function filterPRLoc(val) {
+  document.getElementById('s1-pr-dropdown').style.display = 'block';
+  renderPRLocList(val);
+}
+function renderPRLocList(query) {
+  const list = state.prInputField === 'dropoff' ? getDropoffList(query) : getPickupList(query);
+  document.getElementById('s1-pr-loc-list').innerHTML = list.map(loc => `
+    <div class="loc-item" onmousedown="selectPRLoc('${loc.id}');event.preventDefault()">
+      <span class="loc-thumb ${loc.thumb}">${thumbIcon(loc.type)}</span>
+      <span class="loc-body">
+        <div class="loc-name">${loc.name}${loc.upcoming ? ` <span class="upcoming-badge">${loc.upcoming}</span>` : ''}</div>
+        <div class="loc-sub">${loc.sub}</div>
+      </span>
+    </div>
+  `).join('') || '<div class="loc-item" style="cursor:default;color:var(--text-2);font-size:13px">No results found</div>';
+}
+function selectPRLoc(id) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  if (!loc) return;
+  if (state.prInputField === 'dropoff') {
+    state.dropoff = loc.name;
+  } else {
+    state.pickup = loc.name;
+    state.pickupCity = loc.city || null;
+  }
+  document.getElementById('s1-pr-dropdown').style.display = 'none';
+  setTimeout(() => goToScreen(3), 160);
 }
 
 function bookTripHotel() {
@@ -970,25 +2151,58 @@ function onFlightInput(val) {
     showDropdown(val);
   }, 400);
 }
+const FLIGHTS = {
+  riyadh: [
+    { code:'XY 304', airline:'Flynas',   initial:'F', color:'teal', originCity:'Cairo',    destCity:'Riyadh', depTime:'19:25', arrTime:'22:10' },
+    { code:'XY 306', airline:'Flynas',   initial:'F', color:'teal', originCity:'Dubai',    destCity:'Riyadh', depTime:'21:00', arrTime:'23:55' },
+    { code:'XY 308', airline:'Flynas',   initial:'F', color:'teal', originCity:'Jeddah',   destCity:'Riyadh', depTime:'23:10', arrTime:'00:40' },
+  ],
+  london: [
+    { code:'EK 037', airline:'Emirates', initial:'E', color:'red',  originCity:'Dubai',    destCity:'London', depTime:'08:15', arrTime:'12:30' },
+    { code:'EK 001', airline:'Emirates', initial:'E', color:'red',  originCity:'Riyadh',   destCity:'London', depTime:'14:30', arrTime:'19:00' },
+    { code:'EK 031', airline:'Emirates', initial:'E', color:'red',  originCity:'New York',  destCity:'London', depTime:'21:45', arrTime:'09:20' },
+  ]
+};
+
 function showDropdown(val) {
   const dd = document.getElementById('s2-dropdown');
   dd.style.display = 'block';
-  const count = document.getElementById('s2-dropdown-count');
-  const v = val.trim().toUpperCase();
-  const matches = ['XY 304','XY 306','XY 308'].filter(f => f.replace(' ','').startsWith(v.replace(' ','')));
-  count.innerHTML = `<b>${matches.length} flight${matches.length !== 1 ? 's' : ''}</b> match "${val.trim()}"`;
+  const dateShort = state.arrivalDateStr ? state.arrivalDateStr.split(' ').slice(0,3).join(' ') : '';
+  document.getElementById('s2-dropdown-date').textContent = dateShort;
+
+  const city = state.pickupCity || 'riyadh';
+  const set = FLIGHTS[city] || FLIGHTS.riyadh;
+  const v = val.trim().toLowerCase();
+  const matches = v ? set.filter(f =>
+    f.code.toLowerCase().replace(' ','').includes(v.replace(' ','')) ||
+    f.airline.toLowerCase().includes(v) ||
+    f.originCity.toLowerCase().includes(v) ||
+    f.destCity.toLowerCase().includes(v)
+  ) : set;
+
+  document.getElementById('s2-dropdown-count').innerHTML =
+    `<b>${matches.length} flight${matches.length !== 1 ? 's' : ''}</b> match "${val.trim()}"`;
+
+  document.getElementById('s2-flight-list').innerHTML = matches.map(f => `
+    <div class="flight-option" onclick="selectFlight('${f.code}','${f.airline}','${f.originCity}','${f.destCity}','${f.depTime}','${f.arrTime}')">
+      <span class="airline-mark${f.color === 'red' ? ' red' : ''}">${f.initial}</span>
+      <div>
+        <div class="f-title">${f.originCity} → ${f.destCity}</div>
+        <div class="f-times">${f.depTime} – ${f.arrTime}${dateShort ? ' • ' + dateShort : ''}</div>
+        <div class="f-airline">${f.airline} • ${f.code}</div>
+      </div>
+    </div>
+  `).join('');
 }
 function hideDropdown() {
   document.getElementById('s2-dropdown').style.display = 'none';
 }
-function toggleDateEdit() {
-  const field = document.getElementById('s2-date-field');
-  field.classList.toggle('active');
-}
-
 // ── Flight selection ──
-function selectFlight(code, route, meta, lands, terminal) {
-  state.flight = { code, route, meta, lands, terminal };
+function selectFlight(code, airline, originCity, destCity, depTime, arrTime) {
+  state.flight = { code, airline, originCity, destCity, depTime, arrTime,
+    route: originCity + ' → ' + destCity,
+    meta: depTime + ' – ' + arrTime,
+    lands: arrTime };
   const inp = document.getElementById('s2-flight-input');
   inp.value = code;
   hideDropdown();
@@ -1044,7 +2258,10 @@ function closeSuccess(e) {
 // ── Init ──
 injectHero('s1-right');
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeSuccess();
+  if (e.key === 'Escape') { closeSuccess(); closeLocDrop(); }
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.combo-wrap')) closeLocDrop();
 });
 </script>
 </body>
