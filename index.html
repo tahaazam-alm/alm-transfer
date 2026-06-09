@@ -1361,9 +1361,9 @@ function focusModalField(field) {
   document.getElementById('em-back-btn').style.display = 'flex';
   document.getElementById('em-modal-title').textContent = field === 'pickup' ? 'Update pickup' : 'Update drop-off';
 
-  // Lock min-height so modal doesn't shrink while dropdown is open
+  // Lock height so dropdown is clamped inside the modal
   const modal = document.querySelector('.edit-modal');
-  modal.style.minHeight = modal.offsetHeight + 'px';
+  modal.style.height = modal.offsetHeight + 'px';
 
   // Collapse flight, datetime, pax, footer simultaneously
   document.getElementById('em-flight-section').classList.add('em-collapsed');
@@ -1400,7 +1400,7 @@ function exitLocMode() {
 
   document.getElementById('em-back-btn').style.display = 'none';
   document.getElementById('em-modal-title').textContent = 'Edit your booking';
-  document.querySelector('.edit-modal').style.minHeight = '';
+  document.querySelector('.edit-modal').style.height = '';
 
   if (state.flight && state.flight.code) {
     document.getElementById('em-flight-section').classList.remove('em-collapsed');
@@ -1529,9 +1529,7 @@ function openEditModal() {
 function closeEditModal(e) {
   if (!e || e.target === document.getElementById('edit-overlay')) {
     document.getElementById('edit-overlay').classList.remove('show');
-    const modal = document.querySelector('.edit-modal');
-    modal.style.height = '';
-    modal.style.minHeight = '';
+    document.querySelector('.edit-modal').style.height = '';
   }
 }
 
@@ -1606,9 +1604,9 @@ function focusModalDatetime(sub) {
   document.getElementById('em-back-btn').style.display = 'flex';
   document.getElementById('em-modal-title').textContent = sub === 'date' ? 'Pickup date' : 'Pickup time';
 
-  // Lock min-height so modal keeps its size while sections collapse
+  // Lock height so datetime picker fills exactly the modal space
   const modal = document.querySelector('.edit-modal');
-  modal.style.minHeight = modal.offsetHeight + 'px';
+  modal.style.height = modal.offsetHeight + 'px';
 
   document.getElementById('em-flight-section').classList.add('em-collapsed');
   document.getElementById('em-pax-section').classList.add('em-collapsed');
@@ -1649,7 +1647,7 @@ function exitDatetimeMode() {
 
   document.getElementById('em-back-btn').style.display = 'none';
   document.getElementById('em-modal-title').textContent = 'Edit your booking';
-  document.querySelector('.edit-modal').style.minHeight = '';
+  document.querySelector('.edit-modal').style.height = '';
 
   if (state.flight && state.flight.code) {
     document.getElementById('em-flight-section').classList.remove('em-collapsed');
