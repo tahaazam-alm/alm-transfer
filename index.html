@@ -285,21 +285,30 @@
   .sumbar .seg .change { background: none; border: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--alm-teal); cursor: pointer; padding: 0; margin-left: 4px; }
   .sumbar .div { width: 1px; height: 16px; background: var(--border-soft); }
 
-  /* ── Timeline (step 4) ── */
-  .timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-  .timeline li { display: grid; grid-template-columns: 32px 1fr auto; align-items: flex-start; gap: 12px; padding: 6px 0; position: relative; }
-  .timeline li::before { content: ""; position: absolute; left: 15.5px; top: 30px; bottom: -6px; width: 1px; background: var(--border-soft); }
-  .timeline li:last-child::before { display: none; }
-  .timeline .node { width: 32px; height: 32px; border-radius: var(--r-sm); background: var(--bg-subtle); color: var(--text-2); display: inline-flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
-  .timeline .node.flight  { background: var(--alm-butter-12); color: var(--alm-butter); }
-  .timeline .node.driver  { background: var(--alm-teal-12);   color: var(--alm-teal); }
-  .timeline .node.dest    { background: rgba(49,158,55,.12);  color: var(--alm-success); }
-  .timeline .node svg { width: 16px; height: 16px; }
-  .timeline .tl-body  { min-width: 0; padding-top: 6px; }
-  .timeline .tl-label { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 2px; }
-  .timeline .tl-desc  { font-size: 12px; color: var(--text-2); }
-  .timeline .tl-time  { font-size: 13px; font-weight: 600; color: var(--ink); padding-top: 8px; font-variant-numeric: tabular-nums; }
-  .strike { text-decoration: line-through; color: var(--text-3); font-weight: 400; margin-right: 4px; }
+  /* ── Filters (screen 4) ── */
+  .filter-section { margin-bottom: 20px; }
+  .filter-section:last-child { margin-bottom: 0; }
+  .filter-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-2); margin: 0 0 10px; }
+  .filter-toggle-row { display: flex; align-items: center; justify-content: space-between; }
+  .filter-toggle-row span { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .toggle-switch { width: 40px; height: 22px; border-radius: 11px; background: var(--border); border: none; cursor: pointer; position: relative; transition: background .2s; flex-shrink: 0; }
+  .toggle-switch.on { background: var(--alm-teal); }
+  .toggle-switch::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .toggle-switch.on::after { transform: translateX(18px); }
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fchip { padding: 6px 12px; border: 1.5px solid var(--border); border-radius: 20px; background: #fff; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; transition: border-color .15s, background .15s, color .15s; white-space: nowrap; font-family: inherit; }
+  .fchip:hover:not(.on) { border-color: #B7BFC3; }
+  .fchip.on { border-color: var(--alm-navy); background: var(--alm-navy); color: #fff; }
+  .fchip.teal.on { border-color: var(--alm-teal); background: var(--alm-teal-06); color: var(--alm-teal); }
+  .price-slider-wrap { padding: 4px 0 2px; }
+  .price-slider { width: 100%; accent-color: var(--alm-teal); cursor: pointer; }
+  .price-slider-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-top: 4px; }
+  .luggage-stepper { display: flex; align-items: center; gap: 14px; }
+  .lug-btn { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--border); background: #fff; font-size: 18px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: border-color .15s; }
+  .lug-btn:hover { border-color: var(--alm-teal); }
+  .lug-btn:disabled { opacity: .35; cursor: default; }
+  .lug-count { font-size: 15px; font-weight: 600; color: var(--ink); min-width: 16px; text-align: center; }
+  .filter-divider { border: none; border-top: 1px solid var(--border-soft); margin: 18px 0; }
 
   /* ── Banners ── */
   .banner { display: grid; grid-template-columns: 32px 1fr; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-soft); border-radius: var(--r-md); background: #fff; align-items: flex-start; font-size: 13px; color: var(--ink); line-height: 1.5; }
@@ -841,104 +850,121 @@
 <div id="s4" class="screen">
   <div class="container s4-layout">
     <!-- Summary bar -->
-    <div class="sumbar">
-      <span class="seg flight">
-        <span class="dot"></span>
-        <b id="s4-flight-label">Flynas XY 304</b>
-        · Sat 14 Jun · lands 22:10
-        <button class="change" onclick="openEditModal()">Change</button>
+    <div class="sumbar" onclick="openEditModal()" style="cursor:pointer" title="Edit search">
+      <span class="seg">
+        <span class="dot" style="background:var(--alm-teal)"></span>
+        <b id="s4-pickup-label">King Khalid International Airport</b>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3);margin:0 2px"><path d="M9 18l6-6-6-6"/></svg>
+        <span id="s4-dropoff-label">Marriott Diplomatic Quarter</span>
       </span>
       <span class="div"></span>
       <span class="seg">
-        <span class="dot"></span>
-        <span id="s4-pickup-label">RUH · King Khalid Intl</span> → <span id="s4-dropoff-label">Marriott Diplomatic Quarter</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-2)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span id="s4-date-label">Sun, 14 Jun</span>
+        <span class="div" style="margin:0 6px"></span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-2)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span id="s4-time-label">22:25</span>
       </span>
       <span class="div"></span>
       <span class="seg">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 3v1h14v-1c0-1-3-3-7-3z"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-2)"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 3v1h14v-1c0-1-3-3-7-3z"/></svg>
         <span id="s4-pax-label">2</span> passengers
-        <button class="change" onclick="openEditModal()">Edit</button>
       </span>
       <span class="div"></span>
-      <span class="seg" style="color:var(--text-2)">Pickup: <b style="color:var(--ink)">22:25</b> · auto-adjusts to flight</span>
+      <span class="seg" style="color:var(--alm-teal);font-weight:600;font-size:13px">Edit</span>
     </div>
 
     <div class="s4-grid">
-      <!-- Left: timeline + filters -->
+      <!-- Left: filters -->
       <div class="s4-panel">
-        <p class="panel-section-title">Your trip</p>
-        <ul class="timeline">
-          <li>
-            <span class="node flight">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
-            </span>
-            <div class="tl-body">
-              <div class="tl-label">Flight lands</div>
-              <div class="tl-desc">Flynas XY 304 · King Khalid Intl</div>
-            </div>
-            <span class="tl-time"><span class="strike">22:10</span> 22:35</span>
-          </li>
-          <li>
-            <span class="node driver">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-            </span>
-            <div class="tl-body">
-              <div class="tl-label">Free wait (15 min)</div>
-              <div class="tl-desc">Driver holds spot, no charge</div>
-            </div>
-            <span class="tl-time" style="color:var(--alm-success)">free</span>
-          </li>
-          <li>
-            <span class="node driver">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7764 7.5L18.7314 10.042L21.1064 10.6357C22.2194 10.914 23 11.9144 23 13.0615V14H1V12.5C1 11.1193 2.11929 10 3.5 10H3.66211L4.0332 9.07129C4.41294 8.12232 5.33234 7.5 6.35449 7.5H14.7764Z"/></svg>
-            </span>
-            <div class="tl-body">
-              <div class="tl-label">Driver meets you</div>
-              <div class="tl-desc">Arrivals hall, name board</div>
-            </div>
-            <span class="tl-time"><span class="strike">22:25</span> 22:50</span>
-          </li>
-          <li>
-            <span class="node dest">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
-            </span>
-            <div class="tl-body">
-              <div class="tl-label">Marriott Diplomatic Quarter</div>
-              <div class="tl-desc">Est. 35 min drive</div>
-            </div>
-            <span class="tl-time">~23:25</span>
-          </li>
-        </ul>
+        <p class="panel-section-title" style="margin-bottom:18px">Filters</p>
 
-        <hr class="panel-divider" />
-
-        <p class="filter-label">Car type</p>
-        <div class="chip-row" style="margin-bottom:16px" id="s4-type-filters">
-          <button class="chip filter on" onclick="toggleFilter(this)">All</button>
-          <button class="chip filter" onclick="toggleFilter(this)">Sedan</button>
-          <button class="chip filter" onclick="toggleFilter(this)">SUV</button>
-          <button class="chip filter" onclick="toggleFilter(this)">Luxury</button>
-        </div>
-
-        <p class="filter-label">Sort by</p>
-        <div class="chip-row" id="s4-sort">
-          <button class="chip filter on" onclick="toggleSort(this)">Recommended</button>
-          <button class="chip filter" onclick="toggleSort(this)">Price</button>
-          <button class="chip filter" onclick="toggleSort(this)">Rating</button>
-        </div>
-      </div>
-
-      <!-- Right: delay banner + car list -->
-      <div>
-        <div class="banner delay" style="margin-bottom:16px">
-          <span class="bicon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          </span>
-          <div>
-            <b>25-min flight delay detected.</b> Your pickup time has shifted to 22:50 — your driver will see the updated time. All prices below are still locked.
+        <!-- Free cancellation -->
+        <div class="filter-section">
+          <div class="filter-toggle-row">
+            <span>Free cancellation</span>
+            <button class="toggle-switch" id="f-cancel-toggle" onclick="toggleSwitch(this)"></button>
           </div>
         </div>
 
+        <hr class="filter-divider">
+
+        <!-- Services -->
+        <div class="filter-section">
+          <p class="filter-section-label">Services</p>
+          <div class="filter-chips">
+            <button class="fchip teal" onclick="toggleFchip(this)">Child seat</button>
+            <button class="fchip teal" onclick="toggleFchip(this)">Meet &amp; greet</button>
+          </div>
+        </div>
+
+        <hr class="filter-divider">
+
+        <!-- Price -->
+        <div class="filter-section">
+          <p class="filter-section-label">Price</p>
+          <div class="price-slider-wrap">
+            <input type="range" class="price-slider" id="f-price-slider" min="50" max="500" value="500" oninput="updatePriceLabel(this.value)">
+            <div class="price-slider-labels">
+              <span>SAR 50</span>
+              <span id="f-price-label">Up to SAR 500</span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="filter-divider">
+
+        <!-- Luggage -->
+        <div class="filter-section">
+          <p class="filter-section-label">Luggage</p>
+          <div class="luggage-stepper">
+            <button class="lug-btn" id="f-lug-minus" onclick="adjustLuggage(-1)" disabled>−</button>
+            <span class="lug-count" id="f-lug-count">0</span>
+            <button class="lug-btn" id="f-lug-plus" onclick="adjustLuggage(1)">+</button>
+            <span style="font-size:13px;color:var(--text-2)">bags</span>
+          </div>
+        </div>
+
+        <hr class="filter-divider">
+
+        <!-- Car class -->
+        <div class="filter-section">
+          <p class="filter-section-label">Car class</p>
+          <div class="filter-chips">
+            <button class="fchip on" onclick="toggleFchipSingle(this,'f-class')">All</button>
+            <button class="fchip" onclick="toggleFchipSingle(this,'f-class')">Economy</button>
+            <button class="fchip" onclick="toggleFchipSingle(this,'f-class')">Premium</button>
+            <button class="fchip" onclick="toggleFchipSingle(this,'f-class')">Luxury</button>
+          </div>
+        </div>
+
+        <hr class="filter-divider">
+
+        <!-- Car type -->
+        <div class="filter-section">
+          <p class="filter-section-label">Car type</p>
+          <div class="filter-chips">
+            <button class="fchip on" onclick="toggleFchipSingle(this,'f-type')">All</button>
+            <button class="fchip" onclick="toggleFchipSingle(this,'f-type')">Sedan</button>
+            <button class="fchip" onclick="toggleFchipSingle(this,'f-type')">SUV</button>
+            <button class="fchip" onclick="toggleFchipSingle(this,'f-type')">Bus</button>
+          </div>
+        </div>
+
+        <hr class="filter-divider">
+
+        <!-- Language -->
+        <div class="filter-section">
+          <p class="filter-section-label">Driver language</p>
+          <div class="filter-chips">
+            <button class="fchip teal" onclick="toggleFchip(this)">English</button>
+            <button class="fchip teal" onclick="toggleFchip(this)">Arabic</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: car list -->
+      <div>
         <div class="right-header">
           <h3>4 cars available</h3>
           <span class="right-meta">Prices locked at booking · no surges</span>
@@ -1342,10 +1368,11 @@ function syncScreen3() {
 
 // ── Screen 4 sync ──
 function syncScreen4() {
-  document.getElementById('s4-flight-label').textContent = state.flight.originCity + ' → ' + state.flight.destCity;
   document.getElementById('s4-pickup-label').textContent = state.pickup;
   document.getElementById('s4-dropoff-label').textContent = state.dropoff;
   document.getElementById('s4-pax-label').textContent = state.pax;
+  if (state.pickupDate) document.getElementById('s4-date-label').textContent = formatDtDate(state.pickupDate);
+  if (state.pickupTime) document.getElementById('s4-time-label').textContent = state.pickupTime;
 }
 
 // ── Edit search modal ──
@@ -2224,14 +2251,22 @@ function toggleChip(btn) {
   btn.classList.toggle('on');
 }
 
-// ── Car filter/sort ──
-function toggleFilter(btn) {
-  btn.closest('.chip-row').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+// ── Filter panel ──
+function toggleSwitch(btn) { btn.classList.toggle('on'); }
+function toggleFchip(btn) { btn.classList.toggle('on'); }
+function toggleFchipSingle(btn, group) {
+  btn.closest('.filter-chips').querySelectorAll('.fchip').forEach(c => c.classList.remove('on'));
   btn.classList.add('on');
 }
-function toggleSort(btn) {
-  btn.closest('.chip-row').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
-  btn.classList.add('on');
+let lugCount = 0;
+function adjustLuggage(d) {
+  lugCount = Math.max(0, Math.min(8, lugCount + d));
+  document.getElementById('f-lug-count').textContent = lugCount;
+  document.getElementById('f-lug-minus').disabled = lugCount === 0;
+  document.getElementById('f-lug-plus').disabled = lugCount === 8;
+}
+function updatePriceLabel(v) {
+  document.getElementById('f-price-label').textContent = v >= 500 ? 'Any price' : 'Up to SAR ' + v;
 }
 
 // ── Car selection ──
