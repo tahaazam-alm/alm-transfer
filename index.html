@@ -357,6 +357,34 @@
   .s4-sticky-bar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--border-soft); box-shadow: 0 2px 8px rgba(16,24,40,.05); }
   .s4-sticky-bar .sumbar { margin-bottom: 0; border: none; border-radius: 0; padding: 13px 0; box-shadow: none; background: transparent; gap: 20px; }
 
+  /* ── Version toggle (prototype switcher) ── */
+  .version-toggle { position: fixed; left: 20px; bottom: 20px; z-index: 300; background: #fff; border: 1px solid var(--border-soft); border-radius: var(--r-md); box-shadow: var(--shadow-pop); padding: 10px 12px; }
+  .version-toggle .vt-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-2); margin: 0 0 8px; }
+  .vt-seg { display: flex; gap: 4px; background: var(--bg-subtle); border-radius: 8px; padding: 3px; }
+  .vt-seg button { border: none; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-2); padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: background .15s, color .15s; }
+  .vt-seg button.on { background: var(--alm-navy); color: #fff; }
+
+  /* ── Inline search widget (V2) ── */
+  .s4-inline { display: flex; align-items: stretch; gap: 10px; padding: 12px 0; }
+  .if-field { position: relative; display: flex; flex-direction: column; justify-content: center; min-width: 150px; padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--r-md); background: #fff; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  .if-field:hover { border-color: #B7BFC3; }
+  .if-field.open { border-color: var(--alm-teal); box-shadow: 0 0 0 3px var(--alm-teal-12); }
+  .if-field .if-label { font-size: 11px; color: var(--text-2); display: flex; align-items: center; gap: 4px; line-height: 1.3; }
+  .if-field .if-label svg { width: 11px; height: 11px; }
+  .if-field .if-value { font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; line-height: 1.35; }
+  .if-field.locked { background: var(--bg-subtle); border-color: var(--border-soft); cursor: default; }
+  .if-field.locked:hover { border-color: var(--border-soft); }
+  .if-field.locked .if-value { color: var(--text-2); font-weight: 500; }
+  .if-pax-static { display: flex; align-items: center; gap: 6px; padding: 0 6px; font-size: 13px; color: var(--text-2); }
+  .if-pop { position: absolute; top: calc(100% + 8px); left: 0; width: 330px; background: #fff; border: 1px solid var(--border-soft); border-radius: var(--r-md); box-shadow: var(--shadow-pop); z-index: 80; padding: 12px; display: none; cursor: default; }
+  .if-field.open .if-pop { display: block; }
+  .if-pop .if-search { display: flex; align-items: center; gap: 8px; height: 40px; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 0 12px; margin-bottom: 8px; }
+  .if-pop .if-search:focus-within { border-color: var(--alm-teal); box-shadow: 0 0 0 3px var(--alm-teal-12); }
+  .if-pop .if-search input { border: none; outline: none; font-family: inherit; font-size: 14px; flex: 1; padding: 0; background: transparent; }
+  .if-pop .if-loc-list { max-height: 280px; overflow-y: auto; margin: 0 -12px -12px; }
+  .if-pop .if-time-scroll { max-height: 280px; overflow-y: auto; }
+  .if-pop .em-dt-msg { margin-top: 10px; }
+
   /* ── Success overlay ── */
   .success-overlay { position: fixed; inset: 0; background: rgba(0,49,67,.6); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .25s; }
   .success-overlay.show { opacity: 1; pointer-events: all; }
@@ -856,7 +884,7 @@
   <!-- Sticky search bar -->
   <div class="s4-sticky-bar">
     <div class="container">
-      <div class="sumbar" onclick="openEditModal()" style="cursor:pointer" title="Edit search">
+      <div class="sumbar" id="s4-sumbar" onclick="openEditModal()" style="cursor:pointer" title="Edit search">
         <span class="seg">
           <span class="dot" style="background:var(--alm-teal)"></span>
           <b id="s4-pickup-label">King Khalid International Airport</b>
@@ -878,6 +906,51 @@
         </span>
         <span class="div"></span>
         <span class="seg" style="color:var(--alm-teal);font-weight:600;font-size:13px">Edit</span>
+      </div>
+
+      <!-- V2: inline widget -->
+      <div class="s4-inline" id="s4-inline" style="display:none">
+        <div class="if-field" id="if-pickup" onclick="ifToggle('pickup', event)">
+          <span class="if-label" id="if-pickup-label">Pickup</span>
+          <span class="if-value" id="if-pickup-value">King Khalid International Airport</span>
+          <div class="if-pop" onclick="event.stopPropagation()">
+            <div class="if-search">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input id="if-pickup-input" type="text" placeholder="Search pickup" oninput="ifFilterLoc('pickup', this.value)" autocomplete="off" />
+            </div>
+            <div class="if-loc-list" id="if-pickup-list"></div>
+          </div>
+        </div>
+        <div class="if-field" id="if-dropoff" onclick="ifToggle('dropoff', event)">
+          <span class="if-label" id="if-dropoff-label">Drop-off</span>
+          <span class="if-value" id="if-dropoff-value">Marriott Diplomatic Quarter</span>
+          <div class="if-pop" onclick="event.stopPropagation()">
+            <div class="if-search">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input id="if-dropoff-input" type="text" placeholder="Search drop-off" oninput="ifFilterLoc('dropoff', this.value)" autocomplete="off" />
+            </div>
+            <div class="if-loc-list" id="if-dropoff-list"></div>
+          </div>
+        </div>
+        <div class="if-field" id="if-date" onclick="ifToggle('date', event)" style="min-width:130px">
+          <span class="if-label">Pickup date</span>
+          <span class="if-value" id="if-date-value">Sun, 14 Jun</span>
+          <div class="if-pop" onclick="event.stopPropagation()">
+            <div id="if-cal-content"></div>
+          </div>
+        </div>
+        <div class="if-field" id="if-time" onclick="ifToggle('time', event)" style="min-width:100px">
+          <span class="if-label">Pickup time</span>
+          <span class="if-value" id="if-time-value">22:25</span>
+          <div class="if-pop" onclick="event.stopPropagation()">
+            <div class="if-time-scroll" id="if-time-content"></div>
+            <div id="if-time-msg" class="em-dt-msg" style="display:none"></div>
+          </div>
+        </div>
+        <span class="if-pax-static">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 3v1h14v-1c0-1-3-3-7-3z"/></svg>
+          <span id="if-pax-value">2</span>&nbsp;passengers
+        </span>
       </div>
     </div>
   </div>
@@ -1178,6 +1251,15 @@
   </div>
 </div>
 
+<!-- ── Version toggle ── -->
+<div class="version-toggle">
+  <p class="vt-label">Prototype version</p>
+  <div class="vt-seg">
+    <button id="vt-modal" class="on" onclick="setVersion('modal')">Modal</button>
+    <button id="vt-inline" onclick="setVersion('inline')">Inline widget</button>
+  </div>
+</div>
+
 </div><!-- .frame -->
 
 <script>
@@ -1381,6 +1463,180 @@ function syncScreen4() {
   document.getElementById('s4-pickup-label').textContent = state.pickup;
   document.getElementById('s4-dropoff-label').textContent = state.dropoff;
   document.getElementById('s4-pax-label').textContent = state.pax;
+  if (state.pickupDate) document.getElementById('s4-date-label').textContent = formatDtDate(state.pickupDate);
+  if (state.pickupTime) document.getElementById('s4-time-label').textContent = state.pickupTime;
+
+  const inline = uiVersion === 'inline';
+  document.getElementById('s4-sumbar').style.display = inline ? 'none' : '';
+  document.getElementById('s4-inline').style.display = inline ? '' : 'none';
+  if (inline) syncInlineWidget();
+}
+
+// ── Prototype version toggle ──
+let uiVersion = 'modal'; // 'modal' | 'inline'
+
+function setVersion(v) {
+  uiVersion = v;
+  document.getElementById('vt-modal').classList.toggle('on', v === 'modal');
+  document.getElementById('vt-inline').classList.toggle('on', v === 'inline');
+  if (state.screen === 4) syncScreen4();
+}
+
+// ── Inline widget (V2) ──
+let ifOpenField = null;
+
+function isAirportName(name) {
+  return LOCATIONS.some(l => l.name === name && l.type === 'airport') || /airport|intl\b|terminal/i.test(name || '');
+}
+
+// Side tied to the selected flight — locked while a flight is attached
+function ifLockedSide() {
+  if (!state.flight || !state.flight.code) return null;
+  if (isAirportName(state.pickup)) return 'pickup';
+  if (isAirportName(state.dropoff)) return 'dropoff';
+  return null;
+}
+
+const IF_LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
+function syncInlineWidget() {
+  ifCloseAll();
+  const locked = ifLockedSide();
+  ['pickup', 'dropoff'].forEach(f => {
+    const el = document.getElementById('if-' + f);
+    const isLocked = locked === f;
+    el.classList.toggle('locked', isLocked);
+    el.title = isLocked ? 'Tied to your flight' : '';
+    document.getElementById('if-' + f + '-label').innerHTML =
+      (isLocked ? IF_LOCK_SVG + ' ' : '') + (f === 'pickup' ? 'Pickup' : 'Drop-off');
+    document.getElementById('if-' + f + '-value').textContent = f === 'pickup' ? state.pickup : state.dropoff;
+  });
+  document.getElementById('if-date-value').textContent = formatDtDate(state.pickupDate);
+  document.getElementById('if-time-value').textContent = state.pickupTime || '—';
+  document.getElementById('if-pax-value').textContent = state.pax;
+}
+
+function ifToggle(which, e) {
+  if (e) e.stopPropagation();
+  if ((which === 'pickup' || which === 'dropoff') && ifLockedSide() === which) return;
+  if (ifOpenField === which) { ifCloseAll(); return; }
+  ifCloseAll();
+  ifOpenField = which;
+  document.getElementById('if-' + which).classList.add('open');
+
+  if (which === 'pickup' || which === 'dropoff') {
+    const inp = document.getElementById('if-' + which + '-input');
+    inp.value = '';
+    ifRenderLocList(which, '');
+    setTimeout(() => inp.focus(), 30);
+  } else if (which === 'date') {
+    if (state.pickupDate) {
+      const [py, pm] = state.pickupDate.split('-').map(Number);
+      emDtCalYear = py; emDtCalMonth = pm - 1;
+    }
+    ifRenderCal();
+  } else {
+    ifRenderTime();
+  }
+}
+
+function ifCloseAll() {
+  ifOpenField = null;
+  ['pickup', 'dropoff', 'date', 'time'].forEach(f => {
+    const el = document.getElementById('if-' + f);
+    if (el) el.classList.remove('open');
+  });
+}
+
+document.addEventListener('click', e => {
+  if (ifOpenField && !e.target.closest('.if-field')) ifCloseAll();
+});
+
+function ifFilterLoc(field, val) {
+  ifRenderLocList(field, val);
+}
+
+function ifRenderLocList(field, query) {
+  const list = field === 'dropoff' ? getDropoffList(query) : getPickupList(query);
+  document.getElementById('if-' + field + '-list').innerHTML = list.map(loc => `
+    <div class="loc-item" onmousedown="ifSelectLoc('${loc.id}','${field}');event.preventDefault()">
+      <span class="loc-thumb ${loc.thumb}">${thumbIcon(loc.type)}</span>
+      <span class="loc-body">
+        <div class="loc-name">${loc.name}${loc.upcoming ? ` <span class="upcoming-badge">${loc.upcoming}</span>` : ''}</div>
+        <div class="loc-sub">${loc.sub}</div>
+      </span>
+    </div>
+  `).join('') || '<div class="loc-item" style="cursor:default;color:var(--text-2);font-size:13px">No results found</div>';
+}
+
+function ifSelectLoc(id, field) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  if (!loc) return;
+  if (field === 'pickup') {
+    state.pickup = loc.name;
+    state.pickupCity = loc.city || null;
+  } else {
+    state.dropoff = loc.name;
+  }
+  ifCloseAll();
+  syncScreen4();
+}
+
+function ifCalNav(dir) {
+  emDtCalMonth += dir;
+  if (emDtCalMonth < 0) { emDtCalMonth = 11; emDtCalYear--; }
+  if (emDtCalMonth > 11) { emDtCalMonth = 0; emDtCalYear++; }
+  ifRenderCal();
+}
+
+function ifRenderCal() {
+  document.getElementById('if-cal-content').innerHTML = buildCalendarHTML('ifCalNav', 'ifSelectDate');
+}
+
+function ifSelectDate(iso) {
+  state.pickupDate = iso;
+  ifRenderCal();
+  syncScreen4ValuesOnly();
+  // Auto-advance to the time popover
+  setTimeout(() => {
+    if (uiVersion === 'inline' && state.screen === 4) ifToggle('time');
+  }, 280);
+}
+
+function ifRenderTime() {
+  document.getElementById('if-time-content').innerHTML = buildTimeGridHTML('ifSelectTime');
+  requestAnimationFrame(() => {
+    const sel = document.querySelector('#if-time-content .em-time-slot.selected');
+    if (sel) sel.scrollIntoView({ block: 'nearest' });
+  });
+  ifUpdateTimeMsg();
+}
+
+function ifSelectTime(t) {
+  state.pickupTime = t;
+  document.getElementById('if-time-content').innerHTML = buildTimeGridHTML('ifSelectTime');
+  ifUpdateTimeMsg();
+  syncScreen4ValuesOnly();
+  const v = getDtValidation();
+  if (!v || v.type === 'info') setTimeout(ifCloseAll, 260);
+}
+
+function ifUpdateTimeMsg() {
+  const msgEl = document.getElementById('if-time-msg');
+  const v = getDtValidation();
+  if (v) {
+    msgEl.className = 'em-dt-msg ' + v.type;
+    msgEl.textContent = v.msg;
+    msgEl.style.display = '';
+  } else {
+    msgEl.style.display = 'none';
+  }
+}
+
+// Update labels without closing open popovers
+function syncScreen4ValuesOnly() {
+  document.getElementById('if-date-value').textContent = formatDtDate(state.pickupDate);
+  document.getElementById('if-time-value').textContent = state.pickupTime || '—';
   if (state.pickupDate) document.getElementById('s4-date-label').textContent = formatDtDate(state.pickupDate);
   if (state.pickupTime) document.getElementById('s4-time-label').textContent = state.pickupTime;
 }
@@ -1737,7 +1993,7 @@ function renderDtPicker() {
   updateDtValidation();
 }
 
-function renderDtCalendar() {
+function buildCalendarHTML(navFn, selectFn) {
   const year = emDtCalYear;
   const month = emDtCalMonth;
   const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
@@ -1745,11 +2001,11 @@ function renderDtCalendar() {
 
   let html = `
     <div class="em-cal-nav">
-      <button class="em-cal-nav-btn" onclick="emDtCalNav(-1)">
+      <button class="em-cal-nav-btn" onclick="${navFn}(-1)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
       <span class="em-cal-nav-label">${CAL_MONTHS[month]} ${year}</span>
-      <button class="em-cal-nav-btn" onclick="emDtCalNav(1)">
+      <button class="em-cal-nav-btn" onclick="${navFn}(1)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
       </button>
     </div>
@@ -1768,7 +2024,7 @@ function renderDtCalendar() {
     const iso = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
     const isSel = state.pickupDate === iso;
     let cls = 'em-cal-day' + (isPast ? ' past' : '') + (isToday ? ' today' : '') + (isSel ? ' selected' : '');
-    const oc = isPast ? '' : `onclick="selectDtDate('${iso}')"`;
+    const oc = isPast ? '' : `onclick="${selectFn}('${iso}')"`;
     html += `<button class="${cls}" ${oc}>${d}</button>`;
   }
   html += `</div>`;
@@ -1778,8 +2034,11 @@ function renderDtCalendar() {
   if (state.flight && state.flight.code && state.pickupDate && state.pickupDate !== flightIso) {
     html += `<div class="em-cal-flight-note">Your flight arrives on ${formatDtDate(flightIso)}</div>`;
   }
+  return html;
+}
 
-  document.getElementById('em-dt-content').innerHTML = html;
+function renderDtCalendar() {
+  document.getElementById('em-dt-content').innerHTML = buildCalendarHTML('emDtCalNav', 'selectDtDate');
 }
 
 function emDtCalNav(dir) {
@@ -1798,7 +2057,7 @@ function selectDtDate(iso) {
   setTimeout(() => { switchDtSub('time'); }, 320);
 }
 
-function renderDtTimePicker() {
+function buildTimeGridHTML(selectFn) {
   const flightIso = getFlightIsoDate();
   const isSameDay = state.pickupDate === flightIso;
   const f = state.flight;
@@ -1822,11 +2081,15 @@ function renderDtTimePicker() {
     }
 
     let cls = 'em-time-slot' + (isSel ? ' selected' : isDisabled ? ' disabled' : isCutting ? ' cutting' : '');
-    const oc = isDisabled ? '' : `onclick="selectDtTime('${t}')"`;
+    const oc = isDisabled ? '' : `onclick="${selectFn}('${t}')"`;
     html += `<button class="${cls}" ${oc}>${t}</button>`;
   }
   html += `</div>`;
-  document.getElementById('em-dt-content').innerHTML = html;
+  return html;
+}
+
+function renderDtTimePicker() {
+  document.getElementById('em-dt-content').innerHTML = buildTimeGridHTML('selectDtTime');
 
   // Scroll selected time into view
   requestAnimationFrame(() => {
