@@ -473,6 +473,20 @@
   .em-dt-msg.warn { background: #FEF3C7; color: #92400E; }
   .em-dt-msg.error { background: #FEE2E2; color: #B91C1C; }
 
+  /* ── Edit modal – flight re-selection ── */
+  #em-flightsel-section { display: none; }
+  .edit-modal.em-fs-mode .em-section:not(#em-flightsel-section),
+  .edit-modal.em-fs-mode #em-loc-section { display: none; }
+  #em-flightsel-section.em-fs-focus { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  #em-flightsel-section.em-fs-focus > .em-inner { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding-bottom: 0; }
+  .em-fs-hint { font-size: 13px; color: var(--text-2); margin: 0 0 14px; flex-shrink: 0; line-height: 1.45; }
+  .em-fs-hint b { color: var(--alm-navy); font-weight: 600; }
+  .em-fs-airport { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 6px; background: var(--alm-teal-12); color: var(--alm-teal); font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+  .em-fs-cal { flex: 1; min-height: 0; overflow-y: auto; }
+  .em-fs-flightwrap { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .em-fs-flightwrap .flight-dropdown { display: flex; flex-direction: column; flex: 1; min-height: 0; margin-top: 8px; }
+  .em-fs-flightwrap .em-fs-list { flex: 1; min-height: 0; overflow-y: auto; }
+
   /* ── Footer ── */
   .foot { border-top: 1px solid var(--border-soft); background: #fff; flex: 0 0 auto; }
   .foot .inner { padding: 24px 0; display: flex; justify-content: space-between; font-size: 13px; color: var(--text-2); }
@@ -1231,6 +1245,11 @@
         </div>
       </div>
 
+      <!-- Flight re-selection (shown when pickup/drop-off airport changes) -->
+      <div class="em-section" id="em-flightsel-section">
+        <div class="em-inner" id="em-fs-inner"></div>
+      </div>
+
     </div>
     <div class="em-section" id="em-footer-section">
       <div class="em-inner" style="padding: 6px 20px 20px">
@@ -1749,6 +1768,23 @@ function renderModalLocList(query, field) {
 function selectModalLoc(id, field) {
   const loc = LOCATIONS.find(l => l.id === id);
   if (!loc) return;
+  const prevVal = field === 'pickup' ? state.pickup : state.dropoff;
+
+  // Changed the airport on a flight trip → re-collect flight details for it.
+  // Snapshot before mutating so Back/close can cancel cleanly.
+  if (loc.type === 'airport' && state.flight && state.flight.code && loc.name !== prevVal) {
+    const snapshot = {
+      pickup: state.pickup, pickupCity: state.pickupCity, dropoff: state.dropoff,
+      flight: state.flight, pickupDate: state.pickupDate, pickupTime: state.pickupTime,
+      arrivalDate: state.arrivalDate, arrivalDateStr: state.arrivalDateStr
+    };
+    if (field === 'pickup') { state.pickup = loc.name; state.pickupCity = loc.city || null; }
+    else { state.dropoff = loc.name; }
+    document.getElementById('em-' + field + '-display').textContent = loc.name;
+    startModalFlightSelect(field, loc, snapshot);
+    return;
+  }
+
   if (field === 'pickup') {
     state.pickup = loc.name;
     state.pickupCity = loc.city || null;
@@ -1761,7 +1797,7 @@ function selectModalLoc(id, field) {
   exitLocMode();
 }
 
-function openEditModal() {
+function populateModalFromState() {
   const f = state.flight;
   const dateShort = state.arrivalDateStr ? state.arrivalDateStr.split(' ').slice(0,3).join(' ') : 'Sat 14 Jun';
 
@@ -1817,16 +1853,22 @@ function openEditModal() {
   emLocMode = false;
   emFocusedField = null;
   emDtMode = false;
-  document.querySelector('.edit-modal').classList.remove('em-dt-mode');
-
+  emFsMode = false;
   const modal = document.querySelector('.edit-modal');
+  modal.classList.remove('em-dt-mode', 'em-fs-mode');
+  document.getElementById('em-flightsel-section').classList.remove('em-fs-focus');
   modal.style.height = '';
   modal.style.minHeight = '';
+}
+
+function openEditModal() {
+  populateModalFromState();
   document.getElementById('edit-overlay').classList.add('show');
 }
 
 function closeEditModal(e) {
   if (!e || e.target === document.getElementById('edit-overlay')) {
+    if (emFsMode) restoreFsPrev(); // cancel an in-progress flight re-selection
     document.getElementById('edit-overlay').classList.remove('show');
     document.querySelector('.edit-modal').style.height = '';
   }
@@ -1891,6 +1933,177 @@ function getFlightIsoDate() {
 function modalBack() {
   if (emLocMode) exitLocMode();
   else if (emDtMode) exitDatetimeMode();
+  else if (emFsMode) {
+    if (emFsSub === 'flight') { emFsSub = 'date'; renderModalFlightSelect(); }
+    else cancelFlightSelect();
+  }
+}
+
+// ── Edit modal – flight re-selection (changed airport) ──
+let emFsMode = false;
+let emFsSub = 'date';      // 'date' | 'flight'
+let emFsField = 'pickup';
+let emFsAirport = null;    // { name, city, code }
+let emFsDate = null;       // ISO of chosen flight date
+let emFsPrev = null;       // snapshot to restore on cancel
+
+function airportCode(name) {
+  const loc = LOCATIONS.find(l => l.name === name && l.type === 'airport');
+  if (loc) { const m = loc.sub.match(/^([A-Z]{3})/); if (m) return m[1]; }
+  return '';
+}
+
+function startModalFlightSelect(field, loc, snapshot) {
+  emFsPrev = snapshot; // pre-change state, for Back / close cancel
+  emFsMode = true;
+  emFsSub = 'date';
+  emFsField = field;
+  emFsAirport = { name: loc.name, city: loc.city || 'riyadh', code: airportCode(loc.name) };
+  emFsDate = null;
+  state.flight = null; // old flight no longer valid for the new airport
+
+  // Tidy up location-picker visuals without un-collapsing the modal
+  cleanupLocVisuals();
+
+  // Lock height, switch the modal into flight-select mode
+  const modal = document.querySelector('.edit-modal');
+  modal.style.height = modal.offsetHeight + 'px';
+  modal.classList.add('em-fs-mode');
+  document.getElementById('em-back-btn').style.display = 'flex';
+
+  // Seed calendar month
+  const seed = emFsPrev.pickupDate || getFlightIsoDate();
+  const [sy, sm] = seed.split('-').map(Number);
+  emDtCalYear = sy; emDtCalMonth = sm - 1;
+
+  const fs = document.getElementById('em-flightsel-section');
+  fs.classList.remove('em-collapsed');
+  requestAnimationFrame(() => fs.classList.add('em-fs-focus'));
+  renderModalFlightSelect();
+}
+
+function cleanupLocVisuals() {
+  emLocMode = false;
+  emFocusedField = null;
+  const locSection = document.getElementById('em-loc-section');
+  locSection.classList.remove('em-loc-pickup-focused', 'em-loc-dropoff-focused');
+  ['pickup', 'dropoff'].forEach(f => {
+    document.getElementById('em-' + f + '-row').classList.remove('active', 'dimmed');
+    document.getElementById('em-' + f + '-display').style.display = '';
+    document.getElementById('em-' + f + '-input').style.display = 'none';
+    const dd = document.getElementById('em-' + f + '-dropdown');
+    dd.classList.remove('open');
+    dd.style.display = 'none';
+  });
+}
+
+function renderModalFlightSelect() {
+  const inner = document.getElementById('em-fs-inner');
+  const sideLabel = emFsField === 'pickup' ? 'pickup' : 'drop-off';
+  const chip = `<span class="em-fs-airport">${emFsAirport.code || '✈'} ${emFsAirport.name}</span>`;
+
+  if (emFsSub === 'date') {
+    document.getElementById('em-modal-title').textContent = 'Flight date';
+    inner.innerHTML = `
+      <p class="em-fs-hint">New ${sideLabel} airport ${chip} — when does your flight arrive?</p>
+      <div class="em-fs-cal" id="em-fs-cal"></div>`;
+    renderFsCalendar();
+  } else {
+    document.getElementById('em-modal-title').textContent = 'Find your flight';
+    const dateShort = emFsDate ? formatDtDate(emFsDate) : '';
+    inner.innerHTML = `
+      <div class="em-fs-flightwrap">
+        <div class="em-field-row active" style="cursor:text">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></span>
+          <span class="body">
+            <span class="label">Airline or flight number</span>
+            <input class="em-input" id="em-fs-flight-input" style="display:block" placeholder="e.g. Flynas, XY304" oninput="emFsFlightInput(this.value)" autocomplete="off" />
+          </span>
+        </div>
+        <div class="flight-dropdown">
+          <div class="dropdown-header"><span id="em-fs-count"></span><span>${dateShort}</span></div>
+          <div class="em-fs-list" id="em-fs-list"></div>
+        </div>
+      </div>`;
+    emFsRenderFlights('');
+    setTimeout(() => { const el = document.getElementById('em-fs-flight-input'); if (el) el.focus(); }, 60);
+  }
+}
+
+function renderFsCalendar() {
+  document.getElementById('em-fs-cal').innerHTML = buildCalendarHTML('emFsCalNav', 'emFsSelectDate', emFsDate, false);
+}
+
+function emFsCalNav(dir) {
+  emDtCalMonth += dir;
+  if (emDtCalMonth < 0) { emDtCalMonth = 11; emDtCalYear--; }
+  if (emDtCalMonth > 11) { emDtCalMonth = 0; emDtCalYear++; }
+  renderFsCalendar();
+}
+
+function emFsSelectDate(iso) {
+  emFsDate = iso;
+  renderFsCalendar();
+  setTimeout(() => { emFsSub = 'flight'; renderModalFlightSelect(); }, 280);
+}
+
+function emFsFlightInput(val) { emFsRenderFlights(val); }
+
+function emFsRenderFlights(query) {
+  const set = FLIGHTS[emFsAirport.city] || FLIGHTS.riyadh;
+  const v = query.trim().toLowerCase();
+  const matches = v ? set.filter(f =>
+    f.code.toLowerCase().replace(' ','').includes(v.replace(' ','')) ||
+    f.airline.toLowerCase().includes(v) ||
+    f.originCity.toLowerCase().includes(v) ||
+    f.destCity.toLowerCase().includes(v)
+  ) : set;
+
+  const dateShort = emFsDate ? formatDtDate(emFsDate) : '';
+  document.getElementById('em-fs-count').innerHTML =
+    `<b>${matches.length} flight${matches.length !== 1 ? 's' : ''}</b> match`;
+
+  document.getElementById('em-fs-list').innerHTML = matches.map(f => `
+    <div class="flight-option" onclick="emFsSelectFlight('${f.code}','${f.airline}','${f.originCity}','${f.destCity}','${f.depTime}','${f.arrTime}','${f.initial}','${f.color}')">
+      <span class="airline-mark${f.color === 'red' ? ' red' : ''}">${f.initial}</span>
+      <div>
+        <div class="f-title">${f.originCity} → ${f.destCity}</div>
+        <div class="f-times">${f.depTime} – ${f.arrTime}${dateShort ? ' • ' + dateShort : ''}</div>
+        <div class="f-airline">${f.airline} • ${f.code}</div>
+      </div>
+    </div>
+  `).join('') || '<div style="padding:16px 14px;color:var(--text-2);font-size:13px">No flights match — try another airline or number.</div>';
+}
+
+function emFsSelectFlight(code, airline, originCity, destCity, depTime, arrTime, initial, color) {
+  state.flight = { code, airline, originCity, destCity, depTime, arrTime, initial, color,
+    route: originCity + ' → ' + destCity, meta: depTime + ' – ' + arrTime, lands: arrTime };
+  // Record the flight date everywhere it's read from
+  const [y, mo, da] = emFsDate.split('-').map(Number);
+  state.arrivalDate = { year: y, month: mo - 1, day: da };
+  const dt = new Date(y, mo - 1, da);
+  state.arrivalDateStr = CAL_DAYS_SHORT[dt.getDay()] + ' ' + da + ' ' + CAL_MONTHS_SHORT[mo - 1] + ' ' + y;
+  state.pickupDate = emFsDate;
+  state.pickupTime = computePickupTime(arrTime);
+  exitFlightSelect();
+}
+
+function exitFlightSelect() {
+  emFsMode = false;
+  emFsPrev = null;
+  populateModalFromState(); // repaints with the new flight + airport + date/time
+}
+
+function restoreFsPrev() {
+  if (!emFsPrev) return;
+  Object.assign(state, emFsPrev);
+  emFsPrev = null;
+}
+
+function cancelFlightSelect() {
+  restoreFsPrev();
+  emFsMode = false;
+  populateModalFromState();
 }
 
 function focusModalDatetime(sub) {
@@ -1999,7 +2212,9 @@ function renderDtPicker() {
   updateDtValidation();
 }
 
-function buildCalendarHTML(navFn, selectFn) {
+function buildCalendarHTML(navFn, selectFn, selectedIso, showNote) {
+  if (selectedIso === undefined) selectedIso = state.pickupDate;
+  if (showNote === undefined) showNote = true;
   const year = emDtCalYear;
   const month = emDtCalMonth;
   const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
@@ -2028,7 +2243,7 @@ function buildCalendarHTML(navFn, selectFn) {
     const isPast = thisDate < todayMidnight;
     const isToday = thisDate.toDateString() === todayStr;
     const iso = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-    const isSel = state.pickupDate === iso;
+    const isSel = selectedIso === iso;
     let cls = 'em-cal-day' + (isPast ? ' past' : '') + (isToday ? ' today' : '') + (isSel ? ' selected' : '');
     const oc = isPast ? '' : `onclick="${selectFn}('${iso}')"`;
     html += `<button class="${cls}" ${oc}>${d}</button>`;
@@ -2036,9 +2251,11 @@ function buildCalendarHTML(navFn, selectFn) {
   html += `</div>`;
 
   // Note if selected date differs from flight date
-  const flightIso = getFlightIsoDate();
-  if (state.flight && state.flight.code && state.pickupDate && state.pickupDate !== flightIso) {
-    html += `<div class="em-cal-flight-note">Your flight arrives on ${formatDtDate(flightIso)}</div>`;
+  if (showNote) {
+    const flightIso = getFlightIsoDate();
+    if (state.flight && state.flight.code && state.pickupDate && state.pickupDate !== flightIso) {
+      html += `<div class="em-cal-flight-note">Your flight arrives on ${formatDtDate(flightIso)}</div>`;
+    }
   }
   return html;
 }
