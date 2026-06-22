@@ -390,8 +390,12 @@
   /* ── Flight-autofill bar (V3) ── */
   #s4-autofill { padding: 12px 0 4px; }
   .af-bar { display: inline-flex; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: 100px; padding: 6px 6px 6px 6px; box-shadow: var(--shadow-card); max-width: 100%; }
-  .af-seg { display: flex; align-items: center; gap: 10px; padding: 4px 18px; min-width: 0; }
+  .af-seg { position: relative; display: flex; align-items: center; gap: 10px; padding: 4px 18px; min-width: 0; }
   .af-seg .af-ico { color: var(--text-3); flex: 0 0 18px; }
+  .af-seg.af-open { background: var(--bg-subtle); border-radius: 12px; }
+  .af-seg.af-open .if-pop { display: block; }
+  .af-dt-pop { width: 340px; }
+  .af-dt-content { max-height: 300px; overflow-y: auto; }
   .af-stack { display: flex; flex-direction: column; min-width: 0; }
   .af-airport { display: flex; align-items: center; gap: 8px; }
   .af-iata { font-size: 12px; font-weight: 700; color: var(--ink); background: var(--bg-subtle); border-radius: 5px; padding: 2px 7px; letter-spacing: .02em; flex: 0 0 auto; }
@@ -1013,15 +1017,27 @@
           </div>
           <span class="af-div"></span>
           <!-- Drop-off -->
-          <div class="af-seg af-click" onclick="openEditModal()" title="Edit drop-off">
+          <div class="af-seg af-click" id="af-dropoff-seg" onclick="afToggle('dropoff', event)" title="Edit drop-off">
             <span class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg></span>
             <span class="af-value" id="af-dropoff">Marriott Diplomatic Quarter</span>
+            <div class="if-pop" onclick="event.stopPropagation()">
+              <div class="if-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input id="af-dropoff-input" type="text" placeholder="Search drop-off" oninput="afFilterDropoff(this.value)" autocomplete="off" />
+              </div>
+              <div class="if-loc-list" id="af-dropoff-list"></div>
+            </div>
           </div>
           <span class="af-div"></span>
           <!-- Date & time -->
-          <div class="af-seg af-click" onclick="openEditModal()" title="Edit date & time">
+          <div class="af-seg af-click" id="af-datetime-seg" onclick="afToggle('datetime', event)" title="Edit date & time">
             <span class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
             <span class="af-value" id="af-datetime">14 Jun 2026, 10:25 PM</span>
+            <div class="if-pop af-dt-pop" onclick="event.stopPropagation()">
+              <div class="em-dt-tabs" id="af-dt-tabs"></div>
+              <div class="af-dt-content" id="af-dt-content"></div>
+              <div id="af-dt-msg" class="em-dt-msg" style="display:none"></div>
+            </div>
           </div>
           <span class="af-div"></span>
           <!-- Passengers -->
@@ -1598,6 +1614,7 @@ function formatDateTimeLong(iso, time) {
 }
 
 function syncAutofillBar() {
+  if (typeof afCloseAll === 'function') afCloseAll();
   const f = state.flight;
   const hasFlight = f && f.code;
   document.getElementById('af-iata').textContent = airportCode(state.pickup) || '✈';
@@ -1618,9 +1635,125 @@ function adjustAfPax(delta) {
 
 function afSearch() {
   // Prototype: re-run the search and give a quick confirmation pulse
+  afCloseAll();
   syncAutofillBar();
   const btn = document.querySelector('.af-search');
   if (btn) { btn.style.background = 'var(--alm-teal-06)'; setTimeout(() => { btn.style.background = ''; }, 200); }
+}
+
+// ── Autofill bar inline dropdowns ──
+let afOpenField = null;
+let afDtSub = 'date';
+
+function afToggle(which, e) {
+  if (e) e.stopPropagation();
+  if (afOpenField === which) { afCloseAll(); return; }
+  afCloseAll();
+  afOpenField = which;
+  document.getElementById('af-' + which + '-seg').classList.add('af-open');
+
+  if (which === 'dropoff') {
+    const inp = document.getElementById('af-dropoff-input');
+    inp.value = '';
+    afRenderDropoffList('');
+    setTimeout(() => inp.focus(), 30);
+  } else {
+    afDtSub = 'date';
+    if (state.pickupDate) {
+      const [py, pm] = state.pickupDate.split('-').map(Number);
+      emDtCalYear = py; emDtCalMonth = pm - 1;
+    }
+    afRenderDt();
+  }
+}
+
+function afCloseAll() {
+  afOpenField = null;
+  document.querySelectorAll('#s4-autofill .af-seg.af-open').forEach(el => el.classList.remove('af-open'));
+}
+
+document.addEventListener('click', e => {
+  if (afOpenField && !e.target.closest('.af-seg')) afCloseAll();
+});
+
+function afFilterDropoff(val) { afRenderDropoffList(val); }
+
+function afRenderDropoffList(query) {
+  const list = getDropoffList(query);
+  document.getElementById('af-dropoff-list').innerHTML = list.map(loc => `
+    <div class="loc-item" onmousedown="afSelectDropoff('${loc.id}');event.preventDefault()">
+      <span class="loc-thumb ${loc.thumb}">${thumbIcon(loc.type)}</span>
+      <span class="loc-body">
+        <div class="loc-name">${loc.name}${loc.upcoming ? ` <span class="upcoming-badge">${loc.upcoming}</span>` : ''}</div>
+        <div class="loc-sub">${loc.sub}</div>
+      </span>
+    </div>
+  `).join('') || '<div class="loc-item" style="cursor:default;color:var(--text-2);font-size:13px">No results found</div>';
+}
+
+function afSelectDropoff(id) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  if (!loc) return;
+  state.dropoff = loc.name;
+  afCloseAll();
+  syncAutofillBar();
+}
+
+function afRenderDt() {
+  document.getElementById('af-dt-tabs').innerHTML = `
+    <button class="em-dt-tab ${afDtSub === 'date' ? 'active' : ''}" onclick="afSwitchDt('date')">
+      <span class="dt-tab-label">Date</span><span class="dt-tab-val">${state.pickupDate ? formatDtDate(state.pickupDate) : '—'}</span>
+    </button>
+    <button class="em-dt-tab ${afDtSub === 'time' ? 'active' : ''}" onclick="afSwitchDt('time')">
+      <span class="dt-tab-label">Time</span><span class="dt-tab-val">${state.pickupTime || '—'}</span>
+    </button>`;
+
+  if (afDtSub === 'date') {
+    document.getElementById('af-dt-content').innerHTML = buildCalendarHTML('afCalNav', 'afSelectDate', state.pickupDate, true);
+  } else {
+    document.getElementById('af-dt-content').innerHTML = buildTimeGridHTML('afSelectTime');
+    requestAnimationFrame(() => {
+      const sel = document.querySelector('#af-dt-content .em-time-slot.selected');
+      if (sel) sel.scrollIntoView({ block: 'nearest' });
+    });
+  }
+  afUpdateDtMsg();
+}
+
+function afSwitchDt(sub) { afDtSub = sub; afRenderDt(); }
+
+function afCalNav(dir) {
+  emDtCalMonth += dir;
+  if (emDtCalMonth < 0) { emDtCalMonth = 11; emDtCalYear--; }
+  if (emDtCalMonth > 11) { emDtCalMonth = 0; emDtCalYear++; }
+  afRenderDt();
+}
+
+function afSelectDate(iso) {
+  state.pickupDate = iso;
+  document.getElementById('af-datetime').textContent = formatDateTimeLong(state.pickupDate, state.pickupTime);
+  afDtSub = 'time';
+  afRenderDt();
+}
+
+function afSelectTime(t) {
+  state.pickupTime = t;
+  document.getElementById('af-datetime').textContent = formatDateTimeLong(state.pickupDate, state.pickupTime);
+  afRenderDt();
+  const v = getDtValidation();
+  if (!v || v.type === 'info') setTimeout(afCloseAll, 260);
+}
+
+function afUpdateDtMsg() {
+  const msgEl = document.getElementById('af-dt-msg');
+  const v = getDtValidation();
+  if (v) {
+    msgEl.className = 'em-dt-msg ' + v.type;
+    msgEl.textContent = v.msg;
+    msgEl.style.display = '';
+  } else {
+    msgEl.style.display = 'none';
+  }
 }
 
 // ── Inline widget (V2) ──
