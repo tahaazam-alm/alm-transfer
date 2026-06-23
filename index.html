@@ -386,6 +386,16 @@
   .if-pop .if-loc-list { max-height: 280px; overflow-y: auto; margin: 0 -12px -12px; }
   .if-pop .if-time-scroll { max-height: 280px; overflow-y: auto; }
   .if-pop .em-dt-msg { margin-top: 10px; }
+  /* inline flight re-selection inside pickup popover */
+  .if-fs-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .if-fs-back { width: 26px; height: 26px; border: none; background: var(--bg-subtle); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); flex: 0 0 26px; }
+  .if-fs-back:hover { background: var(--border-soft); }
+  .if-fs-title { font-size: 13px; font-weight: 600; color: var(--alm-navy); }
+  .if-fs-hint { font-size: 12px; color: var(--text-2); margin: 0 0 10px; line-height: 1.45; }
+  .if-fs-hint .em-fs-airport { vertical-align: middle; }
+  .if-fs-cal { max-height: 270px; overflow-y: auto; }
+  .if-fs-flightlist { max-height: 250px; overflow-y: auto; border: 1px solid var(--border-soft); border-radius: var(--r-md); margin-top: 8px; }
+  .if-fs-flightlist .flight-option:last-child { border-bottom: 0; }
 
   /* ── Flight-autofill bar (V3) ── */
   #s4-autofill { padding: 12px 0 4px; }
@@ -958,11 +968,14 @@
           <span class="if-label" id="if-pickup-label">Pickup</span>
           <span class="if-value" id="if-pickup-value">King Khalid International Airport</span>
           <div class="if-pop" onclick="event.stopPropagation()">
-            <div class="if-search">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              <input id="if-pickup-input" type="text" placeholder="Search pickup" oninput="ifFilterLoc('pickup', this.value)" autocomplete="off" />
+            <div id="if-pickup-locview">
+              <div class="if-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input id="if-pickup-input" type="text" placeholder="Search pickup" oninput="ifFilterLoc('pickup', this.value)" autocomplete="off" />
+              </div>
+              <div class="if-loc-list" id="if-pickup-list"></div>
             </div>
-            <div class="if-loc-list" id="if-pickup-list"></div>
+            <div id="if-pickup-fsview" style="display:none"></div>
           </div>
         </div>
         <div class="if-field" id="if-dropoff" onclick="ifToggle('dropoff', event)">
@@ -1774,15 +1787,13 @@ function ifLockedSide() {
 const IF_LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
 
 function syncInlineWidget() {
+  ifResetFlightView();
   ifCloseAll();
-  const locked = ifLockedSide();
   ['pickup', 'dropoff'].forEach(f => {
     const el = document.getElementById('if-' + f);
-    const isLocked = locked === f;
-    el.classList.toggle('locked', isLocked);
-    el.title = isLocked ? 'Tied to your flight' : '';
-    document.getElementById('if-' + f + '-label').innerHTML =
-      (isLocked ? IF_LOCK_SVG + ' ' : '') + (f === 'pickup' ? 'Pickup' : 'Drop-off');
+    el.classList.remove('locked');
+    el.title = '';
+    document.getElementById('if-' + f + '-label').textContent = f === 'pickup' ? 'Pickup' : 'Drop-off';
     document.getElementById('if-' + f + '-value').textContent = f === 'pickup' ? state.pickup : state.dropoff;
   });
   document.getElementById('if-date-value').textContent = formatDtDate(state.pickupDate);
@@ -1792,16 +1803,21 @@ function syncInlineWidget() {
 
 function ifToggle(which, e) {
   if (e) e.stopPropagation();
-  if ((which === 'pickup' || which === 'dropoff') && ifLockedSide() === which) return;
   if (ifOpenField === which) { ifCloseAll(); return; }
   ifCloseAll();
   ifOpenField = which;
   document.getElementById('if-' + which).classList.add('open');
 
-  if (which === 'pickup' || which === 'dropoff') {
-    const inp = document.getElementById('if-' + which + '-input');
+  if (which === 'pickup') {
+    ifResetFlightView(); // always start on the location search view
+    const inp = document.getElementById('if-pickup-input');
     inp.value = '';
-    ifRenderLocList(which, '');
+    ifRenderLocList('pickup', '');
+    setTimeout(() => inp.focus(), 30);
+  } else if (which === 'dropoff') {
+    const inp = document.getElementById('if-dropoff-input');
+    inp.value = '';
+    ifRenderLocList('dropoff', '');
     setTimeout(() => inp.focus(), 30);
   } else if (which === 'date') {
     if (state.pickupDate) {
@@ -1823,6 +1839,7 @@ function ifCloseAll() {
 }
 
 document.addEventListener('click', e => {
+  if (ifFsField && !e.target.closest('.if-field')) { ifFsCancel(); return; }
   if (ifOpenField && !e.target.closest('.if-field')) ifCloseAll();
 });
 
@@ -1846,14 +1863,155 @@ function ifRenderLocList(field, query) {
 function ifSelectLoc(id, field) {
   const loc = LOCATIONS.find(l => l.id === id);
   if (!loc) return;
+  const prevVal = field === 'pickup' ? state.pickup : state.dropoff;
+
+  // Changed pickup to a different airport on a flight trip → re-collect flight inline
+  if (field === 'pickup' && loc.type === 'airport' && state.flight && state.flight.code && loc.name !== prevVal) {
+    const snapshot = {
+      pickup: state.pickup, pickupCity: state.pickupCity, dropoff: state.dropoff,
+      flight: state.flight, pickupDate: state.pickupDate, pickupTime: state.pickupTime,
+      arrivalDate: state.arrivalDate, arrivalDateStr: state.arrivalDateStr
+    };
+    state.pickup = loc.name;
+    state.pickupCity = loc.city || null;
+    document.getElementById('if-pickup-value').textContent = loc.name;
+    ifStartFlightSelect(loc, snapshot);
+    return;
+  }
+
   if (field === 'pickup') {
     state.pickup = loc.name;
     state.pickupCity = loc.city || null;
+    if (loc.type !== 'airport') state.flight = null;
   } else {
     state.dropoff = loc.name;
   }
   ifCloseAll();
   syncScreen4();
+}
+
+// ── Inline widget – flight re-selection (changed pickup airport) ──
+let ifFsField = null;
+let ifFsAirport = null;
+let ifFsDate = null;
+let ifFsSub = 'date';
+let ifFsPrev = null;
+
+function ifStartFlightSelect(loc, snapshot) {
+  ifFsField = 'pickup';
+  ifFsAirport = { name: loc.name, city: loc.city || 'riyadh', code: airportCode(loc.name) };
+  ifFsDate = null;
+  ifFsSub = 'date';
+  ifFsPrev = snapshot;
+  state.flight = null;
+
+  const seed = snapshot.pickupDate || getFlightIsoDate();
+  const [sy, sm] = seed.split('-').map(Number);
+  emDtCalYear = sy; emDtCalMonth = sm - 1;
+
+  document.getElementById('if-pickup-locview').style.display = 'none';
+  document.getElementById('if-pickup-fsview').style.display = '';
+  ifFsRender();
+}
+
+function ifResetFlightView() {
+  ifFsField = null; ifFsPrev = null; ifFsDate = null;
+  const lv = document.getElementById('if-pickup-locview');
+  const fv = document.getElementById('if-pickup-fsview');
+  if (lv) lv.style.display = '';
+  if (fv) { fv.style.display = 'none'; fv.innerHTML = ''; }
+}
+
+function ifFsRender() {
+  const fv = document.getElementById('if-pickup-fsview');
+  const chip = `<span class="em-fs-airport">${ifFsAirport.code || '✈'} ${ifFsAirport.name}</span>`;
+  if (ifFsSub === 'date') {
+    fv.innerHTML = `
+      <div class="if-fs-head">
+        <button class="if-fs-back" onclick="ifFsBack()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+        <span class="if-fs-title">Flight date</span>
+      </div>
+      <p class="if-fs-hint">New pickup ${chip} — when does your flight arrive?</p>
+      <div class="if-fs-cal" id="if-fs-cal"></div>`;
+    document.getElementById('if-fs-cal').innerHTML = buildCalendarHTML('ifFsCalNav', 'ifFsSelectDate', ifFsDate, false);
+  } else {
+    const dateShort = ifFsDate ? formatDtDate(ifFsDate) : '';
+    fv.innerHTML = `
+      <div class="if-fs-head">
+        <button class="if-fs-back" onclick="ifFsBack()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+        <span class="if-fs-title">Find your flight</span>
+      </div>
+      <div class="if-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><path d="M17.8 19.2L16 11l3.5-3.5a2.121 2.121 0 0 0-3-3L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .4 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5.8.6 1.3.4l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+        <input id="if-fs-flight-input" type="text" placeholder="e.g. Flynas, XY304" oninput="ifFsFlightInput(this.value)" autocomplete="off" />
+      </div>
+      <div class="if-fs-flightlist" id="if-fs-list"></div>`;
+    ifFsRenderFlights('');
+    setTimeout(() => { const el = document.getElementById('if-fs-flight-input'); if (el) el.focus(); }, 40);
+  }
+}
+
+function ifFsCalNav(dir) {
+  emDtCalMonth += dir;
+  if (emDtCalMonth < 0) { emDtCalMonth = 11; emDtCalYear--; }
+  if (emDtCalMonth > 11) { emDtCalMonth = 0; emDtCalYear++; }
+  document.getElementById('if-fs-cal').innerHTML = buildCalendarHTML('ifFsCalNav', 'ifFsSelectDate', ifFsDate, false);
+}
+
+function ifFsSelectDate(iso) {
+  ifFsDate = iso;
+  ifFsSub = 'flight';
+  ifFsRender();
+}
+
+function ifFsFlightInput(val) { ifFsRenderFlights(val); }
+
+function ifFsRenderFlights(query) {
+  const set = FLIGHTS[ifFsAirport.city] || FLIGHTS.riyadh;
+  const v = query.trim().toLowerCase();
+  const matches = v ? set.filter(f =>
+    f.code.toLowerCase().replace(' ','').includes(v.replace(' ','')) ||
+    f.airline.toLowerCase().includes(v) ||
+    f.originCity.toLowerCase().includes(v) ||
+    f.destCity.toLowerCase().includes(v)
+  ) : set;
+  const dateShort = ifFsDate ? formatDtDate(ifFsDate) : '';
+  document.getElementById('if-fs-list').innerHTML = matches.map(f => `
+    <div class="flight-option" onmousedown="ifFsSelectFlight('${f.code}','${f.airline}','${f.originCity}','${f.destCity}','${f.depTime}','${f.arrTime}','${f.initial}','${f.color}');event.preventDefault()">
+      <span class="airline-mark${f.color === 'red' ? ' red' : ''}">${f.initial}</span>
+      <div>
+        <div class="f-title">${f.originCity} → ${f.destCity}</div>
+        <div class="f-times">${f.depTime} – ${f.arrTime}${dateShort ? ' • ' + dateShort : ''}</div>
+        <div class="f-airline">${f.airline} • ${f.code}</div>
+      </div>
+    </div>
+  `).join('') || '<div style="padding:16px 14px;color:var(--text-2);font-size:13px">No flights match — try another airline or number.</div>';
+}
+
+function ifFsSelectFlight(code, airline, originCity, destCity, depTime, arrTime, initial, color) {
+  state.flight = { code, airline, originCity, destCity, depTime, arrTime, initial, color,
+    route: originCity + ' → ' + destCity, meta: depTime + ' – ' + arrTime, lands: arrTime };
+  const [y, mo, da] = ifFsDate.split('-').map(Number);
+  state.arrivalDate = { year: y, month: mo - 1, day: da };
+  const dt = new Date(y, mo - 1, da);
+  state.arrivalDateStr = CAL_DAYS_SHORT[dt.getDay()] + ' ' + da + ' ' + CAL_MONTHS_SHORT[mo - 1] + ' ' + y;
+  state.pickupDate = ifFsDate;
+  state.pickupTime = computePickupTime(arrTime);
+  ifResetFlightView();
+  ifCloseAll();
+  syncScreen4();
+}
+
+function ifFsBack() {
+  if (ifFsSub === 'flight') { ifFsSub = 'date'; ifFsRender(); }
+  else ifFsCancel();
+}
+
+function ifFsCancel() {
+  if (ifFsPrev) Object.assign(state, ifFsPrev);
+  ifResetFlightView();
+  ifCloseAll();
+  syncInlineWidget();
 }
 
 function ifCalNav(dir) {
